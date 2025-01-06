@@ -1,0 +1,48 @@
+@font-face {
+    font-family: 'Overlock'; /* Choose a name for the font */
+    src: url('/fonts/Overlock-Regular.ttf') format('woff2'); /* Include different formats for better compatibility */
+    font-weight: normal; /* Optional: specify weight */
+    font-style: normal; /* Optional: specify style */
+}
+
+body {
+    font-family: Overlock, serif !important;
+}
+
+#hero{
+    background-image: url("/images/bg-4.jpg");
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 500px !important;
+}
+
+.carousel {
+    position: relative;
+    overflow: hidden;
+}
+.carousel-track {
+    display: flex;
+    transition: transform 0.3s ease;
+}
+.carousel-item {
+    min-width: 33.33%; /* Show 3 items at once */
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+.carousel-buttons {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+.carousel-button {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}

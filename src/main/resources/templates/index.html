@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<nav th:replace="fragments/navbar :: navbar"></nav>
+<div id="hero" class="p-6 is-flex is-justify-content-center is-align-items-center">
+    <div>
+        <h1 class="is-size-1 has-text-light has-text-centered has-text-weight-bold">Find The Best Product</h1>
+        <p class="is-size-4 has-text-light has-text-centered has-text-weight-bold">Real views by real people</p>
+        <div class="columns is-fullwidth mt-4">
+            <input
+                    type="search"
+                    class="input is-normal is-half"
+                    placeholder="Search Product By Name"
+            />
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <h2 class="is-size-5">What are you looking for?</h2>
+    <div class="carousel">
+        <div class="carousel-track">
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/600x300/ff7f7f/333333" alt="Slide 1">
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/600x300/7f7fff/333333" alt="Slide 2">
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/600x300/7fff7f/333333" alt="Slide 3">
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/600x300/ff7f7f/333333" alt="Slide 4">
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/600x300/7f7fff/333333" alt="Slide 5">
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/600x300/7fff7f/333333" alt="Slide 6">
+            </div>
+        </div>
+        <div class="carousel-buttons">
+            <button class="carousel-button" id="prevBtn">&#10094;</button>
+            <button class="carousel-button" id="nextBtn">&#10095;</button>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/js/carousel.js}"></script>
+</html>
