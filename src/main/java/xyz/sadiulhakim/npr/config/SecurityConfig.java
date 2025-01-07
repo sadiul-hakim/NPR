@@ -6,9 +6,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import xyz.sadiulhakim.npr.user.CustomUserDetailsService;
 
 @Configuration
 public class SecurityConfig {
+
+    private final CustomUserDetailsService userDetailsService;
+
+    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain config(HttpSecurity http) throws Exception {
@@ -20,8 +27,7 @@ public class SecurityConfig {
                 "/js/**",
                 "/images/**",
                 "/register_page",
-                "/login",
-                "/login_page"
+                "/admin_login"
         };
 
         String[] adminAccess = {
@@ -36,11 +42,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth.requestMatchers(adminAccess).hasAnyRole("ADMIN"))
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .oauth2Login(login -> login.defaultSuccessUrl("/", true))
-                .formLogin(form -> form.defaultSuccessUrl("/", true))
+                .userDetailsService(userDetailsService)
+                .formLogin(form -> form
+                        .loginPage("/admin_login")
+                        .defaultSuccessUrl("/dashboard", true))
                 .logout(logout -> logout.logoutSuccessUrl("/"))
                 .build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

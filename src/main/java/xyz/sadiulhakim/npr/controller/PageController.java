@@ -15,13 +15,13 @@ public class PageController {
         return "index";
     }
 
-    @GetMapping("/login_page")
+    @GetMapping("/admin_login")
     public String loginPage() {
-        return "auth/login_page";
+        return "auth/admin_login";
     }
 
-    @GetMapping("/register_page")
-    public String register() {
-        return "auth/register_page";
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "dashboard";
     }
 }
