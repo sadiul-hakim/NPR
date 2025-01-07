@@ -51,3 +51,14 @@ body {
     padding: 10px;
     cursor: pointer;
 }
+
+.borderless,
+.borderless:focus{
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.shadow{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

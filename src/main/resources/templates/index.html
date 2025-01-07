@@ -5,15 +5,18 @@
 <nav th:replace="fragments/navbar :: navbar"></nav>
 <div id="hero" class="p-6 is-flex is-justify-content-center is-align-items-center">
     <div>
-        <h1 class="is-size-1 has-text-light has-text-centered has-text-weight-bold">Find The Best Product</h1>
+        <h1 class="is-size-1 has-text-light has-text-centered has-text-weight-bold">Find The Product You Can Trust</h1>
         <p class="is-size-4 has-text-light has-text-centered has-text-weight-bold">Real views by real people</p>
-        <div class="columns is-fullwidth mt-4">
-            <input
-                    type="search"
-                    class="input is-normal is-half"
-                    placeholder="Search Product By Name"
-            />
-        </div>
+        <form class="is-fullwidth mt-4">
+            <div class="has-background-white is-flex has-radius-rounded p-3">
+                <input
+                        type="search"
+                        class="input borderless"
+                        placeholder="Search Product By Name"
+                />
+                <button class="button is-link has-radius-rounded ml-2 shadow"><img th:src="@{/images/icons/search.svg}" width="30" height="30" alt="search"/></button>
+            </div>
+        </form>
     </div>
 </div>
 <!--Hero section ends-->
@@ -116,7 +119,8 @@
 <div class="container my-6">
     <div class="box has-background-warning-90 columns">
         <div class="column p-4 is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-            <h2 class="is-size-2 has-text-weight-bold has-text-centered has-text-black">Help thousands make the right choice</h2>
+            <h2 class="is-size-2 has-text-weight-bold has-text-centered has-text-black">Help thousands make the right
+                choice</h2>
             <p class="is-size-6 mb-2">Share your experience on NPR, where real reviews make a difference.</p>
             <a th:href="@{/oauth2/authorization/google}" class="button is-warning has-text-light">
                 <img th:src="@{/images/icons/google.svg}" class="icon is-small"
@@ -125,7 +129,8 @@
             </a>
         </div>
         <div class="column is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-            <img th:src="@{'/images/bd product.jpg'}" alt="bangladeshi product" height="280" width="420" class="has-radius-small"/>
+            <img th:src="@{'/images/bd product.jpg'}" alt="bangladeshi product" height="280" width="420"
+                 class="has-radius-small"/>
         </div>
     </div>
 </div>
