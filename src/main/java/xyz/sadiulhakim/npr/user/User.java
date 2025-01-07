@@ -18,7 +18,7 @@ public class User implements UserDetails {
     private long id;
 
     @Column(length = 60, nullable = false)
-    private String fullName;
+    private String name;
 
     @Column(length = 60, nullable = false, unique = true)
     private String email;
@@ -27,9 +27,9 @@ public class User implements UserDetails {
     private String password;
 
     @Column(length = 100)
-    private String photo;
+    private String picture;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Role role;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -40,10 +40,10 @@ public class User implements UserDetails {
 
     public User(long id, String fullName, String email, String password, String photo, Role role, Timestamp createdAt) {
         this.id = id;
-        this.fullName = fullName;
+        this.name = fullName;
         this.email = email;
         this.password = password;
-        this.photo = photo;
+        this.picture = photo;
         this.role = role;
         this.createdAt = createdAt;
     }
@@ -75,12 +75,12 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String fullName) {
+        this.name = fullName;
     }
 
     public String getEmail() {
@@ -95,12 +95,12 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getPhoto() {
-        return photo;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
+    public void setPicture(String photo) {
+        this.picture = photo;
     }
 
     public void setRole(Role role) {
