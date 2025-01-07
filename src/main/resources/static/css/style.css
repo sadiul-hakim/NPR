@@ -9,7 +9,7 @@ body {
     font-family: Overlock, serif !important;
 }
 
-#hero{
+#hero {
     background-image: url("/images/bg-4.jpg");
     background-position: center;
     background-attachment: fixed;
@@ -22,15 +22,19 @@ body {
     position: relative;
     overflow: hidden;
 }
+
 .carousel-track {
     display: flex;
     transition: transform 0.3s ease;
 }
+
 .carousel-item {
-    min-width: 33.33%; /* Show 3 items at once */
+    min-width: 20%; /* Show 3 items at once */
     flex-shrink: 0;
     box-sizing: border-box;
+    height: 100px;
 }
+
 .carousel-buttons {
     position: absolute;
     top: 50%;
@@ -39,6 +43,7 @@ body {
     justify-content: space-between;
     transform: translateY(-50%);
 }
+
 .carousel-button {
     background-color: rgba(0, 0, 0, 0.5);
     color: white;

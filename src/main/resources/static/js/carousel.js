@@ -2,7 +2,7 @@ const prevButton = document.getElementById('prevBtn');
 const nextButton = document.getElementById('nextBtn');
 const track = document.querySelector('.carousel-track');
 const items = document.querySelectorAll('.carousel-item');
-const itemsToShow = 3; // Number of items visible at once
+const itemsToShow = 5; // Number of items visible at once
 let currentIndex = 0;
 
 const moveToSlide = (index) => {

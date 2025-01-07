@@ -16,32 +16,116 @@
         </div>
     </div>
 </div>
-<div class="container mt-5">
-    <h2 class="is-size-5">What are you looking for?</h2>
+<!--Hero section ends-->
+<div class="container my-5">
+    <h2 class="is-size-4 has-text-weight-bold my-4">What are you looking for?</h2>
     <div class="carousel">
         <div class="carousel-track">
-            <div class="carousel-item">
-                <img src="https://via.placeholder.com/600x300/ff7f7f/333333" alt="Slide 1">
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                    Textiles & Apparel
+                </span>
             </div>
-            <div class="carousel-item">
-                <img src="https://via.placeholder.com/600x300/7f7fff/333333" alt="Slide 2">
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Leather Products
+                </span>
             </div>
-            <div class="carousel-item">
-                <img src="https://via.placeholder.com/600x300/7fff7f/333333" alt="Slide 3">
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Footwear
+                </span>
             </div>
-            <div class="carousel-item">
-                <img src="https://via.placeholder.com/600x300/ff7f7f/333333" alt="Slide 4">
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Furniture
+                </span>
             </div>
-            <div class="carousel-item">
-                <img src="https://via.placeholder.com/600x300/7f7fff/333333" alt="Slide 5">
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Pharmaceuticals
+                </span>
             </div>
-            <div class="carousel-item">
-                <img src="https://via.placeholder.com/600x300/7fff7f/333333" alt="Slide 6">
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Ceramics & Pottery
+                </span>
+            </div>
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Plastic Products
+                </span>
+            </div>
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Cement
+                </span>
+            </div>
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Handicrafts
+                </span>
+            </div>
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Spices
+                </span>
+            </div>
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Electronics & Electrical
+                </span>
+            </div>
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Food & Beverages
+                </span>
+            </div>
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Toys & Sporting
+                </span>
+            </div>
+            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+                <span>
+                Metal Products
+                </span>
             </div>
         </div>
         <div class="carousel-buttons">
             <button class="carousel-button" id="prevBtn">&#10094;</button>
             <button class="carousel-button" id="nextBtn">&#10095;</button>
+        </div>
+    </div>
+</div>
+<!--Category section ends-->
+<div class="container my-6">
+    <div class="box has-background-warning-90 columns">
+        <div class="column p-4 is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+            <h2 class="is-size-2 has-text-weight-bold has-text-centered has-text-black">Help thousands make the right choice</h2>
+            <p class="is-size-6 mb-2">Share your experience on NPR, where real reviews make a difference.</p>
+            <a th:href="@{/oauth2/authorization/google}" class="button is-link">
+                <img th:src="@{/images/icons/google.svg}" class="icon is-small"
+                     alt="google"/>
+                <span class="ml-2">Login</span>
+            </a>
+        </div>
+        <div class="column is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+            <img th:src="@{'/images/bd product.jpg'}" alt="bangladeshi product" height="280" width="420" class="has-radius-small"/>
         </div>
     </div>
 </div>
