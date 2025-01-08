@@ -10,10 +10,10 @@ import xyz.sadiulhakim.npr.util.AuthenticatedUserUtil;
 @RequestMapping("/dashboard")
 public class DashboardController {
 
-    @GetMapping("/user_page")
+    @GetMapping("/page")
     public String userPage(Model model) {
         model.addAttribute("name", AuthenticatedUserUtil.getName());
         model.addAttribute("picture", AuthenticatedUserUtil.getPicture());
-        return "user_page";
+        return "dashboard";
     }
 }

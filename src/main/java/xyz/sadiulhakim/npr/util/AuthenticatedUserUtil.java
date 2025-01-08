@@ -4,6 +4,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import xyz.sadiulhakim.npr.user.User;
 
 import java.util.Map;
@@ -23,9 +24,8 @@ public class AuthenticatedUserUtil {
     public static String get(String key) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof DefaultOidcUser user) {
-            Map<String, Object> claims = user.getClaims();
-            return String.valueOf(claims.get(key));
+        if (authentication.getPrincipal() instanceof OAuth2User user) {
+            return user.getAttribute(key);
         }
         return "";
     }

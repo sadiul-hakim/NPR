@@ -1,4 +1,5 @@
-<nav class="navbar is-link" role="navigation" aria-label="main navigation" th:fragment="navbar">
+<nav class="navbar is-link" role="navigation" aria-label="main navigation" th:fragment="navbar"
+     xmlns:sec="http://www.w3.org/1999/xhtml">
     <div class="container">
         <div class="navbar-brand">
             <a class="navbar-item" th:href="@{/}">
@@ -14,13 +15,46 @@
         </div>
 
         <div id="nprNavbar" class="navbar-menu">
-            <div sec:authorize="isAuthenticated()" class="navbar-end">
+            <div sec:authorize="isAuthenticated() && !hasAnyRole('ADMIN','ASSISTANT')" class="navbar-end">
                 <a class="navbar-item">
-                    Home
+                    Products
                 </a>
 
                 <a class="navbar-item">
-                    Documentation
+                    Categories
+                </a>
+
+                <a class="navbar-item">
+                    Brands
+                </a>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        <img th:src="${picture}" alt="" class="icon has-radius-rounded"/>
+                        <span th:text="${name == null || name.isEmpty() ? '' : name}"></span>
+                    </a>
+
+                    <div class="navbar-dropdown">
+                        <form th:action="@{/logout}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <button type="submit" class="navbar-item" aria-current="page">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div sec:authorize="hasAnyRole('ADMIN','ASSISTANT')" class="navbar-end">
+                <a class="navbar-item">
+                    Users
+                </a>
+                <a class="navbar-item">
+                    Brands
+                </a>
+                <a class="navbar-item">
+                    Categories
+                </a>
+                <a class="navbar-item">
+                    Products
                 </a>
 
                 <div class="navbar-item has-dropdown is-hoverable">

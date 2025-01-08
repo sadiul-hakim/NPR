@@ -2,8 +2,6 @@ package xyz.sadiulhakim.npr.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,9 +12,12 @@ import xyz.sadiulhakim.npr.user.CustomUserDetailsService;
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService,
+                          CustomAuthenticationSuccessHandler authenticationSuccessHandler) {
         this.userDetailsService = userDetailsService;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
     @Bean
@@ -31,6 +32,12 @@ public class SecurityConfig {
                 "/admin_login"
         };
 
+        String[] authenticatedUserAccess = {
+                "/categories/get-all",
+                "/brands/get-all",
+                "/products/get-all"
+        };
+
         String[] adminAccess = {
                 "/dashboard/**",
                 "/users/**",
@@ -40,25 +47,18 @@ public class SecurityConfig {
         };
         return http
                 .authorizeHttpRequests(auth -> auth.requestMatchers(publicApi).permitAll())
-                .authorizeHttpRequests(auth -> auth.requestMatchers(adminAccess).hasAnyRole("ADMIN"))
+                .authorizeHttpRequests(auth -> auth.requestMatchers(authenticatedUserAccess).authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers(adminAccess).hasAnyRole("ADMIN", "ASSISTANT"))
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-                .authenticationProvider(authenticationProvider())
-                .oauth2Login(login -> login.loginPage("/oauth2/authorization/google").defaultSuccessUrl("/", true))
+                .userDetailsService(userDetailsService)
+                .oauth2Login(login -> login.loginPage("/oauth2/authorization/google").successHandler(authenticationSuccessHandler))
                 .formLogin(form -> form
                         .loginPage("/admin_login")
-                        .defaultSuccessUrl("/dashboard/user_page", true)
+                        .defaultSuccessUrl("/dashboard/page", true)
                         .loginProcessingUrl("/login")
                         .failureUrl("/login?error=true").permitAll())
                 .logout(logout -> logout.logoutUrl("/logout").permitAll().logoutSuccessUrl("/"))
                 .build();
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        var authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        return authenticationProvider;
     }
 
     @Bean
