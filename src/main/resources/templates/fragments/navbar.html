@@ -17,14 +17,17 @@
         <div id="nprNavbar" class="navbar-menu">
             <div sec:authorize="isAuthenticated() && !hasAnyRole('ADMIN','ASSISTANT')" class="navbar-end">
                 <a class="navbar-item">
+                    <img th:src="@{/images/icons/product.svg}" alt="product" class="icon"/>
                     Products
                 </a>
 
                 <a class="navbar-item">
+                    <img th:src="@{/images/icons/category.svg}" alt="category" class="icon"/>
                     Categories
                 </a>
 
                 <a class="navbar-item">
+                    <img th:src="@{'/images/icons/brand 2.svg'}" alt="brand" class="icon"/>
                     Brands
                 </a>
 
@@ -45,15 +48,19 @@
 
             <div sec:authorize="hasAnyRole('ADMIN','ASSISTANT')" class="navbar-end">
                 <a class="navbar-item">
+                    <img th:src="@{/images/icons/user.svg}" alt="user" class="icon"/>
                     Users
                 </a>
                 <a class="navbar-item">
+                    <img th:src="@{'/images/icons/brand 2.svg'}" alt="brand" class="icon"/>
                     Brands
                 </a>
                 <a class="navbar-item">
+                    <img th:src="@{/images/icons/category.svg}" alt="category" class="icon"/>
                     Categories
                 </a>
                 <a class="navbar-item">
+                    <img th:src="@{/images/icons/product.svg}" alt="product" class="icon"/>
                     Products
                 </a>
 
@@ -74,6 +81,7 @@
 
             <div sec:authorize="!isAuthenticated()" class="navbar-end">
                 <a class="navbar-item" th:href="@{/oauth2/authorization/google}">
+                    <img th:src="@{/images/icons/login.svg}" alt="login" class="icon"/>
                     Log in
                 </a>
             </div>

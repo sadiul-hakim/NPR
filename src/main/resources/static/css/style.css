@@ -5,8 +5,15 @@
     font-style: normal; /* Optional: specify style */
 }
 
+@font-face {
+    font-family: 'Roboto'; /* Choose a name for the font */
+    src: url('/fonts/Roboto-Regular.ttf') format('woff2'); /* Include different formats for better compatibility */
+    font-weight: normal; /* Optional: specify weight */
+    font-style: normal; /* Optional: specify style */
+}
+
 body {
-    font-family: Overlock, serif !important;
+    font-family: Roboto, Overlock, serif !important;
 }
 
 #hero {
@@ -53,12 +60,12 @@ body {
 }
 
 .borderless,
-.borderless:focus{
+.borderless:focus {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
 }
 
-.shadow{
+.shadow {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
