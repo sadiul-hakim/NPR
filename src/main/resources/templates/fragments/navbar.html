@@ -40,15 +40,14 @@
                     <div class="navbar-dropdown">
                         <form th:action="@{/logout}" method="post">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                            <button type="submit" class="navbar-item" aria-current="page"><i data-feather="log-out">
-                                Logout </i></button>
+                            <button type="submit" class="navbar-item" aria-current="page"><i data-feather="log-out"></i> Logout</button>
                         </form>
                     </div>
                 </div>
             </div>
 
             <div sec:authorize="hasAnyRole('ADMIN','ASSISTANT')" class="navbar-end">
-                <a class="navbar-item">
+                <a class="navbar-item" th:href="@{/users/page}">
                     <i data-feather="user"></i>
                     Users
                 </a>

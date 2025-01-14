@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import xyz.sadiulhakim.npr.role.Role;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -33,12 +34,12 @@ public class User implements UserDetails {
     private Role role;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     public User() {
     }
 
-    public User(long id, String fullName, String email, String password, String photo, Role role, Timestamp createdAt) {
+    public User(long id, String fullName, String email, String password, String photo, Role role, LocalDateTime createdAt) {
         this.id = id;
         this.name = fullName;
         this.email = email;
@@ -107,11 +108,11 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+<div class="container my-6">
+
+    <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> User Management</h1>
+    <div th:replace="~{fragments/table :: table(${userResult},${table_url},~{::#table})}">
+        <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
+            <thead>
+            <tr>
+                <th>Picture</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Date</th>
+                <th>
+                    <a class="button is-link">
+                        <i data-feather="plus"></i>
+                    </a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="u : ${userResult.data}">
+                <td>
+                    <img th:src="@{|${u.picture}|}" th:alt="${u.name}" class="icon is-medium"/>
+                </td>
+                <td th:text="${u.name}"></td>
+                <td th:text="${u.email}"></td>
+                <td th:text="${u.role.role}"></td>
+                <td th:text="${#temporals.format(u.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                <td>
+                    <i data-feather="trash-2"></i>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

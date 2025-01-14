@@ -29,9 +29,13 @@ public class NprApplication implements CommandLineRunner {
 
 //        Role roleAdmin = roleRepo.save(new Role(0, "ROLE_ADMIN", ""));
 //        Role roleAdmin = roleRepo.findByRole("ROLE_ADMIN").orElse(null);
-//        User sadiulHakim = userRepo.save(new User(0, "Hassan", "hassan@gmail.com",
-//                passwordEncoder.encode("hakim@123"), "default.png", roleAdmin,
-//                new Timestamp(System.currentTimeMillis())));
+//
+//        for (int i = 0; i < 100; i++) {
+//            User sadiulHakim = userRepo.save(new User(0, "Test", "test" + i + "@gmail.com",
+//                    passwordEncoder.encode("hakim@123"), "default.png", roleAdmin,
+//                    LocalDateTime.now()));
+//            userRepo.save(sadiulHakim);
+//        }
 //        LOGGER.info("user {} is created", sadiulHakim.getEmail());
     }
 }

@@ -1,0 +1,32 @@
+<!-- Table Start -->
+<div th:fragment="table(jpaResult,tableUrl,table)" class="box mt-4">
+  <div class="my-3 is-flex is-justify-content-end">
+    <form class="is-flex is-align-items-center" th:action="@{${tableUrl.searchUrl}}">
+      <input type="text" class="input" placeholder="Search" name="text" />
+      <button class="button is-link ml-2">Search</button>
+    </form>
+    <a class="button is-danger ml-2" th:href="@{${tableUrl.homePageUrl}}">Clear Search</a>
+  </div>
+  <table th:replace="${table}"></table>
+  <div class="is-flex is-justify-content-space-between my-3">
+    <p>
+      Showing <span th:text="${jpaResult.start}"></span> to <span th:text="${jpaResult.end}"></span> of <span th:text="${jpaResult.totalRecords}"></span>
+    </p>
+    <nav class="pagination" role="navigation" aria-label="pagination">
+      <a class="pagination-previous"
+         th:classappend="${jpaResult.isFirst} ? 'is-disabled' : ''"
+         th:href="@{${tableUrl.homePageUrl}(page=${jpaResult.currentPage - 1})}">Previous</a>
+      <a class="pagination-next"
+         th:classappend="${jpaResult.isLast} ? 'is-disabled' : ''"
+         th:href="@{${tableUrl.homePageUrl}(page=${jpaResult.currentPage + 1})}">Next</a>
+      <ul class="pagination-list">
+        <li th:each="i:${#numbers.sequence(1,jpaResult.totalPages)}">
+          <a class="pagination-link" th:href="@{|${tableUrl.homePageUrl}?page=${i-1}|}" th:text="${i}"
+             th:classappend="${jpaResult.currentPage + 1 == i ? 'is-current' : ''}">
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+<!-- Table End -->
