@@ -28,7 +28,7 @@
             <tbody>
             <tr th:each="u : ${userResult.data}">
                 <td>
-                    <img th:src="@{|${u.picture}|}" th:alt="${u.name}" class="icon is-medium"/>
+                    <img th:src="@{'/images/user/'+${u.picture}}" th:alt="${u.name}" class="icon is-medium"/>
                 </td>
                 <td th:text="${u.name}"></td>
                 <td th:text="${u.email}"></td>
