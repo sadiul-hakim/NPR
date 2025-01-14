@@ -17,6 +17,9 @@
                 <th>Date</th>
                 <th>
                     <a class="button is-link">
+                        CSV
+                    </a>
+                    <a class="button is-link" th:href="@{${table_url.createPageUrl()}}">
                         <i data-feather="plus"></i>
                     </a>
                 </th>
@@ -32,7 +35,12 @@
                 <td th:text="${u.role.role}"></td>
                 <td th:text="${#temporals.format(u.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
                 <td>
-                    <i data-feather="trash-2"></i>
+                    <a href="#" class="button is-link">
+                        <i data-feather="edit"></i>
+                    </a>
+                    <a th:href="@{'/users/delete/{id}'(id=${u.id})}" class="button is-danger">
+                        <i data-feather="trash-2"></i>
+                    </a>
                 </td>
             </tr>
             </tbody>
