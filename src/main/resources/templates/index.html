@@ -14,7 +14,7 @@
                         class="input borderless"
                         placeholder="Search Product By Name"
                 />
-                <button class="button is-link has-radius-rounded ml-2 shadow"><img th:src="@{/images/icons/search.svg}" width="30" height="30" alt="search"/></button>
+                <button class="button is-link has-radius-rounded ml-2 shadow"><i data-feather="search"></i></button>
             </div>
         </form>
     </div>
@@ -123,8 +123,7 @@
                 choice</h2>
             <p class="is-size-6 mb-2">Share your experience on NPR, where real reviews make a difference.</p>
             <a th:href="@{/oauth2/authorization/google}" class="button is-warning has-text-light">
-                <img th:src="@{/images/icons/google.svg}" class="icon is-small"
-                     alt="google"/>
+                <i data-feather="at-sign"></i>
                 <span class="ml-2">Continue with Google</span>
             </a>
         </div>

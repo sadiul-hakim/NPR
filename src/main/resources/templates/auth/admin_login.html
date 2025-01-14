@@ -9,8 +9,7 @@
         <div class="column is-two-fifths card mx-auto p-3">
             <p
                     class="is-link has-text-centered my-2 is-flex is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/login.svg}" width="35" height="35"
-                     class="mr-2" alt="login"/> <span class="is-size-4">Login To Dashboard</span>
+                <i data-feather="lock"></i> <span class="is-size-4">Login To Dashboard</span>
             </p>
             <div th:if="${param.error}"
                  class="notification is-danger is-light">
@@ -33,7 +32,7 @@
                                class="input" id="username" name="username"
                                required/>
                         <span class="icon is-small is-left">
-                            <img th:src="@{/images/icons/mail.svg}" alt="mail"/>
+                            <i data-feather="mail"></i>
                         </span>
                     </div>
                     <!--                    <p class="help is-danger">This email is invalid</p>-->
@@ -46,7 +45,7 @@
                                class="input" id="password" name="password"
                                required/>
                         <span class="icon is-small is-left">
-                            <img th:src="@{/images/icons/password.svg}" alt="mail"/>
+                            <i data-feather="key"></i>
                         </span>
                     </div>
                     <!--                    <p class="help is-danger">Invalid Password</p>-->
