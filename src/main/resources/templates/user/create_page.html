@@ -7,10 +7,15 @@
 <div class="container my-6">
     <h1 class="is-size-4"><i data-feather="user-plus"></i> Create User</h1>
     <form class="box p-3" th:object="${dto}" method="post" enctype="multipart/form-data" th:action="@{/users/save}">
+        <input type="hidden" th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}"/>
+        <input type="hidden" name="id"
+               th:value="*{id}"/>
         <div class="field">
             <label class="label" for="name">Name</label>
             <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="User Name" name="name" id="name" th:field="*{name}" required/>
+                <input class="input" type="text" placeholder="User Name" name="name" id="name" th:field="*{name}"
+                       required/>
                 <span class="icon is-small is-left">
                   <i data-feather="user-check"></i>
                 </span>
@@ -19,7 +24,8 @@
         <div class="field">
             <label class="label" for="email">Email</label>
             <div class="control has-icons-left">
-                <input class="input" type="email" placeholder="example@mail.com" name="email" id="email" th:field="*{email}" required/>
+                <input class="input" type="email" placeholder="example@mail.com" name="email" id="email"
+                       th:field="*{email}" required/>
                 <span class="icon is-small is-left">
                   <i data-feather="mail"></i>
                 </span>
@@ -28,7 +34,8 @@
         <div class="field">
             <label class="label" for="password">Password</label>
             <div class="control has-icons-left">
-                <input class="input" type="password" placeholder="*********" name="password" id="password" th:field="*{password}" required/>
+                <input class="input" type="password" placeholder="*********" name="password" id="password"
+                       th:field="*{password}" required th:disabled="${userId != 0}"/>
                 <span class="icon is-small is-left">
                   <i data-feather="mail"></i>
                 </span>
@@ -38,6 +45,7 @@
             <label class="label" for="role">Role</label>
             <div class="control has-icons-left">
                 <select name="role" id="role" class="input" th:field="*{role}">
+                    <option value="0">--Select Role--</option>
                     <option th:each="r:${roles}" th:value="${r.id}" th:text="${r.role}"></option>
                 </select>
                 <span class="icon is-small is-left">

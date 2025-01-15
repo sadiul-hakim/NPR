@@ -29,6 +29,7 @@ public class SecurityConfig {
                 "/fonts/**",
                 "/js/**",
                 "/images/**",
+                "/picture/**",
                 "/admin_login"
         };
 

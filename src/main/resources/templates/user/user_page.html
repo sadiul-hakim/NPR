@@ -28,14 +28,14 @@
             <tbody>
             <tr th:each="u : ${userResult.data}">
                 <td>
-                    <img th:src="@{'/images/user/'+${u.picture}}" th:alt="${u.name}" class="icon is-medium"/>
+                    <img th:src="@{'/picture/user/'+${u.picture}}" th:alt="${u.name}" class="icon is-medium"/>
                 </td>
                 <td th:text="${u.name}"></td>
                 <td th:text="${u.email}"></td>
                 <td th:text="${u.role.role}"></td>
                 <td th:text="${#temporals.format(u.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
                 <td>
-                    <a href="#" class="button is-link">
+                    <a th:href="@{'/users/create_page?userId={id}'(id=${u.id})}" class="button is-link">
                         <i data-feather="edit"></i>
                     </a>
                     <a th:href="@{'/users/delete/{id}'(id=${u.id})}" class="button is-danger">

@@ -9,6 +9,8 @@ import xyz.sadiulhakim.npr.pojo.TableUrlPojo;
 import xyz.sadiulhakim.npr.role.RoleService;
 import xyz.sadiulhakim.npr.util.AuthenticatedUserUtil;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -54,12 +56,20 @@ public class UserController {
     }
 
     @GetMapping("/create_page")
-    public String createPage(Model model) {
+    public String createPage(@RequestParam(defaultValue = "0") long userId, Model model) {
 
         model.addAttribute("name", AuthenticatedUserUtil.getName());
         model.addAttribute("picture", AuthenticatedUserUtil.getPicture());
         model.addAttribute("roles", roleService.findAll());
-        model.addAttribute("dto", new User());
+        model.addAttribute("userId", userId);
+
+        Optional<User> user = userService.getById(userId);
+
+        if (user.isEmpty()) {
+            model.addAttribute("dto", new User());
+        } else {
+            model.addAttribute("dto", user.get());
+        }
 
         return "user/create_page";
     }

@@ -7,11 +7,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
+import xyz.sadiulhakim.npr.util.FileUtil;
 import xyz.sadiulhakim.npr.util.PageUtil;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -22,7 +26,7 @@ public class UserService {
     private int paginationSize;
 
     @Value("${default.user.image.folder:''}")
-    private String filePath;
+    private String folder;
 
     @Value("${default.user.image.name:''}")
     private String defaultPhotoName;
@@ -33,17 +37,63 @@ public class UserService {
         this.userRepo = userRepo;
     }
 
+    public Optional<User> getById(long userId) {
+
+        Optional<User> user = userRepo.findById(userId);
+        if (user.isEmpty()) {
+            LOGGER.error("UserService.getById :: Could not find user {}", userId);
+        }
+
+        return user;
+    }
+
     public void save(User user, MultipartFile photo) {
+
         try {
 
             LOGGER.info("UserService.save :: saving/updating user {}", user.getRole());
 
-            if (photo.isEmpty()) {
-                user.setPicture("default.png");
+            Optional<User> existingUser = getById(user.getId());
+            if (existingUser.isEmpty()) {
+                String fileName = FileUtil.uploadFile(folder, photo.getOriginalFilename(), photo.getInputStream());
+                if (fileName.isEmpty()) {
+                    user.setPicture("default.png");
+                } else {
+                    user.setPicture(fileName);
+                }
+
+                user.setCreatedAt(LocalDateTime.now());
+                userRepo.save(user);
+                return;
             }
 
-            user.setCreatedAt(LocalDateTime.now());
-            userRepo.save(user);
+            User exUser = existingUser.get();
+            if (StringUtils.hasText(user.getName())) {
+                exUser.setName(user.getName());
+            }
+
+            if (StringUtils.hasText(user.getEmail())) {
+                exUser.setEmail(user.getEmail());
+            }
+
+            if (user.getRole() != null) {
+                exUser.setRole(user.getRole());
+            }
+
+            if (!Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
+                String fileName = FileUtil.uploadFile(folder, photo.getOriginalFilename(), photo.getInputStream());
+
+                if (StringUtils.hasText(fileName)) {
+                    boolean deleted = FileUtil.deleteFile(folder, exUser.getPicture());
+                    if (deleted) {
+                        LOGGER.info("UserService.save :: File {} is deleted", exUser.getPicture());
+                    }
+
+                    exUser.setPicture(fileName);
+                }
+            }
+
+            userRepo.save(exUser);
         } catch (Exception ex) {
             LOGGER.error("UserService.save :: {}", ex.getMessage());
         }
@@ -64,6 +114,17 @@ public class UserService {
     }
 
     public void delete(long id) {
-        userRepo.deleteById(id);
+
+        Optional<User> user = userRepo.findById(id);
+        user.ifPresent(u -> {
+
+            if (!u.getPicture().equals(defaultPhotoName)) {
+                boolean deleted = FileUtil.deleteFile(folder, u.getPicture());
+                if (deleted) {
+                    LOGGER.info("UserService.delete :: deleted file {}", u.getPicture());
+                }
+            }
+            userRepo.delete(u);
+        });
     }
 }
