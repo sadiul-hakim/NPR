@@ -1,5 +1,8 @@
 package xyz.sadiulhakim.npr.user;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +21,7 @@ public class UserController {
     private final RoleService roleService;
     private final UserService userService;
 
-    private final TableUrlPojo table_url = new TableUrlPojo("/users/search", "/users", "",
+    private final TableUrlPojo table_url = new TableUrlPojo("/users/search", "/users", "/users/export-csv",
             "/users/create_page", "/users/page");
 
     public UserController(RoleService roleService, UserService userService) {
@@ -30,7 +33,7 @@ public class UserController {
     public String page(@RequestParam(defaultValue = "0") int page, Model model) {
 
         model.addAttribute("name", AuthenticatedUserUtil.getName());
-        model.addAttribute("picture", AuthenticatedUserUtil.getPicture());
+        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(userService.folder));
         model.addAttribute("userResult", userService.findAllPaginated(page));
         model.addAttribute("table_url", table_url);
 
@@ -48,7 +51,7 @@ public class UserController {
     @GetMapping("/search")
     public String searchUser(@RequestParam String text, Model model) {
         model.addAttribute("name", AuthenticatedUserUtil.getName());
-        model.addAttribute("picture", AuthenticatedUserUtil.getPicture());
+        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(userService.folder));
         model.addAttribute("userResult", userService.searchUser(text, 0));
         model.addAttribute("table_url", table_url);
 
@@ -59,7 +62,7 @@ public class UserController {
     public String createPage(@RequestParam(defaultValue = "0") long userId, Model model) {
 
         model.addAttribute("name", AuthenticatedUserUtil.getName());
-        model.addAttribute("picture", AuthenticatedUserUtil.getPicture());
+        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(userService.folder));
         model.addAttribute("roles", roleService.findAll());
         model.addAttribute("userId", userId);
 
@@ -79,5 +82,14 @@ public class UserController {
 
         userService.delete(id);
         return "redirect:/users/page";
+    }
+
+    @GetMapping("/export-csv")
+    public ResponseEntity<byte[]> exportCsv() {
+        var data = userService.getCsvData();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=users.csv");
+        headers.add(HttpHeaders.CONTENT_TYPE, "text/csv");
+        return new ResponseEntity<>(data, headers, HttpStatus.OK);
     }
 }

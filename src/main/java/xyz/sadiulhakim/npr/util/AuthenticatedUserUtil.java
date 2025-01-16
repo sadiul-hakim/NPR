@@ -40,12 +40,12 @@ public class AuthenticatedUserUtil {
         return "";
     }
 
-    public static String getPicture() {
+    public static String getPicture(String prefix) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof UsernamePasswordAuthenticationToken user) {
+        if (authentication instanceof UsernamePasswordAuthenticationToken user) {
             var principal = (User) user.getPrincipal();
-            return principal.getPicture();
+            return prefix + principal.getPicture();
         }
         return "";
     }

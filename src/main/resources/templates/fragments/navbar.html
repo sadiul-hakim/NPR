@@ -47,6 +47,10 @@
             </div>
 
             <div sec:authorize="hasAnyRole('ADMIN','ASSISTANT')" class="navbar-end">
+                <a class="navbar-item" th:href="@{/dashboard/page}">
+                    <i data-feather="home"></i>
+                    Dashboard
+                </a>
                 <a class="navbar-item" th:href="@{/users/page}">
                     <i data-feather="user"></i>
                     Users
@@ -66,7 +70,7 @@
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
-                        <img th:src="${picture}" alt="" class="icon has-radius-rounded"/>
+                        <img th:src="@{'/picture'+${picture}}" alt="" class="icon has-radius-rounded"/>
                         <span th:text="${name.isEmpty() ? '' : name}"></span>
                     </a>
 

@@ -10,10 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
+import xyz.sadiulhakim.npr.util.DateUtil;
 import xyz.sadiulhakim.npr.util.FileUtil;
 import xyz.sadiulhakim.npr.util.PageUtil;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -26,7 +29,7 @@ public class UserService {
     private int paginationSize;
 
     @Value("${default.user.image.folder:''}")
-    private String folder;
+    public String folder;
 
     @Value("${default.user.image.name:''}")
     private String defaultPhotoName;
@@ -100,6 +103,10 @@ public class UserService {
     }
 
     public PaginationResult findAllPaginated(int pageNumber) {
+        return findAllPaginatedWithSize(pageNumber, paginationSize);
+    }
+
+    public PaginationResult findAllPaginatedWithSize(int pageNumber, int size) {
 
         LOGGER.info("UserService.findAllPaginated :: finding user page : {}", pageNumber);
         Page<User> page = userRepo.findAll(PageRequest.of(pageNumber, paginationSize, Sort.by("name")));
@@ -126,5 +133,36 @@ public class UserService {
             }
             userRepo.delete(u);
         });
+    }
+
+    public long count() {
+        return userRepo.numberOfUsers();
+    }
+
+    public byte[] getCsvData() {
+        final int batchSize = 500;
+        int batchNumber = 0;
+        StringBuilder sb = new StringBuilder("Id,Name,Email,Picture,Date\n");
+        Page<User> page;
+        do {
+            page = userRepo.findAll(PageRequest.of(batchNumber, batchSize));
+            List<User> users = page.getContent();
+            for (User user : users) {
+                sb.append(user.getId())
+                        .append(",")
+                        .append(user.getName())
+                        .append(",")
+                        .append(user.getEmail())
+                        .append(",")
+                        .append(user.getPicture())
+                        .append(",")
+                        .append(DateUtil.format(user.getCreatedAt()))
+                        .append("\n");
+
+            }
+            batchNumber++;
+        } while (page.hasNext());
+
+        return sb.toString().getBytes(StandardCharsets.UTF_8);
     }
 }

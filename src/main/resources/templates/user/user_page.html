@@ -16,7 +16,7 @@
                 <th>Role</th>
                 <th>Date</th>
                 <th>
-                    <a class="button is-link">
+                    <a class="button is-link" th:href="@{${table_url.csvUrl()}}">
                         CSV
                     </a>
                     <a class="button is-link" th:href="@{${table_url.createPageUrl()}}">
