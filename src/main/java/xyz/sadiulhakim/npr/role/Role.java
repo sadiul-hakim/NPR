@@ -7,11 +7,11 @@ import jakarta.persistence.*;
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private long id;
 
     @Column(length = 30, nullable = false, unique = true)
-    private String role;
+    private String name;
 
     @Column(length = 150)
     private String description;
@@ -19,14 +19,14 @@ public class Role {
     public Role() {
     }
 
-    public Role(long id, String role, String description) {
+    public Role(long id, String name, String description) {
         this.id = id;
-        this.role = role;
+        this.name = name;
         this.description = description;
     }
 
-    public String getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 
     public long getId() {
@@ -37,8 +37,8 @@ public class Role {
         this.id = id;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

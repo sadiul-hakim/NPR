@@ -5,16 +5,14 @@
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="container my-6">
 
-    <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> User Management</h1>
-    <div th:replace="~{fragments/table :: table(${userResult},${table_url},~{::#table})}">
+    <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> Role Management</h1>
+    <div th:replace="~{fragments/table :: table(${roleResult},${table_url},~{::#table})}">
         <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
             <thead>
             <tr>
-                <th>Picture</th>
-                <th>Name</th>
-                <th>Email</th>
+                <th>Id</th>
                 <th>Role</th>
-                <th>Date</th>
+                <th>Description</th>
                 <th>
                     <a class="button is-link" th:href="@{${table_url.csvUrl()}}">
                         CSV
@@ -26,19 +24,15 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="u : ${userResult.data}">
+            <tr th:each="r,stat : ${roleResult.data}">
+                <td th:text="${stat.index+1}"></td>
+                <td th:text="${r.name}"></td>
+                <td th:text="${r.description}"></td>
                 <td>
-                    <img th:src="@{'/picture/user/'+${u.picture}}" th:alt="${u.name}" class="icon is-medium"/>
-                </td>
-                <td th:text="${u.name}"></td>
-                <td th:text="${u.email}"></td>
-                <td th:text="${u.role.name}"></td>
-                <td th:text="${#temporals.format(u.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
-                <td>
-                    <a th:href="@{'/users/create_page?userId={id}'(id=${u.id})}" class="button is-link">
+                    <a th:href="@{'/roles/create_page?roleId={id}'(id=${r.id})}" class="button is-link">
                         <i data-feather="edit"></i>
                     </a>
-                    <a th:href="@{'/users/delete/{id}'(id=${u.id})}" class="button is-danger">
+                    <a th:href="@{'/roles/delete/{id}'(id=${r.id})}" class="button is-danger">
                         <i data-feather="trash-2"></i>
                     </a>
                 </td>

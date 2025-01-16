@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
+import xyz.sadiulhakim.npr.role.Role;
 import xyz.sadiulhakim.npr.util.DateUtil;
 import xyz.sadiulhakim.npr.util.FileUtil;
 import xyz.sadiulhakim.npr.util.PageUtil;
@@ -38,6 +39,10 @@ public class UserService {
 
     public UserService(UserRepo userRepo) {
         this.userRepo = userRepo;
+    }
+
+    public List<User> getByRole(Role role) {
+        return userRepo.findAllByRole(role);
     }
 
     public Optional<User> getById(long userId) {
@@ -109,7 +114,7 @@ public class UserService {
     public PaginationResult findAllPaginatedWithSize(int pageNumber, int size) {
 
         LOGGER.info("UserService.findAllPaginated :: finding user page : {}", pageNumber);
-        Page<User> page = userRepo.findAll(PageRequest.of(pageNumber, paginationSize, Sort.by("name")));
+        Page<User> page = userRepo.findAll(PageRequest.of(pageNumber, size, Sort.by("name")));
         return PageUtil.prepareResult(page);
     }
 

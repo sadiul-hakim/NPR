@@ -42,6 +42,7 @@ public class SecurityConfig {
         String[] adminAccess = {
                 "/dashboard/**",
                 "/users/**",
+                "/roles/**",
                 "/brands/**",
                 "/categories/**",
                 "/products/**"
