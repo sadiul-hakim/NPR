@@ -46,7 +46,7 @@
             <div class="control has-icons-left">
                 <select name="role" id="role" class="input" th:field="*{role}">
                     <option value="0">--Select Role--</option>
-                    <option th:each="r:${roles}" th:value="${r.id}" th:text="${r.name}"></option>
+                    <option th:each="r:${roles}" th:value="${r.name()}" th:text="${r.name()}"></option>
                 </select>
                 <span class="icon is-small is-left">
                   <i data-feather="user-plus"></i>

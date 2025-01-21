@@ -3,14 +3,18 @@ package xyz.sadiulhakim.npr.role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
-import xyz.sadiulhakim.npr.user.User;
-import xyz.sadiulhakim.npr.user.UserService;
+import xyz.sadiulhakim.npr.role.dto.RoleDTO;
+import xyz.sadiulhakim.npr.role.event.DeleteRoleEvent;
+import xyz.sadiulhakim.npr.role.model.Role;
+import xyz.sadiulhakim.npr.role.model.RoleRepo;
 import xyz.sadiulhakim.npr.util.PageUtil;
 
 import java.nio.charset.StandardCharsets;
@@ -26,11 +30,11 @@ public class RoleService {
     private int paginationSize;
 
     private final RoleRepo roleRepo;
-    private final UserService userService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public RoleService(RoleRepo roleRepo, UserService userService) {
+    public RoleService(RoleRepo roleRepo, ApplicationEventPublisher eventPublisher) {
         this.roleRepo = roleRepo;
-        this.userService = userService;
+        this.eventPublisher = eventPublisher;
     }
 
     public void save(Role role) {
@@ -60,18 +64,38 @@ public class RoleService {
         }
     }
 
-    public List<Role> findAll() {
-        return roleRepo.findAll();
+    public List<RoleDTO> findAll() {
+        return roleRepo.findAll().stream()
+                .map(r -> new RoleDTO(r.getId(), r.getName(), r.getDescription()))
+                .toList();
     }
 
-    public Optional<Role> getById(long userId) {
+    public Optional<Role> getById(long roleId) {
 
-        Optional<Role> user = roleRepo.findById(userId);
-        if (user.isEmpty()) {
-            LOGGER.error("RoleService.getById :: Could not find role {}", userId);
+        if (roleId == 0) {
+            return Optional.empty();
         }
 
-        return user;
+        Optional<Role> role = roleRepo.findById(roleId);
+        if (role.isEmpty()) {
+            LOGGER.error("RoleService.getById :: Could not find role {}", roleId);
+        }
+
+        return role;
+    }
+
+    public Optional<Role> getByName(String name) {
+
+        if (!StringUtils.hasText(name)) {
+            return Optional.empty();
+        }
+
+        Optional<Role> role = roleRepo.findByName(name);
+        if (role.isEmpty()) {
+            LOGGER.error("RoleService.getByName :: Could not find role {}", name);
+        }
+
+        return role;
     }
 
     public PaginationResult findAllPaginated(int pageNumber) {
@@ -92,20 +116,19 @@ public class RoleService {
         return PageUtil.prepareResult(page);
     }
 
+    @Transactional
     public boolean delete(long id) {
 
         Optional<Role> role = roleRepo.findById(id);
         if (role.isEmpty()) {
             return false;
         }
-
-        List<User> users = userService.getByRole(role.get());
-        if (!users.isEmpty()) {
-            return false;
-        }
-
-        roleRepo.delete(role.get());
+        eventPublisher.publishEvent(new DeleteRoleEvent(role.get().getName()));
         return true;
+    }
+
+    public void forceDelete(Role role) {
+        roleRepo.delete(role);
     }
 
     public long count() {

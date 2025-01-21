@@ -2,7 +2,6 @@ package xyz.sadiulhakim.npr.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -10,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
-import xyz.sadiulhakim.npr.role.Role;
+import xyz.sadiulhakim.npr.properties.AppProperties;
+import xyz.sadiulhakim.npr.user.model.User;
+import xyz.sadiulhakim.npr.user.model.UserRepo;
 import xyz.sadiulhakim.npr.util.DateUtil;
 import xyz.sadiulhakim.npr.util.FileUtil;
 import xyz.sadiulhakim.npr.util.PageUtil;
@@ -26,26 +27,27 @@ public class UserService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
-    @Value("${default.pagination.size:0}")
-    private int paginationSize;
-
-    @Value("${default.user.image.folder:''}")
-    public String folder;
-
-    @Value("${default.user.image.name:''}")
-    private String defaultPhotoName;
-
     private final UserRepo userRepo;
+    private final AppProperties appProperties;
 
-    public UserService(UserRepo userRepo) {
+    public UserService(UserRepo userRepo, AppProperties appProperties) {
         this.userRepo = userRepo;
+        this.appProperties = appProperties;
     }
 
-    public List<User> getByRole(Role role) {
-        return userRepo.findAllByRole(role);
+    public User findByEmail(String email) {
+        return userRepo.findByEmail(email).orElse(null);
+    }
+
+    public long countByRole(String role) {
+        return userRepo.countByRole(role);
     }
 
     public Optional<User> getById(long userId) {
+
+        if (userId == 0) {
+            return Optional.empty();
+        }
 
         Optional<User> user = userRepo.findById(userId);
         if (user.isEmpty()) {
@@ -63,7 +65,7 @@ public class UserService {
 
             Optional<User> existingUser = getById(user.getId());
             if (existingUser.isEmpty()) {
-                String fileName = FileUtil.uploadFile(folder, photo.getOriginalFilename(), photo.getInputStream());
+                String fileName = FileUtil.uploadFile(appProperties.getUserImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
                 if (fileName.isEmpty()) {
                     user.setPicture("default.png");
                 } else {
@@ -89,10 +91,10 @@ public class UserService {
             }
 
             if (!Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
-                String fileName = FileUtil.uploadFile(folder, photo.getOriginalFilename(), photo.getInputStream());
+                String fileName = FileUtil.uploadFile(appProperties.getUserImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
 
                 if (StringUtils.hasText(fileName)) {
-                    boolean deleted = FileUtil.deleteFile(folder, exUser.getPicture());
+                    boolean deleted = FileUtil.deleteFile(appProperties.getUserImageFolder(), exUser.getPicture());
                     if (deleted) {
                         LOGGER.info("UserService.save :: File {} is deleted", exUser.getPicture());
                     }
@@ -108,7 +110,7 @@ public class UserService {
     }
 
     public PaginationResult findAllPaginated(int pageNumber) {
-        return findAllPaginatedWithSize(pageNumber, paginationSize);
+        return findAllPaginatedWithSize(pageNumber, appProperties.getPaginationSize());
     }
 
     public PaginationResult findAllPaginatedWithSize(int pageNumber, int size) {
@@ -130,8 +132,8 @@ public class UserService {
         Optional<User> user = userRepo.findById(id);
         user.ifPresent(u -> {
 
-            if (!u.getPicture().equals(defaultPhotoName)) {
-                boolean deleted = FileUtil.deleteFile(folder, u.getPicture());
+            if (!u.getPicture().equals(appProperties.getDefaultUserPhotoName())) {
+                boolean deleted = FileUtil.deleteFile(appProperties.getUserImageFolder(), u.getPicture());
                 if (deleted) {
                     LOGGER.info("UserService.delete :: deleted file {}", u.getPicture());
                 }

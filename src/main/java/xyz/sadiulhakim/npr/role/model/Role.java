@@ -1,9 +1,11 @@
-package xyz.sadiulhakim.npr.role;
+package xyz.sadiulhakim.npr.role.model;
 
 import jakarta.persistence.*;
+import org.springframework.modulith.NamedInterface;
 
 
 @Entity
+@NamedInterface("user-role")
 public class Role {
 
     @Id

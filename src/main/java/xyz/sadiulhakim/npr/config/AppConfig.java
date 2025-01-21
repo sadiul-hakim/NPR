@@ -1,14 +1,16 @@
 package xyz.sadiulhakim.npr.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 @Configuration
-public class AppConfig implements WebMvcConfigurer {
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/picture/**")
-                .addResourceLocations("file:F:/NPR/picture/");
+public class AppConfig {
+
+    @Bean
+    Executor customAsyncTaskExecutor(){
+        return Executors.newVirtualThreadPerTaskExecutor();
     }
 }

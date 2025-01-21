@@ -1,4 +1,4 @@
-package xyz.sadiulhakim.npr.config;
+package xyz.sadiulhakim.npr.config.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import xyz.sadiulhakim.npr.util.AuthenticatedUserUtil;
+import xyz.sadiulhakim.npr.util.auth.AuthenticatedUserUtil;
 import xyz.sadiulhakim.npr.visitor.Visitor;
 import xyz.sadiulhakim.npr.visitor.VisitorRepo;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Component
-public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final VisitorRepo visitorRepo;
 

@@ -4,23 +4,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import xyz.sadiulhakim.npr.user.UserService;
-import xyz.sadiulhakim.npr.util.AuthenticatedUserUtil;
+import xyz.sadiulhakim.npr.properties.AppProperties;
+import xyz.sadiulhakim.npr.util.auth.AuthenticatedUserUtil;
 
 @Controller
 @RequestMapping("/dashboard")
-public class DashboardController {
+class DashboardController {
 
-    private final UserService userService;
+    private final AppProperties appProperties;
 
-    public DashboardController(UserService userService) {
-        this.userService = userService;
+    DashboardController(AppProperties appProperties) {
+        this.appProperties = appProperties;
     }
 
     @GetMapping("/page")
-    public String userPage(Model model) {
+    String userPage(Model model) {
         model.addAttribute("name", AuthenticatedUserUtil.getName());
-        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(userService.folder));
+        model.addAttribute("picture",AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
         return "dashboard";
     }
 }

@@ -1,9 +1,10 @@
-package xyz.sadiulhakim.npr.user;
+package xyz.sadiulhakim.npr.user.model;
 
 import jakarta.persistence.*;
+import org.springframework.modulith.NamedInterface;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import xyz.sadiulhakim.npr.role.Role;
+import xyz.sadiulhakim.npr.role.model.Role;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -11,7 +12,8 @@ import java.util.Collections;
 
 @Entity
 @Table(name = "application_user")
-public class User implements UserDetails {
+@NamedInterface("application-user")
+public class User {
 
     @Id
     @GeneratedValue
@@ -29,8 +31,7 @@ public class User implements UserDetails {
     @Column(length = 100)
     private String picture;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Role role;
+    private String role;
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
@@ -38,7 +39,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(long id, String fullName, String email, String password, String photo, Role role, LocalDateTime createdAt) {
+    public User(long id, String fullName, String email, String password, String photo, String role, LocalDateTime createdAt) {
         this.id = id;
         this.name = fullName;
         this.email = email;
@@ -48,22 +49,11 @@ public class User implements UserDetails {
         this.createdAt = createdAt;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(() -> getRole().getName());
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
     public String getPassword() {
         return password;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
@@ -103,7 +93,7 @@ public class User implements UserDetails {
         this.picture = photo;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 

@@ -1,4 +1,4 @@
-package xyz.sadiulhakim.npr.config;
+package xyz.sadiulhakim.npr.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,22 +6,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import xyz.sadiulhakim.npr.user.CustomUserDetailsService;
 
+//@EnableTransactionManagement(proxyTargetClass = true)
 @Configuration
-public class SecurityConfig {
+class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService,
+    SecurityConfig(CustomUserDetailsService userDetailsService,
                           CustomAuthenticationSuccessHandler authenticationSuccessHandler) {
         this.userDetailsService = userDetailsService;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
     @Bean
-    public SecurityFilterChain config(HttpSecurity http) throws Exception {
+    SecurityFilterChain config(HttpSecurity http) throws Exception {
 
         String[] publicApi = {
                 "/",
@@ -45,7 +45,8 @@ public class SecurityConfig {
                 "/roles/**",
                 "/brands/**",
                 "/categories/**",
-                "/products/**"
+                "/products/**",
+                "/actuator/**"
         };
         return http
                 .authorizeHttpRequests(auth -> auth.requestMatchers(publicApi).permitAll())
@@ -64,7 +65,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

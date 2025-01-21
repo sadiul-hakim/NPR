@@ -1,14 +1,14 @@
-package xyz.sadiulhakim.npr.util;
+package xyz.sadiulhakim.npr.util.auth;
 
+import org.springframework.modulith.NamedInterface;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import xyz.sadiulhakim.npr.user.User;
+import xyz.sadiulhakim.npr.config.security.CustomUserDetails;
+import xyz.sadiulhakim.npr.user.model.User;
 
-import java.util.Map;
-
+@NamedInterface("auth-user-util")
 public class AuthenticatedUserUtil {
     private AuthenticatedUserUtil() {
     }
@@ -34,7 +34,7 @@ public class AuthenticatedUserUtil {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof UsernamePasswordAuthenticationToken user) {
-            var principal = (User) user.getPrincipal();
+            var principal = (CustomUserDetails) user.getPrincipal();
             return principal.getName();
         }
         return "";
@@ -44,7 +44,7 @@ public class AuthenticatedUserUtil {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof UsernamePasswordAuthenticationToken user) {
-            var principal = (User) user.getPrincipal();
+            var principal = (CustomUserDetails) user.getPrincipal();
             return prefix + principal.getPicture();
         }
         return "";
