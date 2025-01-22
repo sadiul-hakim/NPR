@@ -1,5 +1,6 @@
 package xyz.sadiulhakim.npr.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +10,9 @@ import xyz.sadiulhakim.npr.util.auth.AuthenticatedUserUtil;
 class PageController {
 
     @GetMapping("/")
-    String home(Model model) {
+    String home(Model model, HttpSession session) {
+
+        session.setAttribute("site-name", "NPR");
         model.addAttribute("name", AuthenticatedUserUtil.get(AuthenticatedUserUtil.NAME));
         model.addAttribute("picture", AuthenticatedUserUtil.get(AuthenticatedUserUtil.PICTURE));
         return "index";

@@ -1,5 +1,12 @@
 # 1. Modulith
 
+Dependencies
+1. spring-modulith-events-jpa (for saving events)
+2. spring-modulith-actuator (for /actuator/modulith but requires spring-boot-starter-actuator)
+3. spring-modulith-starter-jpa (if jpa is used in project. If you add this there is no need of spring-modulith-starter-core)
+4. spring-modulith-observability
+
+
 Under the root package `xyz.sadiulhakim` all the packages are called module in Spring Modulith.
 And files directly under modules `not under any nested package` are called public api like: AppConfig
 under config module is called public Api. Any `public` class under any package under any module can not be accessed from
@@ -50,3 +57,12 @@ event from listener. And take actions.***
 2. Implement ApplicationListener or Use @EventListener,@TransactionalEventListener to capture an Event
    `When the task is Transactional we should use @TransactionalEventListener otherwise the event would not be listened to.`
 3. Use ApplicationEventPublisher to publish an Event
+
+# 3. Spring Session with Redis
+
+Dependency
+
+1. spring-boot-starter-data-redis
+2. spring-session-data-redis
+
+Use  `HttpSession` to access and Send session.
