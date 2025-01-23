@@ -37,5 +37,9 @@ public class NprApplication implements CommandLineRunner {
 //            userRepo.save(sadiulHakim);
 //        }
 //        LOGGER.info("user {} is created", sadiulHakim.getEmail());
+
+//        br.save(new Brand(0, "HP", "brand.svg"));
+//        br.save(new Brand(0, "Dell", "brand.svg"));
+//        br.save(new Brand(0, "Samsung", "brand.svg"));
     }
 }

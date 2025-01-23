@@ -1,17 +1,16 @@
-package xyz.sadiulhakim.npr.user;
+package xyz.sadiulhakim.npr.user.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.modulith.NamedInterface;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
 import xyz.sadiulhakim.npr.properties.AppProperties;
-import xyz.sadiulhakim.npr.user.model.User;
-import xyz.sadiulhakim.npr.user.model.UserRepo;
 import xyz.sadiulhakim.npr.util.DateUtil;
 import xyz.sadiulhakim.npr.util.FileUtil;
 import xyz.sadiulhakim.npr.util.PageUtil;
@@ -23,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@NamedInterface("user-service")
 public class UserService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
@@ -30,7 +30,7 @@ public class UserService {
     private final UserRepo userRepo;
     private final AppProperties appProperties;
 
-    public UserService(UserRepo userRepo, AppProperties appProperties) {
+    UserService(UserRepo userRepo, AppProperties appProperties) {
         this.userRepo = userRepo;
         this.appProperties = appProperties;
     }
@@ -61,15 +61,21 @@ public class UserService {
 
         try {
 
-            LOGGER.info("UserService.save :: saving/updating user {}", user.getRole());
+            LOGGER.info("UserService.save :: saving/updating user {}", user.getName());
 
             Optional<User> existingUser = getById(user.getId());
             if (existingUser.isEmpty()) {
-                String fileName = FileUtil.uploadFile(appProperties.getUserImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
-                if (fileName.isEmpty()) {
-                    user.setPicture("default.png");
+
+                if (Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
+                    user.setPicture(appProperties.getDefaultUserPhotoName());
                 } else {
-                    user.setPicture(fileName);
+
+                    String fileName = FileUtil.uploadFile(appProperties.getUserImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
+                    if (fileName.isEmpty()) {
+                        user.setPicture(appProperties.getDefaultUserPhotoName());
+                    } else {
+                        user.setPicture(fileName);
+                    }
                 }
 
                 user.setCreatedAt(LocalDateTime.now());

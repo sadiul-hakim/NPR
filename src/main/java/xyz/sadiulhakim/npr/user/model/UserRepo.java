@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface UserRepo extends JpaRepository<User, Long> {
+interface UserRepo extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     long countByRole(String role);

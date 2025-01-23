@@ -1,4 +1,4 @@
-package xyz.sadiulhakim.npr.brand;
+package xyz.sadiulhakim.npr.brand.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,19 +6,25 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.modulith.NamedInterface;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import xyz.sadiulhakim.npr.brand.event.BrandDeleteEvent;
-import xyz.sadiulhakim.npr.brand.model.Brand;
-import xyz.sadiulhakim.npr.brand.model.BrandRepository;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
 import xyz.sadiulhakim.npr.properties.AppProperties;
+import xyz.sadiulhakim.npr.user.model.User;
+import xyz.sadiulhakim.npr.util.FileUtil;
 import xyz.sadiulhakim.npr.util.PageUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@NamedInterface("brand-service")
 public class BrandService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(BrandService.class);
@@ -26,10 +32,59 @@ public class BrandService {
     private final AppProperties appProperties;
     private final ApplicationEventPublisher eventPublisher;
 
-    public BrandService(BrandRepository brandRepository, AppProperties appProperties, ApplicationEventPublisher eventPublisher) {
+    BrandService(BrandRepository brandRepository, AppProperties appProperties, ApplicationEventPublisher eventPublisher) {
         this.brandRepository = brandRepository;
         this.appProperties = appProperties;
         this.eventPublisher = eventPublisher;
+    }
+
+    public void save(Brand brand, MultipartFile photo) {
+
+        try {
+
+            LOGGER.info("BrandService.save :: saving/updating brand {}", brand.getName());
+
+            Optional<Brand> existingBrand = getById(brand.getId());
+            if (existingBrand.isEmpty()) {
+
+                if (Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
+                    brand.setPicture(appProperties.getDefaultBrandPhotoName());
+                } else {
+
+                    String fileName = FileUtil.uploadFile(appProperties.getBrandImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
+                    if (fileName.isEmpty()) {
+                        brand.setPicture(appProperties.getDefaultBrandPhotoName());
+                    } else {
+                        brand.setPicture(fileName);
+                    }
+                }
+
+                brandRepository.save(brand);
+                return;
+            }
+
+            Brand exBrand = existingBrand.get();
+            if (StringUtils.hasText(brand.getName())) {
+                exBrand.setName(brand.getName());
+            }
+
+            if (!Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
+                String fileName = FileUtil.uploadFile(appProperties.getBrandImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
+
+                if (StringUtils.hasText(fileName)) {
+                    boolean deleted = FileUtil.deleteFile(appProperties.getBrandImageFolder(), exBrand.getPicture());
+                    if (deleted) {
+                        LOGGER.info("BrandService.save :: File {} is deleted", exBrand.getPicture());
+                    }
+
+                    exBrand.setPicture(fileName);
+                }
+            }
+
+            brandRepository.save(exBrand);
+        } catch (Exception ex) {
+            LOGGER.error("BrandService.save :: {}", ex.getMessage());
+        }
     }
 
     public Optional<Brand> getById(long brandId) {
@@ -95,7 +150,20 @@ public class BrandService {
         brandRepository.delete(brand);
     }
 
+    @Transactional
     public void delete(long brandId) {
+
+        Optional<Brand> brand = brandRepository.findById(brandId);
+        brand.ifPresent(b -> {
+
+            if (!b.getPicture().equals(appProperties.getDefaultBrandPhotoName())) {
+                boolean deleted = FileUtil.deleteFile(appProperties.getBrandImageFolder(), b.getPicture());
+                if (deleted) {
+                    LOGGER.info("BrandService.delete :: deleted file {}", b.getPicture());
+                }
+            }
+        });
+
         eventPublisher.publishEvent(new BrandDeleteEvent(brandId));
     }
 }

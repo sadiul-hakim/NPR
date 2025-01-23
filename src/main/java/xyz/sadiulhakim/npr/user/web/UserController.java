@@ -1,6 +1,5 @@
 package xyz.sadiulhakim.npr.user.web;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import xyz.sadiulhakim.npr.pojo.TableUrlPojo;
 import xyz.sadiulhakim.npr.properties.AppProperties;
-import xyz.sadiulhakim.npr.role.RoleService;
-import xyz.sadiulhakim.npr.user.UserService;
+import xyz.sadiulhakim.npr.role.model.RoleService;
+import xyz.sadiulhakim.npr.user.model.UserService;
 import xyz.sadiulhakim.npr.user.model.User;
 import xyz.sadiulhakim.npr.util.auth.AuthenticatedUserUtil;
 

@@ -1,4 +1,4 @@
-package xyz.sadiulhakim.npr.role;
+package xyz.sadiulhakim.npr.role.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,14 +7,13 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.modulith.NamedInterface;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
 import xyz.sadiulhakim.npr.role.dto.RoleDTO;
 import xyz.sadiulhakim.npr.role.event.DeleteRoleEvent;
-import xyz.sadiulhakim.npr.role.model.Role;
-import xyz.sadiulhakim.npr.role.model.RoleRepo;
 import xyz.sadiulhakim.npr.util.PageUtil;
 
 import java.nio.charset.StandardCharsets;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@NamedInterface("role-service")
 public class RoleService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(RoleService.class);
@@ -32,7 +32,7 @@ public class RoleService {
     private final RoleRepo roleRepo;
     private final ApplicationEventPublisher eventPublisher;
 
-    public RoleService(RoleRepo roleRepo, ApplicationEventPublisher eventPublisher) {
+    RoleService(RoleRepo roleRepo, ApplicationEventPublisher eventPublisher) {
         this.roleRepo = roleRepo;
         this.eventPublisher = eventPublisher;
     }

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+<div class="container my-6">
+
+    <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> Brand Management</h1>
+    <div th:replace="~{fragments/table :: table(${brandResult},${table_url},~{::#table})}">
+        <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
+            <thead>
+            <tr>
+                <th>Picture</th>
+                <th>Name</th>
+                <th>
+                    <a class="button is-link" th:href="@{${table_url.csvUrl()}}">
+                        CSV
+                    </a>
+                    <a class="button is-link" th:href="@{${table_url.createPageUrl()}}">
+                        <i data-feather="plus"></i>
+                    </a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${brandResult.data}">
+                <td>
+                    <img th:src="@{'/picture/brand/'+${b.picture}}" th:alt="${b.name}" class="icon is-medium"/>
+                </td>
+                <td th:text="${b.name}"></td>
+                <td>
+                    <a th:href="@{'/brands/create_page?brandId={id}'(id=${b.id})}" class="button is-link">
+                        <i data-feather="edit"></i>
+                    </a>
+                    <a th:href="@{'/brands/delete/{id}'(id=${b.id})}" class="button is-danger">
+                        <i data-feather="trash-2"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

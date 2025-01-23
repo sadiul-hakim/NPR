@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import xyz.sadiulhakim.npr.pojo.TableUrlPojo;
 import xyz.sadiulhakim.npr.properties.AppProperties;
-import xyz.sadiulhakim.npr.role.RoleService;
+import xyz.sadiulhakim.npr.role.model.RoleService;
 import xyz.sadiulhakim.npr.role.model.Role;
 import xyz.sadiulhakim.npr.util.auth.AuthenticatedUserUtil;
 

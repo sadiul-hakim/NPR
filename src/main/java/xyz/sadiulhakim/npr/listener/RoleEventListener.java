@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
-import xyz.sadiulhakim.npr.role.RoleService;
+import xyz.sadiulhakim.npr.role.model.RoleService;
 import xyz.sadiulhakim.npr.role.event.DeleteRoleEvent;
-import xyz.sadiulhakim.npr.user.UserService;
+import xyz.sadiulhakim.npr.user.model.UserService;
 
 @Component
 class RoleEventListener {

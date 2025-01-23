@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
-import xyz.sadiulhakim.npr.brand.BrandService;
+import xyz.sadiulhakim.npr.brand.model.BrandService;
 import xyz.sadiulhakim.npr.brand.event.BrandDeleteEvent;
 
 @Component
