@@ -2,13 +2,8 @@ package xyz.sadiulhakim.npr.user.model;
 
 import jakarta.persistence.*;
 import org.springframework.modulith.NamedInterface;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import xyz.sadiulhakim.npr.role.model.Role;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
 
 @Entity
 @Table(name = "application_user")

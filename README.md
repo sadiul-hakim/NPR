@@ -1,11 +1,12 @@
 # 1. Modulith
 
 Dependencies
+
 1. spring-modulith-events-jpa (for saving events)
 2. spring-modulith-actuator (for /actuator/modulith but requires spring-boot-starter-actuator)
-3. spring-modulith-starter-jpa (if jpa is used in project. If you add this there is no need of spring-modulith-starter-core)
+3. spring-modulith-starter-jpa (if jpa is used in project. If you add this there is no need of
+   spring-modulith-starter-core)
 4. spring-modulith-observability
-
 
 Under the root package `xyz.sadiulhakim` all the packages are called module in Spring Modulith.
 And files directly under modules `not under any nested package` are called public api like: AppConfig
@@ -44,6 +45,30 @@ You can use `@Async` annotation to make listening Asynchronous.
 publishing method or class should be annotated with `@Transactional`.
 Same to `@ApplicationModuleListener` as it is annotated with
 `@TransactionalEventListener , @Async and @Transactional(propagation = Propagation.REQUIRES_NE)`***.
+
+#### Example of a dependency cycle
+
+Suppose we have modules like this
+
+```
+user - module
+   web (package)
+      UserController (class)
+   model (package)
+      UserService (class)
+
+role - module
+   RoleEventListener (class)
+   model (package)
+      RoleService (class)
+   web (package)
+      RoleController
+```
+
+UserController has dependency of RoleService `which is public api (directly under module)` which belongs to role module
+and RoleEventListener `which is a public api` has dependency of UserService which belongs to user module.
+Though dependent classes are public api still there is a cycle. It is all about module, does not matter if the class is
+a public api or not.
 
 # 2. Spring Events (Observer Pattern, One Subject multiple Observer)
 
