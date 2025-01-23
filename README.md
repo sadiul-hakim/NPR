@@ -65,4 +65,5 @@ Dependency
 1. spring-boot-starter-data-redis
 2. spring-session-data-redis
 
-Use  `HttpSession` to access and Send session.
+In Java, use  `HttpSession` to access and Send session.
+In Thymeleaf use `${session}` to access session.
