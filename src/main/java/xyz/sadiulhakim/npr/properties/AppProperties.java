@@ -21,6 +21,12 @@ public class AppProperties {
     @Value("${default.brand.image.name:''}")
     private String defaultBrandPhotoName;
 
+    @Value("${default.category.image.folder:''}")
+    private String categoryImageFolder;
+
+    @Value("${default.category.image.name:''}")
+    private String defaultCategoryPhotoName;
+
     public int getPaginationSize() {
         return paginationSize;
     }
@@ -39,5 +45,13 @@ public class AppProperties {
 
     public String getDefaultBrandPhotoName() {
         return defaultBrandPhotoName;
+    }
+
+    public String getCategoryImageFolder() {
+        return categoryImageFolder;
+    }
+
+    public String getDefaultCategoryPhotoName() {
+        return defaultCategoryPhotoName;
     }
 }

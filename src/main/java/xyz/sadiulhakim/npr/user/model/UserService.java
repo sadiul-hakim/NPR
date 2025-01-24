@@ -99,7 +99,7 @@ public class UserService {
             if (!Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
                 String fileName = FileUtil.uploadFile(appProperties.getUserImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
 
-                if (StringUtils.hasText(fileName)) {
+                if (StringUtils.hasText(fileName) && !exUser.getPicture().equals(appProperties.getDefaultUserPhotoName())) {
                     boolean deleted = FileUtil.deleteFile(appProperties.getUserImageFolder(), exUser.getPicture());
                     if (deleted) {
                         LOGGER.info("UserService.save :: File {} is deleted", exUser.getPicture());

@@ -28,7 +28,7 @@ class EventCleanupIntegrationConfig {
                     Map<String, Object> params = new HashMap<>();
                     params.put("cutoffDate", LocalDateTime.now().minusDays(2));
                     return new GenericMessage<>(params);
-                }, e -> e.poller(p -> p.cron("0 * * * * *"))) // Every hour
+                }, e -> e.poller(p -> p.cron("0 0 * * * *"))) // Every hour
                 .handle(this::deleteOldEventPublications)
                 .get();
     }

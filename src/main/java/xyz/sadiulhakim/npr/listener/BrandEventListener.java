@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
-import xyz.sadiulhakim.npr.brand.model.BrandService;
 import xyz.sadiulhakim.npr.brand.event.BrandDeleteEvent;
+import xyz.sadiulhakim.npr.brand.model.BrandService;
 
 @Component
 class BrandEventListener {
@@ -21,9 +21,9 @@ class BrandEventListener {
     @ApplicationModuleListener
     void brandDeleteEvent(BrandDeleteEvent event) {
 
-        var brand = brandService.getById(event.brandId());
+        var brand = brandService.getByName(event.name());
         brand.ifPresent(b -> {
-            LOGGER.info("BrandEventListener :: deleting brand {}", event.brandId());
+            LOGGER.info("BrandEventListener :: deleting brand {}", event.name());
             brandService.forceDelete(b);
         });
     }

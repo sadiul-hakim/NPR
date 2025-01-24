@@ -3,13 +3,14 @@ package xyz.sadiulhakim.npr.event;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Entity
 @Table(name = "event_publication")
 public class EventPublication {
 
     @Id
-    private String id;
+    private UUID id;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp completionDate;
@@ -29,7 +30,7 @@ public class EventPublication {
     public EventPublication() {
     }
 
-    public EventPublication(String id, Timestamp completionDate, String eventType, String listenerId, Timestamp publicationDate, String serializedEvent) {
+    public EventPublication(UUID id, Timestamp completionDate, String eventType, String listenerId, Timestamp publicationDate, String serializedEvent) {
         this.id = id;
         this.completionDate = completionDate;
         this.eventType = eventType;
@@ -38,11 +39,11 @@ public class EventPublication {
         this.serializedEvent = serializedEvent;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

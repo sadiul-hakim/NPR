@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import xyz.sadiulhakim.npr.brand.event.BrandDeleteEvent;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
 import xyz.sadiulhakim.npr.properties.AppProperties;
-import xyz.sadiulhakim.npr.user.model.User;
 import xyz.sadiulhakim.npr.util.FileUtil;
 import xyz.sadiulhakim.npr.util.PageUtil;
 
@@ -71,7 +70,7 @@ public class BrandService {
             if (!Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
                 String fileName = FileUtil.uploadFile(appProperties.getBrandImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
 
-                if (StringUtils.hasText(fileName)) {
+                if (StringUtils.hasText(fileName) && !exBrand.getPicture().equals(appProperties.getDefaultBrandPhotoName())) {
                     boolean deleted = FileUtil.deleteFile(appProperties.getBrandImageFolder(), exBrand.getPicture());
                     if (deleted) {
                         LOGGER.info("BrandService.save :: File {} is deleted", exBrand.getPicture());
@@ -101,6 +100,20 @@ public class BrandService {
         return brand;
     }
 
+    public Optional<Brand> getByName(String name) {
+
+        if (!StringUtils.hasText(name)) {
+            return Optional.empty();
+        }
+
+        Optional<Brand> brand = brandRepository.findByName(name);
+        if (brand.isEmpty()) {
+            LOGGER.error("BrandService.getByName :: Could not find brand {}", name);
+        }
+
+        return brand;
+    }
+
     public PaginationResult findAllPaginated(int pageNumber) {
         return findAllPaginatedWithSize(pageNumber, appProperties.getPaginationSize());
     }
@@ -114,7 +127,7 @@ public class BrandService {
 
     public PaginationResult search(String text, int pageNumber) {
 
-        LOGGER.info("BrandService.searchUser :: search user by text : {}", text);
+        LOGGER.info("BrandService.searchUser :: search brand by text : {}", text);
         Page<Brand> page = brandRepository.findAllByNameContaining(text, PageRequest.of(pageNumber, 200));
         return PageUtil.prepareResult(page);
     }
@@ -162,8 +175,8 @@ public class BrandService {
                     LOGGER.info("BrandService.delete :: deleted file {}", b.getPicture());
                 }
             }
+            eventPublisher.publishEvent(new BrandDeleteEvent(b.getName()));
         });
 
-        eventPublisher.publishEvent(new BrandDeleteEvent(brandId));
     }
 }
