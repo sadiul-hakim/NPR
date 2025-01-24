@@ -103,6 +103,12 @@
             <scope>runtime</scope>
         </dependency>
         <!--    Modulith Ends    -->
+        <!--    Integration Starts    -->
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-jpa</artifactId>
+        </dependency>
+        <!--    Integration Ends    -->
         <!--   Testing Dependencies  Start   -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
