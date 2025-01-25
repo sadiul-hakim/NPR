@@ -109,6 +109,12 @@
             <artifactId>spring-integration-jpa</artifactId>
         </dependency>
         <!--    Integration Ends    -->
+        <!--    Cache Starts    -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <!--    Cache Ends    -->
         <!--   Testing Dependencies  Start   -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

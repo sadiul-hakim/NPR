@@ -95,6 +95,9 @@ In Thymeleaf use `${session}` to access session.
 
 # 4. Spring Integration
 
+Dependency
+1. spring-integration-jpa
+
 Spring Integration is an extension of the Spring framework that provides a lightweight and flexible solution for
 building
 enterprise integration solutions. It supports messaging-based architectures to connect different systems, applications,
