@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.modulith.NamedInterface;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,10 +30,12 @@ public class UserService {
 
     private final UserRepo userRepo;
     private final AppProperties appProperties;
+    private final PasswordEncoder passwordEncoder;
 
-    UserService(UserRepo userRepo, AppProperties appProperties) {
+    UserService(UserRepo userRepo, AppProperties appProperties, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.appProperties = appProperties;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User findByEmail(String email) {
@@ -79,6 +82,8 @@ public class UserService {
                 }
 
                 user.setCreatedAt(LocalDateTime.now());
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+
                 userRepo.save(user);
                 return;
             }

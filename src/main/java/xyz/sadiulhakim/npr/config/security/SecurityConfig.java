@@ -62,9 +62,4 @@ class SecurityConfig {
                 .logout(logout -> logout.logoutUrl("/logout").permitAll().logoutSuccessUrl("/"))
                 .build();
     }
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

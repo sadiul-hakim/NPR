@@ -8,7 +8,7 @@ import org.springframework.modulith.docs.Documenter;
 @SpringBootTest
 class NprApplicationTests {
 
-    static ApplicationModules modules = ApplicationModules.of(NprApplication.class);
+    static ApplicationModules modules = ApplicationModules.of(Application.class);
 
     @Test
     void contextLoads() {

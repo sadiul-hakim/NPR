@@ -9,7 +9,7 @@ public class Visitor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(length = 55, nullable = false)
+    @Column(length = 100, nullable = false)
     private String name;
 
     @Column(length = 70, nullable = false, unique = true)

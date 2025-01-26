@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @SpringBootApplication
 @EnableWebSecurity
-public class NprApplication implements CommandLineRunner {
+public class Application implements CommandLineRunner {
 
 //    private final RoleRepo roleRepo;
 //    private final UserRepo userRepo;
@@ -21,7 +21,7 @@ public class NprApplication implements CommandLineRunner {
 //    }
 
     public static void main(String[] args) {
-        SpringApplication.run(NprApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Override
