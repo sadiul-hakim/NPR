@@ -1,4 +1,4 @@
-package xyz.sadiulhakim.npr.visitor;
+package xyz.sadiulhakim.npr.visitor.model;
 
 import jakarta.persistence.*;
 
