@@ -1,30 +1,64 @@
 package xyz.sadiulhakim.npr.listener;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
-import xyz.sadiulhakim.npr.brand.event.BrandDeleteEvent;
+import xyz.sadiulhakim.npr.brand.event.BrandEvent;
 import xyz.sadiulhakim.npr.brand.model.BrandService;
+import xyz.sadiulhakim.npr.event.EntityEventType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 class BrandEventListener {
 
     private final Logger LOGGER = LoggerFactory.getLogger(BrandEventListener.class);
 
-    private final BrandService brandService;
+    @Value("${application.broadcaster.channel:''}")
+    private String broadcasterChannel;
 
-    public BrandEventListener(BrandService brandService) {
+    private final BrandService brandService;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final ObjectMapper mapper;
+
+    public BrandEventListener(BrandService brandService, SimpMessagingTemplate messagingTemplate, ObjectMapper mapper) {
         this.brandService = brandService;
+        this.messagingTemplate = messagingTemplate;
+        this.mapper = mapper;
     }
 
     @ApplicationModuleListener
-    void brandDeleteEvent(BrandDeleteEvent event) {
+    void brandDeleteEvent(BrandEvent event) {
 
+        if (event.type().equals(EntityEventType.DELETED)) {
+            deleteBrand(event);
+        } else if (event.type().equals(EntityEventType.CREATED)) {
+            sendNotification(event);
+        }
+    }
+
+    void deleteBrand(BrandEvent event) {
         var brand = brandService.getByName(event.name());
         brand.ifPresent(b -> {
             LOGGER.info("BrandEventListener :: deleting brand {}", event.name());
             brandService.forceDelete(b);
         });
     }
+
+    void sendNotification(BrandEvent event) {
+
+        try {
+            Map<String, String> msg = new HashMap<>();
+            msg.put("message", "New brand " + event.name() + " is now available!");
+            messagingTemplate.convertAndSend(broadcasterChannel, mapper.writeValueAsString(msg));
+        } catch (Exception ex) {
+            LOGGER.info("BrandEventListener.sendNotification :: could not send notification on band create!");
+        }
+    }
+
 }

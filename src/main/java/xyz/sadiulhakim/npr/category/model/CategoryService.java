@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.sadiulhakim.npr.category.event.CategoryDeleteEvent;
+import xyz.sadiulhakim.npr.category.event.CategoryEvent;
+import xyz.sadiulhakim.npr.event.EntityEventType;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
 import xyz.sadiulhakim.npr.properties.AppProperties;
 import xyz.sadiulhakim.npr.util.FileUtil;
@@ -38,6 +39,7 @@ public class CategoryService {
         this.eventPublisher = eventPublisher;
     }
 
+    @Transactional
     public void save(Category category, MultipartFile photo) {
 
         try {
@@ -60,10 +62,18 @@ public class CategoryService {
                 }
 
                 categoryRepository.save(category);
+                eventPublisher.publishEvent(new CategoryEvent(category.getName(), EntityEventType.CREATED));
                 return;
             }
 
-            Category exCategory = existingCategory.get();
+            update(existingCategory.get(), category, photo);
+        } catch (Exception ex) {
+            LOGGER.error("CategoryService.save :: {}", ex.getMessage());
+        }
+    }
+
+    private void update(Category exCategory, Category category, MultipartFile photo) {
+        try {
             if (StringUtils.hasText(category.getName())) {
                 exCategory.setName(category.getName());
             }
@@ -86,7 +96,7 @@ public class CategoryService {
 
             categoryRepository.save(exCategory);
         } catch (Exception ex) {
-            LOGGER.error("CategoryService.save :: {}", ex.getMessage());
+            LOGGER.error("CategoryService.update :: {}", ex.getMessage());
         }
     }
 
@@ -179,7 +189,7 @@ public class CategoryService {
                     LOGGER.info("CategoryService.delete :: deleted file {}", c.getPicture());
                 }
             }
-            eventPublisher.publishEvent(new CategoryDeleteEvent(c.getName()));
+            eventPublisher.publishEvent(new CategoryEvent(c.getName(), EntityEventType.DELETED));
         });
 
     }

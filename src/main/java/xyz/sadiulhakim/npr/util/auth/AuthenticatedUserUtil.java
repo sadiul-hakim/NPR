@@ -6,7 +6,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import xyz.sadiulhakim.npr.config.security.CustomUserDetails;
-import xyz.sadiulhakim.npr.user.model.User;
 
 @NamedInterface("auth-user-util")
 public class AuthenticatedUserUtil {
@@ -16,6 +15,7 @@ public class AuthenticatedUserUtil {
     public final static String NAME = "name";
     public final static String VERIFIED = "email_verified";
     public final static String ISS = "iss";
+    public final static String SUB = "sub";
     public final static String NONCE = "nonce";
     public final static String PICTURE = "picture";
     public final static String EMAIL = "email";

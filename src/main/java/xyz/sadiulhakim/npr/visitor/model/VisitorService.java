@@ -44,6 +44,7 @@ public class VisitorService {
         visitor.setName(user.getAttribute(AuthenticatedUserUtil.NAME));
         visitor.setEmail(user.getAttribute(AuthenticatedUserUtil.EMAIL));
         visitor.setPicture(user.getAttribute(AuthenticatedUserUtil.PICTURE));
+        visitor.setSub(user.getAttribute(AuthenticatedUserUtil.SUB));
         return visitor;
     }
 
