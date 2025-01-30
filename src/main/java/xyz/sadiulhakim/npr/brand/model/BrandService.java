@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.sadiulhakim.npr.brand.event.BrandDeleteEvent;
+import xyz.sadiulhakim.npr.brand.event.BrandEvent;
+import xyz.sadiulhakim.npr.event.EntityEventType;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
 import xyz.sadiulhakim.npr.properties.AppProperties;
 import xyz.sadiulhakim.npr.util.FileUtil;
@@ -37,6 +38,7 @@ public class BrandService {
         this.eventPublisher = eventPublisher;
     }
 
+    @Transactional
     public void save(Brand brand, MultipartFile photo) {
 
         try {
@@ -59,10 +61,19 @@ public class BrandService {
                 }
 
                 brandRepository.save(brand);
+                eventPublisher.publishEvent(new BrandEvent(brand.getName(), EntityEventType.CREATED));
                 return;
             }
 
-            Brand exBrand = existingBrand.get();
+            updateBrand(existingBrand.get(), brand, photo);
+        } catch (Exception ex) {
+            LOGGER.error("BrandService.save :: {}", ex.getMessage());
+        }
+    }
+
+    private void updateBrand(Brand exBrand, Brand brand, MultipartFile photo) {
+
+        try {
             if (StringUtils.hasText(brand.getName())) {
                 exBrand.setName(brand.getName());
             }
@@ -82,7 +93,7 @@ public class BrandService {
 
             brandRepository.save(exBrand);
         } catch (Exception ex) {
-            LOGGER.error("BrandService.save :: {}", ex.getMessage());
+            LOGGER.error("BrandService.updateBrand :: {}", ex.getMessage());
         }
     }
 
@@ -175,7 +186,7 @@ public class BrandService {
                     LOGGER.info("BrandService.delete :: deleted file {}", b.getPicture());
                 }
             }
-            eventPublisher.publishEvent(new BrandDeleteEvent(b.getName()));
+            eventPublisher.publishEvent(new BrandEvent(b.getName(), EntityEventType.DELETED));
         });
 
     }

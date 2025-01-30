@@ -14,7 +14,6 @@ import java.io.IOException;
 class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final VisitorService visitorService;
-
     public CustomAuthenticationSuccessHandler(VisitorService visitorService) {
         this.visitorService = visitorService;
     }
