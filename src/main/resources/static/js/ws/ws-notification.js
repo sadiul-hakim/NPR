@@ -1,24 +1,28 @@
 const username = document.getElementById("username");
+const bodyTag = document.getElementsByTagName("body")[0]; // Get the first body element
+
+// Create notification container
+const notificationContainer = document.createElement("div");
+notificationContainer.classList.add("notification-container");
+bodyTag.appendChild(notificationContainer);
 
 document.addEventListener("DOMContentLoaded", function () {
     let wsId = username.innerText;
 
-    // Try to set up WebSocket connection with the handshake
+    // Set up WebSocket connection
     let socket = new SockJS('/npr-ws');
-
-    // Create a new StompClient object with the WebSocket endpoint
     const stompClient = Stomp.over(socket);
 
-    // Start the STOMP communications, provide a callback for when the CONNECT frame arrives.
+    // Start the STOMP communications
     stompClient.connect(
         {'ws-id': wsId},
         function (frame) {
             stompClient.subscribe('/user/topic/notification', function (message) {
-                showMessage(JSON.parse(message.body).message);
+                showNotification(JSON.parse(message.body).title, JSON.parse(message.body).message, "is-info");
             });
 
             stompClient.subscribe("/topic/nprChannel", function (message) {
-                showMessage(JSON.parse(message.body).message)
+                showNotification(JSON.parse(message.body).title, JSON.parse(message.body).message, "is-success");
             });
         },
         function (err) {
@@ -27,10 +31,48 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 });
 
+function showNotification(title, msg, type = "is-info") {
+    let notification = createTag("div", "", ["notification", type]);
+    let deleteBtn = createTag("button", "", ["delete"]);
+
+    let messageDiv = createTag("div", "", []);
+    let messageTag = createTag("span", msg, ["has-text-light", "is-size-7"]);
+    let titleTag = createTag("h4", title, ["has-text-weight-bold", "has-text-warning"]);
+
+    messageDiv.append(titleTag);
+    messageDiv.append(messageTag);
+
+    notification.append(deleteBtn);
+    notification.append(messageDiv);
+
+    // Append to floating notification container
+    notificationContainer.appendChild(notification);
+
+    // Remove notification on "X" click
+    deleteBtn.addEventListener("click", () => {
+        hideNotification(notification);
+    });
+
+    // Auto-dismiss after 3 seconds
+    setTimeout(() => hideNotification(notification), 30000);
+}
+
+function hideNotification(notification) {
+    notification.classList.add("fade-out");
+    setTimeout(() => notification.remove(), 800);
+}
+
 function showMessage(message) {
-    console.log("Message = " + message)
+    console.log("Message = " + message);
 }
 
 function showInfo(message) {
-    console.log(message)
+    console.log(message);
+}
+
+function createTag(name, innerText, classList) {
+    let tag = document.createElement(name);
+    classList.forEach(c => tag.classList.add(c));
+    tag.innerText = innerText;
+    return tag;
 }

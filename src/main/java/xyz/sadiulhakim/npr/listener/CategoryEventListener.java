@@ -10,7 +10,10 @@ import org.springframework.stereotype.Component;
 import xyz.sadiulhakim.npr.category.event.CategoryEvent;
 import xyz.sadiulhakim.npr.category.model.CategoryService;
 import xyz.sadiulhakim.npr.event.EntityEventType;
+import xyz.sadiulhakim.npr.notification.Notification;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,9 +47,11 @@ class CategoryEventListener {
     void sendNotification(CategoryEvent event) {
 
         try {
-            Map<String, String> msg = new HashMap<>();
-            msg.put("message", "New category " + event.name() + " is now available!");
-            messagingTemplate.convertAndSend(broadcasterChannel, mapper.writeValueAsString(msg));
+
+            String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+            Notification notification = new Notification("Category", "New category " + event.name() + " is now available!",
+                    localDateTime, false);
+            messagingTemplate.convertAndSend(broadcasterChannel, mapper.writeValueAsString(notification));
         } catch (Exception ex) {
             LOGGER.info("CategoryEventListener.sendNotification :: could not send notification on band create!");
         }

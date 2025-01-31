@@ -10,7 +10,10 @@ import org.springframework.stereotype.Component;
 import xyz.sadiulhakim.npr.brand.event.BrandEvent;
 import xyz.sadiulhakim.npr.brand.model.BrandService;
 import xyz.sadiulhakim.npr.event.EntityEventType;
+import xyz.sadiulhakim.npr.notification.Notification;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,9 +56,10 @@ class BrandEventListener {
     void sendNotification(BrandEvent event) {
 
         try {
-            Map<String, String> msg = new HashMap<>();
-            msg.put("message", "New brand " + event.name() + " is now available!");
-            messagingTemplate.convertAndSend(broadcasterChannel, mapper.writeValueAsString(msg));
+            String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+            Notification notification = new Notification("Brand", "New brand " + event.name() + " is now available!",
+                    localDateTime, false);
+            messagingTemplate.convertAndSend(broadcasterChannel, mapper.writeValueAsString(notification));
         } catch (Exception ex) {
             LOGGER.info("BrandEventListener.sendNotification :: could not send notification on band create!");
         }

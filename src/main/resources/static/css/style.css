@@ -69,3 +69,26 @@ body {
 .shadow {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+.notification-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notification {
+    min-width: 250px;
+    opacity: 1;
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    transform: translateX(0);
+    background-color: rgba(10, 90, 155, 0.63) !important;
+}
+
+.notification.fade-out {
+    opacity: 0;
+    transform: translateX(50px);
+}
