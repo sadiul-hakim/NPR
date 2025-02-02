@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+<div class="container my-6">
+    <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> Visitor Management</h1>
+    <div th:replace="~{fragments/table :: table(${visitorResult},${table_url},~{::#table})}">
+        <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
+            <thead>
+            <tr>
+                <th>Picture</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Sub</th>
+                <th>Last Visited</th>
+                <th>
+                    <a class="button is-link" th:href="@{${table_url.csvUrl()}}">
+                        CSV
+                    </a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="v : ${visitorResult.data}">
+                <td>
+                    <img th:src="${v.picture}" th:alt="${v.name}" class="icon is-large"/>
+                </td>
+                <td th:text="${v.name}"></td>
+                <td th:text="${v.email}"></td>
+                <td th:text="${v.sub}"></td>
+                <td th:text="${#temporals.format(v.lastVisited, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                <td>
+                    <a th:href="@{'/visitors/delete/{id}'(id=${v.id})}" class="button is-danger">
+                        <i data-feather="trash-2"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

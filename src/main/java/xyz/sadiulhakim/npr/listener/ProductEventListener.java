@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
-import xyz.sadiulhakim.npr.brand.event.BrandEvent;
 import xyz.sadiulhakim.npr.event.EntityEventType;
 import xyz.sadiulhakim.npr.notification.Notification;
 import xyz.sadiulhakim.npr.product.event.ProductEvent;

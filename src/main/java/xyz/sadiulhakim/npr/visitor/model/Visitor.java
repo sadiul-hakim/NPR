@@ -2,6 +2,8 @@ package xyz.sadiulhakim.npr.visitor.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class Visitor {
 
@@ -21,15 +23,27 @@ public class Visitor {
     @Column(length = 200)
     private String picture;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime lastVisited;
+
     public Visitor() {
     }
 
-    public Visitor(long id, String name, String email, String picture, String sub) {
+    public Visitor(long id, String name, String email, String picture, String sub, LocalDateTime lastVisited) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.sub = sub;
         this.picture = picture;
+        this.lastVisited = lastVisited;
+    }
+
+    public LocalDateTime getLastVisited() {
+        return lastVisited;
+    }
+
+    public void setLastVisited(LocalDateTime lastVisited) {
+        this.lastVisited = lastVisited;
     }
 
     public long getId() {

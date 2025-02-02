@@ -45,6 +45,7 @@ class SecurityConfig {
                 "/brands/**",
                 "/categories/**",
                 "/products/**",
+                "/visitors/**",
                 "/actuator/**"
         };
         return http
