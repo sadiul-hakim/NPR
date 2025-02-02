@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import xyz.sadiulhakim.npr.pojo.TableUrlPojo;
 import xyz.sadiulhakim.npr.properties.AppProperties;
 import xyz.sadiulhakim.npr.role.model.RoleService;
+import xyz.sadiulhakim.npr.user.model.PasswordDTO;
 import xyz.sadiulhakim.npr.user.model.UserService;
 import xyz.sadiulhakim.npr.user.model.User;
 import xyz.sadiulhakim.npr.util.auth.AuthenticatedUserUtil;
@@ -80,6 +81,29 @@ class UserController {
         }
 
         return "user/create_page";
+    }
+
+    @GetMapping("/change_password_page")
+    String changePasswordPage(@RequestParam(defaultValue = "0") long userId, Model model) {
+
+        model.addAttribute("name", AuthenticatedUserUtil.getName());
+        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
+        model.addAttribute("userId", userId);
+        model.addAttribute("passwordDto", new PasswordDTO());
+
+        return "user/change_password";
+    }
+
+    @PostMapping("/change_password")
+    String changePassword(@ModelAttribute PasswordDTO passwordDTO,
+                          @RequestParam long userId,
+                          RedirectAttributes model) {
+
+        String message = userService.changePassword(passwordDTO, userId);
+        model.addFlashAttribute("message", message);
+        model.addFlashAttribute("hasMessage", true);
+
+        return "redirect:/users/change_password_page";
     }
 
     @GetMapping("/delete/{id}")

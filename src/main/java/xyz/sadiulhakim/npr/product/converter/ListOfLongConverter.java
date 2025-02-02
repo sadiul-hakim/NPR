@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
-@Converter
+@Converter(autoApply = true)
 public class ListOfLongConverter implements AttributeConverter<List<Long>, String> {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();

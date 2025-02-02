@@ -139,6 +139,10 @@ public class CategoryService {
         return PageUtil.prepareResult(page);
     }
 
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
+    }
+
     public PaginationResult search(String text, int pageNumber) {
 
         LOGGER.info("CategoryService.searchUser :: search category by text : {}", text);

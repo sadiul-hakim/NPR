@@ -1,6 +1,5 @@
 package xyz.sadiulhakim.npr.product.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +66,7 @@ public class ProductService {
                     }
                 }
 
+                product.getDetails().put("name", product.getName());
                 productRepository.save(product);
                 return;
             }
@@ -95,7 +95,7 @@ public class ProductService {
             exProduct.setDescription(product.getDescription());
         }
 
-        // Updating of Product Details , Rating and Reviews would be handled somewhere else.
+        // Updating of Product QRCode , Details , Rating and Reviews would be handled somewhere else.
 
         if (!Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
             String fileName = FileUtil.uploadFile(appProperties.getProductImageFolder(), photo.getOriginalFilename(),
@@ -165,36 +165,42 @@ public class ProductService {
         return PageUtil.prepareResult(page);
     }
 
-    public byte[] getCsvData() throws JsonProcessingException {
+    public byte[] getCsvData() {
         final int batchSize = 500;
         int batchNumber = 0;
         StringBuilder sb = new StringBuilder("Id,Name,Brand,Category,Picture,QRCode,Description,Details,Rating\n");
-        Page<Product> page;
-        do {
-            page = productRepository.findAll(PageRequest.of(batchNumber, batchSize));
-            List<Product> products = page.getContent();
-            for (Product product : products) {
-                sb.append(product.getId())
-                        .append(",")
-                        .append(product.getName())
-                        .append(",")
-                        .append(product.getBrand())
-                        .append(",")
-                        .append(product.getCategory())
-                        .append(",")
-                        .append(product.getPicture())
-                        .append(",")
-                        .append(product.getQrCode())
-                        .append(",")
-                        .append(product.getDescription())
-                        .append(",")
-                        .append(mapper.writeValueAsString(product.getDetails()))
-                        .append(",")
-                        .append(product.getRating())
-                        .append("\n");
-            }
-            batchNumber++;
-        } while (page.hasNext());
+
+        try {
+
+            Page<Product> page;
+            do {
+                page = productRepository.findAll(PageRequest.of(batchNumber, batchSize));
+                List<Product> products = page.getContent();
+                for (Product product : products) {
+                    sb.append(product.getId())
+                            .append(",")
+                            .append(product.getName())
+                            .append(",")
+                            .append(product.getBrand())
+                            .append(",")
+                            .append(product.getCategory())
+                            .append(",")
+                            .append(product.getPicture())
+                            .append(",")
+                            .append(product.getQrCode())
+                            .append(",")
+                            .append(product.getDescription())
+                            .append(",")
+                            .append(mapper.writeValueAsString(product.getDetails()))
+                            .append(",")
+                            .append(product.getRating())
+                            .append("\n");
+                }
+                batchNumber++;
+            } while (page.hasNext());
+        } catch (Exception ex) {
+            LOGGER.info("ProductService.getCSVData :: error occurred {}", ex.getMessage());
+        }
 
         return sb.toString().getBytes(StandardCharsets.UTF_8);
     }

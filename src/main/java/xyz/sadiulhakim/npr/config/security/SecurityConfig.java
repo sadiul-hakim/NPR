@@ -14,7 +14,7 @@ class SecurityConfig {
     private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
     SecurityConfig(CustomUserDetailsService userDetailsService,
-                          CustomAuthenticationSuccessHandler authenticationSuccessHandler) {
+                   CustomAuthenticationSuccessHandler authenticationSuccessHandler) {
         this.userDetailsService = userDetailsService;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
@@ -58,8 +58,14 @@ class SecurityConfig {
                         .loginPage("/admin_login")
                         .defaultSuccessUrl("/dashboard/page", true)
                         .loginProcessingUrl("/login")
-                        .failureUrl("/login?error=true").permitAll())
-                .logout(logout -> logout.logoutUrl("/logout").permitAll().logoutSuccessUrl("/"))
+                        .failureUrl("/login?error=true").permitAll()
+                )
+                .logout(logout -> logout.logoutUrl("/logout")
+                        .permitAll()
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)  // Invalidate session
+                        .deleteCookies("JSESSIONID")
+                )
                 .build();
     }
 }

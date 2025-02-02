@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.Map;
 
-@Converter
+@Converter(autoApply = true)
 public class MapOfStringAndObjectConverter implements AttributeConverter<Map<String, Object>, String> {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();

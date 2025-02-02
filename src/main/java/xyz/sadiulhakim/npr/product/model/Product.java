@@ -27,17 +27,18 @@ public class Product {
 
     @Column(length = 150)
     private String qrCode;
+
     @Column(length = 250)
     private String description;
 
 
-    @Column(columnDefinition = "JSON")
+    @Column(columnDefinition = "jsonb")
     @Convert(converter = MapOfStringAndObjectConverter.class)
     private Map<String, Object> details = new HashMap<>();
 
     private double rating;
 
-    @Column(columnDefinition = "JSON")
+    @Column(columnDefinition = "jsonb")
     @Convert(converter = ListOfLongConverter.class)
     private List<Long> reviews = new ArrayList<>();
 

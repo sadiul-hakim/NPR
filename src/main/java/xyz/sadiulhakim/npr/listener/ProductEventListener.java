@@ -10,13 +10,14 @@ import org.springframework.stereotype.Component;
 import xyz.sadiulhakim.npr.brand.event.BrandEvent;
 import xyz.sadiulhakim.npr.event.EntityEventType;
 import xyz.sadiulhakim.npr.notification.Notification;
+import xyz.sadiulhakim.npr.product.event.ProductEvent;
 import xyz.sadiulhakim.npr.product.model.ProductService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class ProductEventListener {
+class ProductEventListener {
 
     private final Logger LOGGER = LoggerFactory.getLogger(ProductEventListener.class);
 
@@ -27,14 +28,14 @@ public class ProductEventListener {
     private final SimpMessagingTemplate messagingTemplate;
     private final ObjectMapper mapper;
 
-    public ProductEventListener(ProductService productService, SimpMessagingTemplate messagingTemplate, ObjectMapper mapper) {
+    ProductEventListener(ProductService productService, SimpMessagingTemplate messagingTemplate, ObjectMapper mapper) {
         this.productService = productService;
         this.messagingTemplate = messagingTemplate;
         this.mapper = mapper;
     }
 
     @ApplicationModuleListener
-    void brandDeleteEvent(BrandEvent event) {
+    void brandDeleteEvent(ProductEvent event) {
 
         if (event.type().equals(EntityEventType.DELETED)) {
             deleteBrand(event);
@@ -43,7 +44,7 @@ public class ProductEventListener {
         }
     }
 
-    void deleteBrand(BrandEvent event) {
+    void deleteBrand(ProductEvent event) {
         var brand = productService.getByName(event.name());
         brand.ifPresent(b -> {
             LOGGER.info("ProductEventListener :: deleting product {}", event.name());
@@ -51,7 +52,7 @@ public class ProductEventListener {
         });
     }
 
-    void sendNotification(BrandEvent event) {
+    void sendNotification(ProductEvent event) {
 
         try {
             String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);

@@ -158,6 +158,39 @@ public class UserService {
         });
     }
 
+    public String changePassword(PasswordDTO passwordDTO, long userId) {
+
+        try {
+            Optional<User> user = getById(userId);
+            if (user.isEmpty()) {
+                return "User does not exist!";
+            }
+
+            if (!StringUtils.hasText(passwordDTO.getCurrentPassword()) ||
+                    !StringUtils.hasText(passwordDTO.getNewPassword()) ||
+                    !StringUtils.hasText(passwordDTO.getConfirmPassword())) {
+                return "Password can not be empty!";
+            }
+
+            if (!passwordDTO.getNewPassword().equals(passwordDTO.getConfirmPassword())) {
+                return "Password Does not Match!";
+            }
+
+            User exUser = user.get();
+            if (passwordEncoder.matches(passwordDTO.getNewPassword(), exUser.getPassword())) {
+                return "Invalid Password!";
+            }
+
+            exUser.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
+            userRepo.save(exUser);
+
+            return "Password is reset successfully!";
+        } catch (Exception ex) {
+            LOGGER.error("UserService.changePassword :: {}", ex.getMessage());
+            return "Could not reset password, Please try again!";
+        }
+    }
+
     public long count() {
         return userRepo.numberOfUsers();
     }

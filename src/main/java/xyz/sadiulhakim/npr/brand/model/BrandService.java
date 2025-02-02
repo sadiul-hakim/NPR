@@ -111,6 +111,10 @@ public class BrandService {
         return brand;
     }
 
+    public List<Brand> findAll() {
+        return brandRepository.findAll();
+    }
+
     public Optional<Brand> getByName(String name) {
 
         if (!StringUtils.hasText(name)) {

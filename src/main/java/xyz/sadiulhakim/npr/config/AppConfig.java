@@ -9,7 +9,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 @Configuration
-public class AppConfig {
+class AppConfig {
 
     @Bean
     Executor customAsyncTaskExecutor() {
