@@ -16,6 +16,7 @@ import xyz.sadiulhakim.npr.util.DateUtil;
 import xyz.sadiulhakim.npr.util.FileUtil;
 import xyz.sadiulhakim.npr.util.PageUtil;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -88,36 +89,40 @@ public class UserService {
                 return;
             }
 
-            User exUser = existingUser.get();
-            if (StringUtils.hasText(user.getName())) {
-                exUser.setName(user.getName());
-            }
-
-            if (StringUtils.hasText(user.getEmail())) {
-                exUser.setEmail(user.getEmail());
-            }
-
-            if (user.getRole() != null) {
-                exUser.setRole(user.getRole());
-            }
-
-            if (!Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
-                String fileName = FileUtil.uploadFile(appProperties.getUserImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
-
-                if (StringUtils.hasText(fileName) && !exUser.getPicture().equals(appProperties.getDefaultUserPhotoName())) {
-                    boolean deleted = FileUtil.deleteFile(appProperties.getUserImageFolder(), exUser.getPicture());
-                    if (deleted) {
-                        LOGGER.info("UserService.save :: File {} is deleted", exUser.getPicture());
-                    }
-
-                    exUser.setPicture(fileName);
-                }
-            }
-
-            userRepo.save(exUser);
+            update(existingUser.get(), user, photo);
         } catch (Exception ex) {
             LOGGER.error("UserService.save :: {}", ex.getMessage());
         }
+    }
+
+    private void update(User exUser, User user, MultipartFile photo) throws IOException {
+
+        if (StringUtils.hasText(user.getName())) {
+            exUser.setName(user.getName());
+        }
+
+        if (StringUtils.hasText(user.getEmail())) {
+            exUser.setEmail(user.getEmail());
+        }
+
+        if (user.getRole() != null) {
+            exUser.setRole(user.getRole());
+        }
+
+        if (!Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
+            String fileName = FileUtil.uploadFile(appProperties.getUserImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
+
+            if (StringUtils.hasText(fileName) && !exUser.getPicture().equals(appProperties.getDefaultUserPhotoName())) {
+                boolean deleted = FileUtil.deleteFile(appProperties.getUserImageFolder(), exUser.getPicture());
+                if (deleted) {
+                    LOGGER.info("UserService.update :: File {} is deleted", exUser.getPicture());
+                }
+
+                exUser.setPicture(fileName);
+            }
+        }
+
+        userRepo.save(exUser);
     }
 
     public PaginationResult findAllPaginated(int pageNumber) {

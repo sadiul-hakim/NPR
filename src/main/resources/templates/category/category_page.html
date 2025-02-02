@@ -4,42 +4,41 @@
 <body>
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="container my-6">
-
-  <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> Category Management</h1>
-  <div th:replace="~{fragments/table :: table(${categoryResult},${table_url},~{::#table})}">
-    <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
-      <thead>
-      <tr>
-        <th>Picture</th>
-        <th>Name</th>
-        <th>
-          <a class="button is-link" th:href="@{${table_url.csvUrl()}}">
-            CSV
-          </a>
-          <a class="button is-link" th:href="@{${table_url.createPageUrl()}}">
-            <i data-feather="plus"></i>
-          </a>
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="b : ${categoryResult.data}">
-        <td>
-          <img th:src="@{'/picture/category/'+${b.picture}}" th:alt="${b.name}" class="icon is-medium"/>
-        </td>
-        <td th:text="${b.name}"></td>
-        <td>
-          <a th:href="@{'/categories/create_page?brandId={id}'(id=${b.id})}" class="button is-link">
-            <i data-feather="edit"></i>
-          </a>
-          <a th:href="@{'/categories/delete/{id}'(id=${b.id})}" class="button is-danger">
-            <i data-feather="trash-2"></i>
-          </a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+    <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> Category Management</h1>
+    <div th:replace="~{fragments/table :: table(${categoryResult},${table_url},~{::#table})}">
+        <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
+            <thead>
+            <tr>
+                <th>Picture</th>
+                <th>Name</th>
+                <th>
+                    <a class="button is-link" th:href="@{${table_url.csvUrl()}}">
+                        CSV
+                    </a>
+                    <a class="button is-link" th:href="@{${table_url.createPageUrl()}}">
+                        <i data-feather="plus"></i>
+                    </a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${categoryResult.data}">
+                <td>
+                    <img th:src="@{'/picture/category/'+${b.picture}}" th:alt="${b.name}" class="icon is-medium"/>
+                </td>
+                <td th:text="${b.name}"></td>
+                <td>
+                    <a th:href="@{'/categories/create_page?brandId={id}'(id=${b.id})}" class="button is-link">
+                        <i data-feather="edit"></i>
+                    </a>
+                    <a th:href="@{'/categories/delete/{id}'(id=${b.id})}" class="button is-danger">
+                        <i data-feather="trash-2"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>

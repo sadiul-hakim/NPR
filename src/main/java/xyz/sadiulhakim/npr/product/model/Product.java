@@ -25,8 +25,11 @@ public class Product {
     @Column(length = 150, nullable = false)
     private String picture;
 
+    @Column(length = 150)
+    private String qrCode;
     @Column(length = 250)
     private String description;
+
 
     @Column(columnDefinition = "JSON")
     @Convert(converter = MapOfStringAndObjectConverter.class)
@@ -41,7 +44,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(long id, String name, String brand, String category, String picture, String description,
+    public Product(long id, String name, String brand, String category, String qrCode,String picture, String description,
                    Map<String, Object> details, double rating, List<Long> reviews) {
         this.id = id;
         this.name = name;
@@ -52,6 +55,7 @@ public class Product {
         this.details = details;
         this.rating = rating;
         this.reviews = reviews;
+        this.qrCode=qrCode;
     }
 
     public long getId() {
@@ -94,6 +98,14 @@ public class Product {
         this.picture = picture;
     }
 
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -131,15 +143,12 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && Double.compare(rating, product.rating) == 0 && Objects.equals(name, product.name) &&
-                Objects.equals(brand, product.brand) && Objects.equals(category, product.category) &&
-                Objects.equals(picture, product.picture) && Objects.equals(description, product.description) &&
-                Objects.equals(details, product.details) && Objects.equals(reviews, product.reviews);
+        return id == product.id && Double.compare(rating, product.rating) == 0 && Objects.equals(name, product.name) && Objects.equals(brand, product.brand) && Objects.equals(category, product.category) && Objects.equals(picture, product.picture) && Objects.equals(qrCode, product.qrCode) && Objects.equals(description, product.description) && Objects.equals(details, product.details) && Objects.equals(reviews, product.reviews);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, brand, category, picture, description, details, rating, reviews);
+        return Objects.hash(id, name, brand, category, picture, qrCode, description, details, rating, reviews);
     }
 
     @Override
@@ -150,6 +159,7 @@ public class Product {
                 ", brand='" + brand + '\'' +
                 ", category='" + category + '\'' +
                 ", picture='" + picture + '\'' +
+                ", qrCode='" + qrCode + '\'' +
                 ", description='" + description + '\'' +
                 ", details=" + details +
                 ", rating=" + rating +

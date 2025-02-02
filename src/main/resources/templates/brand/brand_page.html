@@ -4,7 +4,6 @@
 <body>
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="container my-6">
-
     <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> Brand Management</h1>
     <div th:replace="~{fragments/table :: table(${brandResult},${table_url},~{::#table})}">
         <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
