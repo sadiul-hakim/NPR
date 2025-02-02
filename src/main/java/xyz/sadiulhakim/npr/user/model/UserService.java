@@ -117,7 +117,9 @@ public class UserService {
                 if (deleted) {
                     LOGGER.info("UserService.update :: File {} is deleted", exUser.getPicture());
                 }
+            }
 
+            if (StringUtils.hasText(fileName)) {
                 exUser.setPicture(fileName);
             }
         }

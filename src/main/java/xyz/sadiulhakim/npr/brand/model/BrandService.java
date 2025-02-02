@@ -86,7 +86,9 @@ public class BrandService {
                     if (deleted) {
                         LOGGER.info("BrandService.save :: File {} is deleted", exBrand.getPicture());
                     }
+                }
 
+                if (StringUtils.hasText(fileName)) {
                     exBrand.setPicture(fileName);
                 }
             }

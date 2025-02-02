@@ -106,6 +106,9 @@ public class ProductService {
                 if (deleted) {
                     LOGGER.info("ProductService.update :: File {} is deleted", exProduct.getPicture());
                 }
+            }
+
+            if (StringUtils.hasText(fileName)) {
                 exProduct.setPicture(fileName);
             }
         }
@@ -129,6 +132,28 @@ public class ProductService {
         }
 
         return product;
+    }
+
+    public void addDetail(String key, String value, long productId) {
+
+        Optional<Product> product = getById(productId);
+        if (product.isEmpty())
+            return;
+
+        Product exProduct = product.get();
+        exProduct.getDetails().put(key, value);
+        productRepository.save(exProduct);
+    }
+
+    public void deleteDetail(String key, long productId) {
+
+        Optional<Product> product = getById(productId);
+        if (product.isEmpty())
+            return;
+
+        Product exProduct = product.get();
+        exProduct.getDetails().remove(key);
+        productRepository.save(exProduct);
     }
 
     public Optional<Product> getByName(String name) {

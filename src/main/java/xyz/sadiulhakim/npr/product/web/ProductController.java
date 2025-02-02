@@ -16,9 +16,9 @@ import xyz.sadiulhakim.npr.pojo.TableUrlPojo;
 import xyz.sadiulhakim.npr.product.model.Product;
 import xyz.sadiulhakim.npr.product.model.ProductService;
 import xyz.sadiulhakim.npr.properties.AppProperties;
-import xyz.sadiulhakim.npr.user.model.User;
 import xyz.sadiulhakim.npr.util.auth.AuthenticatedUserUtil;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,6 +91,36 @@ class ProductController {
         model.addAttribute("brands", brands);
 
         return "product/create_page";
+    }
+
+    @GetMapping("/details_page")
+    String detailsPage(@RequestParam(defaultValue = "0") long productId, Model model) {
+
+        model.addAttribute("name", AuthenticatedUserUtil.getName());
+        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
+        model.addAttribute("productId", productId);
+
+        Optional<Product> product = productService.getById(productId);
+        model.addAttribute("details", product.isPresent() ?
+                product.get().getDetails() : new HashMap<>());
+
+        return "product/details_page";
+    }
+
+    @PostMapping("/add_detail")
+    String addProductDetail(@RequestParam String key, @RequestParam String value,
+                            @RequestParam long productId) {
+
+        productService.addDetail(key, value, productId);
+
+        return "redirect:/products/details_page?productId=" + productId;
+    }
+
+    @GetMapping("/delete_detail/{key}")
+    String deleteProductDetail(@PathVariable String key, @RequestParam long productId) {
+
+        productService.deleteDetail(key, productId);
+        return "redirect:/products/details_page?productId=" + productId;
     }
 
     @GetMapping("/delete/{id}")

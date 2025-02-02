@@ -29,7 +29,7 @@
             <tbody>
             <tr th:each="p : ${productResult.data}">
                 <td>
-                    <img th:src="@{'/picture/product/'+${p.picture}}" th:alt="${p.name}" class="icon is-medium"/>
+                    <img th:src="@{'/picture/product/'+${p.picture}}" th:alt="${p.name}" class="icon is-large"/>
                 </td>
                 <td th:text="${p.name}"></td>
                 <td th:text="${p.brand}"></td>
@@ -37,6 +37,10 @@
                 <td th:text="${p.rating}"></td>
                 <td th:text="${p.description}"></td>
                 <td>
+                    <a th:href="@{'/products/details_page?productId={id}'(id=${p.id})}" class="button is-warning"
+                       title="Product Details">
+                        <i data-feather="list"></i>
+                    </a>
                     <a th:href="@{'/products/create_page?productId={id}'(id=${p.id})}" class="button is-link">
                         <i data-feather="edit"></i>
                     </a>

@@ -24,7 +24,7 @@
             <tbody>
             <tr th:each="b : ${brandResult.data}">
                 <td>
-                    <img th:src="@{'/picture/brand/'+${b.picture}}" th:alt="${b.name}" class="icon is-medium"/>
+                    <img th:src="@{'/picture/brand/'+${b.picture}}" th:alt="${b.name}" class="icon is-large"/>
                 </td>
                 <td th:text="${b.name}"></td>
                 <td>

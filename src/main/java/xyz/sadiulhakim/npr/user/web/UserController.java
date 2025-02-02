@@ -16,6 +16,7 @@ import xyz.sadiulhakim.npr.user.model.UserService;
 import xyz.sadiulhakim.npr.user.model.User;
 import xyz.sadiulhakim.npr.util.auth.AuthenticatedUserUtil;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -88,8 +89,11 @@ class UserController {
 
         model.addAttribute("name", AuthenticatedUserUtil.getName());
         model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
-        model.addAttribute("userId", userId);
         model.addAttribute("passwordDto", new PasswordDTO());
+
+        if (Objects.equals(model.getAttribute("userId"), "0")) {
+            model.addAttribute("userId", userId);
+        }
 
         return "user/change_password";
     }
@@ -103,7 +107,7 @@ class UserController {
         model.addFlashAttribute("message", message);
         model.addFlashAttribute("hasMessage", true);
 
-        return "redirect:/users/change_password_page";
+        return "redirect:/users/change_password_page?userId=" + userId;
     }
 
     @GetMapping("/delete/{id}")

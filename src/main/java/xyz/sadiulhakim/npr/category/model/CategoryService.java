@@ -89,7 +89,9 @@ public class CategoryService {
                     if (deleted) {
                         LOGGER.info("CategoryService.save :: File {} is deleted", exCategory.getPicture());
                     }
+                }
 
+                if (StringUtils.hasText(fileName)) {
                     exCategory.setPicture(fileName);
                 }
             }
