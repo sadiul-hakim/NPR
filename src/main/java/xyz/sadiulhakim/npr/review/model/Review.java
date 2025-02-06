@@ -21,6 +21,9 @@ public class Review {
     @Column(length = 100, nullable = false)
     private String visitorName;
 
+    @Column(length = 100, nullable = false)
+    private String visitorEmail;
+
     @Column(length = 200)
     private String visitorPicture;
 
@@ -30,13 +33,23 @@ public class Review {
     public Review() {
     }
 
-    public Review(long id, String review, double rating, String visitorName, String visitorPicture, LocalDateTime time) {
+    public Review(long id, String review, double rating, String visitorName, String visitorEmail,
+                  String visitorPicture, LocalDateTime time) {
         this.id = id;
         this.review = review;
         this.rating = rating;
         this.visitorName = visitorName;
+        this.visitorEmail = visitorEmail;
         this.visitorPicture = visitorPicture;
         this.time = time;
+    }
+
+    public String getVisitorEmail() {
+        return visitorEmail;
+    }
+
+    public void setVisitorEmail(String visitorEmail) {
+        this.visitorEmail = visitorEmail;
     }
 
     public long getId() {
@@ -92,23 +105,11 @@ public class Review {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Review review1 = (Review) o;
-        return id == review1.id && Double.compare(rating, review1.rating) == 0 && Objects.equals(review, review1.review) && Objects.equals(visitorName, review1.visitorName) && Objects.equals(visitorPicture, review1.visitorPicture) && Objects.equals(time, review1.time);
+        return id == review1.id && Double.compare(rating, review1.rating) == 0 && Objects.equals(review, review1.review) && Objects.equals(visitorName, review1.visitorName) && Objects.equals(visitorEmail, review1.visitorEmail) && Objects.equals(visitorPicture, review1.visitorPicture) && Objects.equals(time, review1.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, review, rating, visitorName, visitorPicture, time);
-    }
-
-    @Override
-    public String toString() {
-        return "Review{" +
-                "id=" + id +
-                ", review='" + review + '\'' +
-                ", rating=" + rating +
-                ", visitorName='" + visitorName + '\'' +
-                ", visitorPicture='" + visitorPicture + '\'' +
-                ", time=" + time +
-                '}';
+        return Objects.hash(id, review, rating, visitorName, visitorEmail, visitorPicture, time);
     }
 }
