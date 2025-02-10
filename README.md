@@ -156,6 +156,207 @@ It typically consists of:
 6. The Service Activator processes the message or performs business logic.
 7. The message is delivered to its final Message Destination, which could be another system, database, or file.
 
+## Examples
+
+### Direct Channel
+
+```java
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.handler.ServiceActivatingHandler;
+import org.springframework.integration.annotation.ServiceActivator;
+
+@Configuration
+public class IntegrationConfig {
+
+    // Define Direct Channel
+    @Bean
+    public DirectChannel directChannel() {
+        return new DirectChannel();
+    }
+
+    // Define Service Activator to handle the message from the channel
+    @Bean
+    @ServiceActivator(inputChannel = "directChannel")
+    public ServiceActivatingHandler serviceActivator() {
+        return new ServiceActivatingHandler(msg -> {
+            System.out.println("Message received: " + msg.getPayload());
+        });
+    }
+}
+```
+
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.integration.core.MessageChannel;
+
+@SpringBootApplication
+public class SpringIntegrationApp implements CommandLineRunner {
+
+    @Autowired
+    private DirectChannel directChannel;
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringIntegrationApp.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        // Send a message to the direct channel
+        directChannel.send(MessageBuilder.withPayload("Hello, Spring Integration!").build());
+    }
+}
+
+```
+
+### Publish-Subscribe Channel
+
+```java
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.channel.PublishSubscribeChannel;
+import org.springframework.integration.handler.ServiceActivatingHandler;
+import org.springframework.integration.annotation.ServiceActivator;
+
+@Configuration
+public class IntegrationConfig {
+
+    // Define Publish-Subscribe Channel
+    @Bean
+    public PublishSubscribeChannel publishSubscribeChannel() {
+        return new PublishSubscribeChannel();
+    }
+
+    // First Subscriber
+    @Bean
+    @ServiceActivator(inputChannel = "publishSubscribeChannel")
+    public ServiceActivatingHandler subscriberOne() {
+        return new ServiceActivatingHandler(msg -> {
+            System.out.println("Subscriber 1 received: " + msg.getPayload());
+        });
+    }
+
+    // Second Subscriber
+    @Bean
+    @ServiceActivator(inputChannel = "publishSubscribeChannel")
+    public ServiceActivatingHandler subscriberTwo() {
+        return new ServiceActivatingHandler(msg -> {
+            System.out.println("Subscriber 2 received: " + msg.getPayload());
+        });
+    }
+}
+
+```
+
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.integration.channel.PublishSubscribeChannel;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.integration.core.MessageChannel;
+
+@SpringBootApplication
+public class SpringIntegrationApp implements CommandLineRunner {
+
+    @Autowired
+    private PublishSubscribeChannel publishSubscribeChannel;
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringIntegrationApp.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        // Send a message to the Publish-Subscribe channel
+        publishSubscribeChannel.send(MessageBuilder.withPayload("Hello to multiple subscribers!").build());
+    }
+}
+```
+### File Processor
+
+```java
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.MessageChannels;
+import org.springframework.integration.file.dsl.Files;
+import org.springframework.integration.file.filters.SimplePatternFileListFilter;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageHandler;
+
+import java.io.File;
+import java.io.IOException;
+
+@Configuration
+public class FileProcessingIntegrationConfig {
+
+    private static final String INPUT_DIR = "F:\\Spring Integration\\input";  // Directory to read files from
+    private static final String OUTPUT_DIR = "F:\\Spring Integration\\output"; // Directory for processed files
+
+    @Bean
+    public MessageChannel fileInputChannel() {
+        return MessageChannels.queue().getObject();
+    }
+
+    @Bean
+    public MessageChannel processedFileChannel() {
+        return MessageChannels.direct().getObject();
+    }
+
+    @Bean
+    public IntegrationFlow fileProcessorRow() {
+        return IntegrationFlow
+                .from(
+                        Files.inboundAdapter(new File(INPUT_DIR))
+                                .filter(new SimplePatternFileListFilter("*.txt")) // Accept only .txt files
+                                .autoCreateDirectory(true),
+                        e -> e.poller(p -> p.fixedDelay(10_000))// Poll every 10 second
+                ).channel(fileInputChannel()) // Input channel
+                // Transformer to convert file content to uppercase
+                .<File, String>transform(file -> {
+                    try {
+                        return new String(java.nio.file.Files.readAllBytes(file.toPath())).toUpperCase();
+                    } catch (IOException e) {
+                        throw new RuntimeException("Failed to read file", e);
+                    }
+                }).channel(processedFileChannel()) // Pass to the next channel
+                // Service Activator to process the transformed message
+                .handle(processFileService())
+                .get();
+    }
+
+
+    @Bean
+    @ServiceActivator(inputChannel = "processedFileChannel")
+    public MessageHandler processFileService() {
+        return message -> {
+            var result = (String) message.getPayload();
+            System.out.println("Processed Content: " + result);
+
+            // Optionally, save the processed content to a file
+            File outputFile = new File(OUTPUT_DIR, "processed_" + System.currentTimeMillis() + ".txt");
+            try {
+                outputFile.getParentFile().mkdirs(); // Ensure directory exists
+                java.nio.file.Files.write(outputFile.toPath(), result.getBytes());
+                System.out.println("Saved processed file to: " + outputFile.getAbsolutePath());
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to write processed file", e);
+            }
+        };
+    }
+}
+```
+
+
 # 5. WebSocket
 
 ***Spring WebSocket is a module in the Spring Framework that provides real-time, full-duplex communication between client and server over WebSocket protocol. Unlike traditional HTTP request-response cycles, WebSockets maintain a persistent connection, allowing bidirectional communication without re-establishing the connection for each message.***
