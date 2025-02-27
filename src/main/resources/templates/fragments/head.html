@@ -6,7 +6,7 @@
     <title>National Products Ratings</title>
     <link rel="stylesheet" th:href="@{/css/bulma.min.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="icon" th:href="@{/images/NPR.svg}" type="image/jpg">
+    <link rel="icon" th:href="@{/images/logo.png}" type="image/jpg">
 
     <script defer th:src="@{/js/feather.min.js}"></script>
     <script defer th:src="@{/js/bulma/navbar.js}"></script>
@@ -15,4 +15,11 @@
     <script defer th:src="@{/js/ws/stomp.min.js}"></script>
     <script defer th:src="@{/js/ws/ws-notification.js}"></script>
     <script defer th:src="@{/js/app.js}"></script>
+
+    <link rel="manifest" th:href="@{/js/manifest.json}">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/js/sw.js');
+        }
+    </script>
 </head>
