@@ -93,12 +93,16 @@
             <scope>runtime</scope>
         </dependency>
         <!--    Modulith Ends    -->
-        <!--    Integration Starts    -->
+        <!--    Batch Starts    -->
         <dependency>
-            <groupId>org.springframework.integration</groupId>
-            <artifactId>spring-integration-jpa</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-batch</artifactId>
         </dependency>
-        <!--    Integration Ends    -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <!--    Batch Ends    -->
         <!--    Cache Starts    -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -93,275 +93,211 @@ Dependency
 In Java, use  `HttpSession` to access and Send session.
 In Thymeleaf use `${session}` to access session.
 
-# 4. Spring Integration
+# 4. Spring Batch Overview
 
-Dependency
+Spring Batch is a framework designed for processing large volumes of data in batch jobs. It provides robust support for
+transaction management, job processing, and parallel execution while ensuring fault tolerance, scalability, and
+performance.
 
-1. spring-integration-jpa
+## Key Features of Spring Batch
 
-Spring Integration is an extension of the Spring framework that provides a lightweight and flexible solution for
-building
-enterprise integration solutions. It supports messaging-based architectures to connect different systems, applications,
-or processes within an enterprise. Using well-defined patterns, it enables seamless communication and data exchange
-between
-components while ensuring loose coupling and scalability.
+- **Chunk-based processing:** Reads large data sets in chunks for efficient processing.
+- **Transaction management:** Supports rollback and retry mechanisms.
+- **Job scheduling & execution:** Jobs can be triggered manually, scheduled, or event-driven.
+- **Parallel processing & scalability:** Supports multi-threading and partitioning for high performance.
+- **Built-in readers & writers:** Provides various data sources such as databases, files, and messaging systems.
+- **Error handling & retries:** Built-in mechanisms for skipping and retrying failed records.
 
-## Key Elements of Spring Integration
+---
 
-1. `Endpoints` are components that enable interaction between external systems and the integration framework. Examples
-   include inbound adapters (consume data from external sources) and outbound adapters (send data to external systems).
-2. `Filters` determine whether a message should be allowed to proceed through the integration flow. They act as
-   decision-makers, accepting or rejecting messages based on specified criteria.
-3. `Transformers` modify or convert the content of a message to a required format. For example, they can convert a JSON
-   payload into a Java object or vice versa.
-4. `Routers` determine the path a message should take based on its content or metadata. For example, a router can direct
-   messages to different endpoints based on a header value.
-5. `Service activators` are endpoints that connect a Spring service (business logic) to the messaging system. They
-   process
-   incoming messages and produce responses, if necessary.
-6. `Channels` are the conduits for passing messages between different components in Spring Integration. They decouple
-   the
-   sender and receiver to ensure flexibility and scalability.
+## 1. Dependency for Spring Batch
 
-## Types of Channels in Spring Integration
+To use Spring Batch, add the following dependencies to your `pom.xml` (for Maven-based projects):
 
-1. `Direct Channel` - Messages are sent directly from the sender to the receiver within the same thread. This is
-   synchronous and has low overhead.
-2. `Queue Channel` - Acts like a message queue where messages are stored until consumed by a receiver. It supports
-   asynchronous communication.
-3. `Publish-Subscribe Channel` - Allows multiple consumers to subscribe to the same channel and receive copies of the
-   same message, enabling broadcast messaging.
-4. `Executor Channel` - Utilizes a task executor for asynchronous message handling. It decouples the sender and receiver
-   threads for better performance.
-5. `Priority Channel` - Processes messages based on priority rather than arrival order, enabling prioritized message
-   handling.
+```xml
 
-## Integration Flow
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-batch</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+</dependencies>
+```
 
-An integration flow defines the sequence of components through which messages pass in a Spring Integration application.
-It typically consists of:
+For **Gradle**:
 
-1. Message Source – Generates or receives messages.
-2. Channels – Pass messages between components.
-3. Message Processors – Includes filters, transformers, routers, and service activators.
-4. Message Destination – The endpoint where messages are sent or processed.
+```gradle
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    runtimeOnly 'org.hsqldb:hsqldb'
+}
+```
 
-## How Integration Flow Works
+---
 
-1. A Message Source (e.g., an inbound adapter) receives data from an external system or generates it.
-2. The message is passed into a Channel.
-3. A Filter may determine if the message should proceed.
-4. If accepted, a Transformer converts the message into the desired format.
-5. A Router can direct the message to appropriate components or endpoints.
-6. The Service Activator processes the message or performs business logic.
-7. The message is delivered to its final Message Destination, which could be another system, database, or file.
+## 2. Key Elements of Spring Batch
 
-## Examples
+Spring Batch is built around several core concepts:
 
-### Direct Channel
+### i. Job
+
+A **Job** is the main container for batch processing. It consists of **one or more Steps**.
 
 ```java
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.channel.DirectChannel;
-import org.springframework.integration.handler.ServiceActivatingHandler;
-import org.springframework.integration.annotation.ServiceActivator;
+
+@Bean
+public Job myJob(JobRepository jobRepository, Step step1) {
+    return new JobBuilder("myJob", jobRepository)
+            .start(step1)
+            .build();
+}
+```
+
+### ii. Step
+
+A **Step** defines a stage in the job, such as reading, processing, and writing data.
+
+```java
+
+@Bean
+public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    return new StepBuilder("step1", jobRepository)
+            .<String, String>chunk(10, transactionManager)
+            .reader(itemReader())
+            .processor(itemProcessor())
+            .writer(itemWriter())
+            .build();
+}
+```
+
+### iii. ItemReader
+
+Reads data from a source (e.g., database, file, or API).
+
+```java
+
+@Bean
+public ItemReader<String> itemReader() {
+    return new ListItemReader<>(List.of("item1", "item2", "item3"));
+}
+```
+
+### iv. ItemProcessor
+
+Processes each item before writing.
+
+```java
+
+@Bean
+public ItemProcessor<String, String> itemProcessor() {
+    return item -> item.toUpperCase(); // Convert to uppercase
+}
+```
+
+### v. ItemWriter
+
+Writes the processed data to an output source.
+
+```java
+
+@Bean
+public ItemWriter<String> itemWriter() {
+    return items -> items.forEach(System.out::println);
+}
+```
+
+---
+
+## 3. How Spring Batch Works
+
+Spring Batch follows a structured flow:
+
+1. **JobLauncher** starts a Job.
+2. **Job** contains multiple Steps.
+3. Each **Step** processes data in a sequence:
+    - **ItemReader** reads data.
+    - **ItemProcessor** transforms data.
+    - **ItemWriter** writes data.
+4. **Job Repository** stores job execution details.
+5. Job completes, fails, or restarts as needed.
+
+---
+
+## 4. Basic Example of a Spring Batch Job
+
+```java
 
 @Configuration
-public class IntegrationConfig {
+@EnableBatchProcessing
+public class BatchConfig {
 
-    // Define Direct Channel
     @Bean
-    public DirectChannel directChannel() {
-        return new DirectChannel();
+    public Job myJob(JobRepository jobRepository, Step step1) {
+        return new JobBuilder("myJob", jobRepository)
+                .start(step1)
+                .build();
     }
 
-    // Define Service Activator to handle the message from the channel
     @Bean
-    @ServiceActivator(inputChannel = "directChannel")
-    public ServiceActivatingHandler serviceActivator() {
-        return new ServiceActivatingHandler(msg -> {
-            System.out.println("Message received: " + msg.getPayload());
-        });
+    public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("step1", jobRepository)
+                .<String, String>chunk(10, transactionManager)
+                .reader(itemReader())
+                .processor(itemProcessor())
+                .writer(itemWriter())
+                .build();
+    }
+
+    @Bean
+    public ItemReader<String> itemReader() {
+        return new ListItemReader<>(List.of("Java", "Spring", "Batch"));
+    }
+
+    @Bean
+    public ItemProcessor<String, String> itemProcessor() {
+        return item -> "Processed: " + item;
+    }
+
+    @Bean
+    public ItemWriter<String> itemWriter() {
+        return items -> items.forEach(System.out::println);
     }
 }
 ```
 
-```java
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.integration.channel.DirectChannel;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.integration.core.MessageChannel;
-
-@SpringBootApplication
-public class SpringIntegrationApp implements CommandLineRunner {
-
-    @Autowired
-    private DirectChannel directChannel;
-
-    public static void main(String[] args) {
-        SpringApplication.run(SpringIntegrationApp.class, args);
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        // Send a message to the direct channel
-        directChannel.send(MessageBuilder.withPayload("Hello, Spring Integration!").build());
-    }
-}
+### Expected Output
 
 ```
-
-### Publish-Subscribe Channel
-
-```java
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.channel.PublishSubscribeChannel;
-import org.springframework.integration.handler.ServiceActivatingHandler;
-import org.springframework.integration.annotation.ServiceActivator;
-
-@Configuration
-public class IntegrationConfig {
-
-    // Define Publish-Subscribe Channel
-    @Bean
-    public PublishSubscribeChannel publishSubscribeChannel() {
-        return new PublishSubscribeChannel();
-    }
-
-    // First Subscriber
-    @Bean
-    @ServiceActivator(inputChannel = "publishSubscribeChannel")
-    public ServiceActivatingHandler subscriberOne() {
-        return new ServiceActivatingHandler(msg -> {
-            System.out.println("Subscriber 1 received: " + msg.getPayload());
-        });
-    }
-
-    // Second Subscriber
-    @Bean
-    @ServiceActivator(inputChannel = "publishSubscribeChannel")
-    public ServiceActivatingHandler subscriberTwo() {
-        return new ServiceActivatingHandler(msg -> {
-            System.out.println("Subscriber 2 received: " + msg.getPayload());
-        });
-    }
-}
-
+Processed: Java
+Processed: Spring
+Processed: Batch
 ```
 
-```java
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.integration.channel.PublishSubscribeChannel;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.integration.core.MessageChannel;
+---
 
-@SpringBootApplication
-public class SpringIntegrationApp implements CommandLineRunner {
+## Conclusion
 
-    @Autowired
-    private PublishSubscribeChannel publishSubscribeChannel;
-
-    public static void main(String[] args) {
-        SpringApplication.run(SpringIntegrationApp.class, args);
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        // Send a message to the Publish-Subscribe channel
-        publishSubscribeChannel.send(MessageBuilder.withPayload("Hello to multiple subscribers!").build());
-    }
-}
-```
-### File Processor
-
-```java
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.annotation.ServiceActivator;
-import org.springframework.integration.dsl.IntegrationFlow;
-import org.springframework.integration.dsl.MessageChannels;
-import org.springframework.integration.file.dsl.Files;
-import org.springframework.integration.file.filters.SimplePatternFileListFilter;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageHandler;
-
-import java.io.File;
-import java.io.IOException;
-
-@Configuration
-public class FileProcessingIntegrationConfig {
-
-    private static final String INPUT_DIR = "F:\\Spring Integration\\input";  // Directory to read files from
-    private static final String OUTPUT_DIR = "F:\\Spring Integration\\output"; // Directory for processed files
-
-    @Bean
-    public MessageChannel fileInputChannel() {
-        return MessageChannels.queue().getObject();
-    }
-
-    @Bean
-    public MessageChannel processedFileChannel() {
-        return MessageChannels.direct().getObject();
-    }
-
-    @Bean
-    public IntegrationFlow fileProcessorRow() {
-        return IntegrationFlow
-                .from(
-                        Files.inboundAdapter(new File(INPUT_DIR))
-                                .filter(new SimplePatternFileListFilter("*.txt")) // Accept only .txt files
-                                .autoCreateDirectory(true),
-                        e -> e.poller(p -> p.fixedDelay(10_000))// Poll every 10 second
-                ).channel(fileInputChannel()) // Input channel
-                // Transformer to convert file content to uppercase
-                .<File, String>transform(file -> {
-                    try {
-                        return new String(java.nio.file.Files.readAllBytes(file.toPath())).toUpperCase();
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to read file", e);
-                    }
-                }).channel(processedFileChannel()) // Pass to the next channel
-                // Service Activator to process the transformed message
-                .handle(processFileService())
-                .get();
-    }
-
-
-    @Bean
-    @ServiceActivator(inputChannel = "processedFileChannel")
-    public MessageHandler processFileService() {
-        return message -> {
-            var result = (String) message.getPayload();
-            System.out.println("Processed Content: " + result);
-
-            // Optionally, save the processed content to a file
-            File outputFile = new File(OUTPUT_DIR, "processed_" + System.currentTimeMillis() + ".txt");
-            try {
-                outputFile.getParentFile().mkdirs(); // Ensure directory exists
-                java.nio.file.Files.write(outputFile.toPath(), result.getBytes());
-                System.out.println("Saved processed file to: " + outputFile.getAbsolutePath());
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to write processed file", e);
-            }
-        };
-    }
-}
-```
-
+Spring Batch is a powerful framework for handling batch processing tasks efficiently. By defining **Jobs, Steps,
+ItemReaders, Processors, and Writers**, you can create scalable and robust data processing pipelines. 🚀
 
 # 5. WebSocket
 
-***Spring WebSocket is a module in the Spring Framework that provides real-time, full-duplex communication between client and server over WebSocket protocol. Unlike traditional HTTP request-response cycles, WebSockets maintain a persistent connection, allowing bidirectional communication without re-establishing the connection for each message.***
+***Spring WebSocket is a module in the Spring Framework that provides real-time, full-duplex communication between
+client and server over WebSocket protocol. Unlike traditional HTTP request-response cycles, WebSockets maintain a
+persistent connection, allowing bidirectional communication without re-establishing the connection for each message.***
 
-***In WebSocket, when someone connects to the socket and sends a message, we can receive that message and broadcast it to everyone or send it to a specific user.***
+***In WebSocket, when someone connects to the socket and sends a message, we can receive that message and broadcast it
+to everyone or send it to a specific user.***
 
 ## Dependency
 
@@ -421,11 +357,12 @@ Without this, clients won’t know where to connect to WebSockets.
 👉 How does it work?
 
 ```java
- @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
-                .withSockJS();
-    }
+
+@Override
+public void registerStompEndpoints(StompEndpointRegistry registry) {
+    registry.addEndpoint("/ws")
+            .withSockJS();
+}
 ```
 
 Adds an endpoint (e.g., /ws) for clients to connect.
@@ -445,18 +382,18 @@ This establishes a WebSocket connection to /ws.
 
 ### Summary
 
-| Method | What it does | Why it's needed | How it works |
-|--------|-------------|----------------|-------------|
-| `configureMessageBroker` | Sets up message broker | Enables real-time messaging | Defines `/topic` and `/queue` for communication |
-| `registerStompEndpoints` | Creates WebSocket endpoint | Allows clients to connect | Uses SockJS for compatibility |
-
+| Method                   | What it does               | Why it's needed             | How it works                                    |
+|--------------------------|----------------------------|-----------------------------|-------------------------------------------------|
+| `configureMessageBroker` | Sets up message broker     | Enables real-time messaging | Defines `/topic` and `/queue` for communication |
+| `registerStompEndpoints` | Creates WebSocket endpoint | Allows clients to connect   | Uses SockJS for compatibility                   |
 
 ## Elements of Spring WebSocket
 
 Spring provides multiple ways to work with WebSockets:
 
 1. **WebSocket API**: Raw WebSocket implementation.
-2. **STOMP (Simple Text Oriented Messaging Protocol)**: A higher-level protocol that supports features like message routing, subscriptions, and message acknowledgments.
+2. **STOMP (Simple Text Oriented Messaging Protocol)**: A higher-level protocol that supports features like message
+   routing, subscriptions, and message acknowledgments.
 3. **SockJS**: A fallback mechanism for browsers that do not support WebSockets.
 
 ## How to Send a Sample Message in Spring WebSocket
@@ -518,28 +455,28 @@ public class WebSocketController {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
-    <input type="text" id="message" placeholder="Type a message">
-    <button onclick="sendMessage()">Send</button>
-    <div id="messages"></div>
+<input type="text" id="message" placeholder="Type a message">
+<button onclick="sendMessage()">Send</button>
+<div id="messages"></div>
 
-    <script>
-        var socket = new SockJS('/ws');
-        var stompClient = Stomp.over(socket);
+<script>
+    var socket = new SockJS('/ws');
+    var stompClient = Stomp.over(socket);
 
-        stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
-            
-            // Subscribe to receive messages
-            stompClient.subscribe('/topic/response', function (message) {
-                document.getElementById("messages").innerHTML += "<p>" + message.body + "</p>";
-            });
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+
+        // Subscribe to receive messages
+        stompClient.subscribe('/topic/response', function (message) {
+            document.getElementById("messages").innerHTML += "<p>" + message.body + "</p>";
         });
+    });
 
-        function sendMessage() {
-            var message = document.getElementById("message").value;
-            stompClient.send("/app/message", {}, message);
-        }
-    </script>
+    function sendMessage() {
+        var message = document.getElementById("message").value;
+        stompClient.send("/app/message", {}, message);
+    }
+</script>
 </body>
 </html>
 ```
@@ -548,19 +485,19 @@ public class WebSocketController {
 
 1. **Client sends a message**
 
-   - Sends to `/app/message` (configured in `@MessageMapping`).
-   - Example: `stompClient.send("/app/message", {}, "Hello!")`.
+    - Sends to `/app/message` (configured in `@MessageMapping`).
+    - Example: `stompClient.send("/app/message", {}, "Hello!")`.
 
 2. **Server receives and processes message**
 
-   - `@MessageMapping("/message")` handles the message.
+    - `@MessageMapping("/message")` handles the message.
 
 3. **Server sends response to topic**
 
-   - Uses `@SendTo("/topic/response")`.
-   - Message gets broadcasted to all clients subscribed to `/topic/response`.
+    - Uses `@SendTo("/topic/response")`.
+    - Message gets broadcasted to all clients subscribed to `/topic/response`.
 
 4. **Clients receive the message**
 
-   - Subscribed clients to `/topic/response` receive the message.
+    - Subscribed clients to `/topic/response` receive the message.
 
