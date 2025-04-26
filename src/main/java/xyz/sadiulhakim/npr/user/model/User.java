@@ -1,32 +1,43 @@
 package xyz.sadiulhakim.npr.user.model;
 
 import jakarta.persistence.*;
-import org.springframework.modulith.NamedInterface;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import xyz.sadiulhakim.npr.role.model.Role;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "application_user")
-@NamedInterface("application-user")
 public class User {
 
     @Id
     @GeneratedValue
     private long id;
 
+    @NotBlank
     @Column(length = 60, nullable = false)
     private String name;
 
+    @NotBlank
+    @Email
     @Column(length = 60, nullable = false, unique = true)
     private String email;
 
+    @NotBlank
+    @Size(min = 8,max = 100)
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$", message = "Password must be at least 8 characters long and include: \" +\r\n"
+            + "              \"1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character (@$!%*?&).")
     @Column(length = 100, nullable = false)
     private String password;
 
     @Column(length = 100)
     private String picture;
 
-    private String role;
+    @ManyToOne
+    private Role role;
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
@@ -34,7 +45,8 @@ public class User {
     public User() {
     }
 
-    public User(long id, String fullName, String email, String password, String photo, String role, LocalDateTime createdAt) {
+    public User(long id, String fullName, String email, String password, String photo, Role role,
+                LocalDateTime createdAt) {
         this.id = id;
         this.name = fullName;
         this.email = email;
@@ -48,7 +60,7 @@ public class User {
         return password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
@@ -88,7 +100,7 @@ public class User {
         this.picture = photo;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

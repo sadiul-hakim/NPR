@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.modulith.events.ApplicationModuleListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import xyz.sadiulhakim.npr.event.EntityEventType;
 import xyz.sadiulhakim.npr.notification.Notification;
@@ -33,7 +34,8 @@ class ProductEventListener {
         this.mapper = mapper;
     }
 
-    @ApplicationModuleListener
+    @Async("defaultTaskExecutor")
+    @EventListener
     void brandDeleteEvent(ProductEvent event) {
 
         if (event.type().equals(EntityEventType.DELETED)) {

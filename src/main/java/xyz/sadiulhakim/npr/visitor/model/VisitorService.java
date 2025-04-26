@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.modulith.NamedInterface;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@NamedInterface("visitor-service")
 public class VisitorService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(VisitorService.class);

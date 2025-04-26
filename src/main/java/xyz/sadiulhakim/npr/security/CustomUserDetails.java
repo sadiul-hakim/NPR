@@ -1,4 +1,4 @@
-package xyz.sadiulhakim.npr.config.security;
+package xyz.sadiulhakim.npr.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

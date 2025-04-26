@@ -1,13 +1,11 @@
 package xyz.sadiulhakim.npr.util.auth;
 
-import org.springframework.modulith.NamedInterface;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import xyz.sadiulhakim.npr.config.security.CustomUserDetails;
+import xyz.sadiulhakim.npr.security.CustomUserDetails;
 
-@NamedInterface("auth-user-util")
 public class AuthenticatedUserUtil {
     private AuthenticatedUserUtil() {
     }

@@ -1,4 +1,4 @@
-package xyz.sadiulhakim.npr.config.security;
+package xyz.sadiulhakim.npr.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

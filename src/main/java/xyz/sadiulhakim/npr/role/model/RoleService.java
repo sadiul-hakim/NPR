@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.modulith.NamedInterface;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@NamedInterface("role-service")
 public class RoleService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(RoleService.class);
@@ -123,7 +121,7 @@ public class RoleService {
         if (role.isEmpty()) {
             return false;
         }
-        eventPublisher.publishEvent(new DeleteRoleEvent(role.get().getName()));
+        eventPublisher.publishEvent(new DeleteRoleEvent(role.get().getId()));
         return true;
     }
 

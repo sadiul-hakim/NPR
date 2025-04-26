@@ -1,4 +1,4 @@
-package xyz.sadiulhakim.npr.config.security;
+package xyz.sadiulhakim.npr.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +24,6 @@ class CustomUserDetailsService implements UserDetailsService {
         }
 
         return new CustomUserDetails(user.getEmail(), user.getName(),
-                user.getPassword(), user.getRole(), user.getPicture());
+                user.getPassword(), user.getRole().getName(), user.getPicture());
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.modulith.NamedInterface;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -26,7 +25,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-@NamedInterface("product-service")
 public class ProductService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
@@ -83,11 +81,11 @@ public class ProductService {
             exProduct.setName(product.getName());
         }
 
-        if (StringUtils.hasText(product.getBrand())) {
+        if (product.getBrand() != null) {
             exProduct.setBrand(product.getBrand());
         }
 
-        if (StringUtils.hasText(product.getCategory())) {
+        if (product.getCategory() != null) {
             exProduct.setCategory(product.getCategory());
         }
 
@@ -184,7 +182,7 @@ public class ProductService {
     public PaginationResult search(String text, int pageNumber) {
 
         LOGGER.info("ProductService.search :: search product by text : {}", text);
-        Page<Product> page = productRepository.findAllByNameContainingOrCategoryContainingOrBrandContainingOrDescriptionContaining(
+        Page<Product> page = productRepository.findAllByNameContainingOrDescriptionContaining(
                 text, text, text, text, PageRequest.of(pageNumber, 200)
         );
         return PageUtil.prepareResult(page);
@@ -206,9 +204,9 @@ public class ProductService {
                             .append(",")
                             .append(product.getName())
                             .append(",")
-                            .append(product.getBrand())
+                            .append(product.getBrand().getName())
                             .append(",")
-                            .append(product.getCategory())
+                            .append(product.getCategory().getName())
                             .append(",")
                             .append(product.getPicture())
                             .append(",")

@@ -1,7 +1,13 @@
 package xyz.sadiulhakim.npr.brand.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import xyz.sadiulhakim.npr.product.model.Product;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -11,19 +17,32 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank
     @Column(length = 150, unique = true, nullable = false)
     private String name;
 
     @Column(length = 150)
     private String picture;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,mappedBy = "brand")
+    private List<Product> products = new ArrayList<>();
+
     public Brand() {
     }
 
-    public Brand(long id, String name, String picture) {
+    public Brand(long id, String name, String picture, List<Product> products) {
         this.id = id;
         this.name = name;
         this.picture = picture;
+        this.products = products;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public long getId() {
@@ -52,23 +71,14 @@ public class Brand {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Brand brand = (Brand) o;
-        return id == brand.id && Objects.equals(name, brand.name) && Objects.equals(picture, brand.picture);
+        return id == brand.id && Objects.equals(name, brand.name) && Objects.equals(picture, brand.picture) &&
+                Objects.equals(products, brand.products);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, picture);
-    }
-
-    @Override
-    public String toString() {
-        return "Brand{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", picture='" + picture + '\'' +
-                '}';
+        return Objects.hash(id, name, picture, products);
     }
 }

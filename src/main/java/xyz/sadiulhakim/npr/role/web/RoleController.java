@@ -1,10 +1,12 @@
 package xyz.sadiulhakim.npr.role.web;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import xyz.sadiulhakim.npr.pojo.TableUrlPojo;
@@ -42,7 +44,10 @@ class RoleController {
     }
 
     @PostMapping("/save")
-    String save(@ModelAttribute Role roleDto, RedirectAttributes attributes) {
+    String save(@ModelAttribute @Valid Role roleDto, BindingResult result) {
+        if(result.hasErrors()){
+            return "role/create_page";
+        }
         roleService.save(roleDto);
         return "redirect:/roles/page";
     }

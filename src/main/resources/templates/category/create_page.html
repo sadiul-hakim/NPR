@@ -20,6 +20,7 @@
                   <i data-feather="user-check"></i>
                 </span>
             </div>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="has-text-danger"></div>
         </div>
         <div class="field">
             <label class="label" for="photo">Picture</label>

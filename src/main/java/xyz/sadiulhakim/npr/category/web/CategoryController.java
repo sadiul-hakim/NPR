@@ -1,10 +1,12 @@
 package xyz.sadiulhakim.npr.category.web;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -43,7 +45,11 @@ class CategoryController {
     }
 
     @PostMapping("/save")
-    String save(@ModelAttribute Category dto, @RequestParam MultipartFile photo, RedirectAttributes attributes) {
+    String save(@ModelAttribute @Valid Category dto, @RequestParam MultipartFile photo, BindingResult result) {
+
+        if(result.hasErrors()){
+            return "category/create_page";
+        }
 
         categoryService.save(dto, photo);
         return "redirect:/categories/page";

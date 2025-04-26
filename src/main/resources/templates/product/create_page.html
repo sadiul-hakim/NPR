@@ -17,24 +17,27 @@
                 <input class="input" type="text" placeholder="Product Name" name="name" id="name" th:field="*{name}"
                        required/>
             </div>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="has-text-danger"></div>
         </div>
         <div class="field">
             <label class="label" for="brand">Brand</label>
             <div class="control">
                 <select name="brand" id="brand" class="input" th:field="*{brand}">
                     <option value="0">--Select Brand--</option>
-                    <option th:each="b:${brands}" th:value="${b.name}" th:text="${b.name}"></option>
+                    <option th:each="b:${brands}" th:value="${b.id}" th:text="${b.name}"></option>
                 </select>
             </div>
+            <div th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}" class="has-text-danger"></div>
         </div>
         <div class="field">
             <label class="label" for="category">Category</label>
             <div class="control">
                 <select name="category" id="category" class="input" th:field="*{category}">
                     <option value="0">--Select Category--</option>
-                    <option th:each="c:${categories}" th:value="${c.name}" th:text="${c.name}"></option>
+                    <option th:each="c:${categories}" th:value="${c.id}" th:text="${c.name}"></option>
                 </select>
             </div>
+            <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="has-text-danger"></div>
         </div>
         <div class="field">
             <label class="label" for="description">Description</label>

@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     stompClient.connect(
         {'ws-id': wsId},
         function (frame) {
-            stompClient.subscribe('/user/topic/notification', function (message) {
+            stompClient.subscribe('/user/queue/notification', function (message) {
                 showNotification(JSON.parse(message.body).title, JSON.parse(message.body).message, "is-info");
             });
 

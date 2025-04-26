@@ -5,13 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.modulith.NamedInterface;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
 import xyz.sadiulhakim.npr.properties.AppProperties;
+import xyz.sadiulhakim.npr.role.model.Role;
+import xyz.sadiulhakim.npr.role.model.RoleService;
 import xyz.sadiulhakim.npr.util.DateUtil;
 import xyz.sadiulhakim.npr.util.FileUtil;
 import xyz.sadiulhakim.npr.util.PageUtil;
@@ -24,7 +25,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-@NamedInterface("user-service")
 public class UserService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
@@ -32,19 +32,26 @@ public class UserService {
     private final UserRepo userRepo;
     private final AppProperties appProperties;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
-    UserService(UserRepo userRepo, AppProperties appProperties, PasswordEncoder passwordEncoder) {
+    UserService(UserRepo userRepo, AppProperties appProperties, PasswordEncoder passwordEncoder, RoleService roleService) {
         this.userRepo = userRepo;
         this.appProperties = appProperties;
         this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
     }
 
     public User findByEmail(String email) {
         return userRepo.findByEmail(email).orElse(null);
     }
 
-    public long countByRole(String role) {
-        return userRepo.countByRole(role);
+    public long countByRole(long role) {
+        Optional<Role> byId = roleService.getById(role);
+        if (byId.isEmpty()) {
+            LOGGER.warn("Could not find role by id {}", role);
+            return 0;
+        }
+        return userRepo.countByRole(byId.get());
     }
 
     public Optional<User> getById(long userId) {
@@ -74,7 +81,8 @@ public class UserService {
                     user.setPicture(appProperties.getDefaultUserPhotoName());
                 } else {
 
-                    String fileName = FileUtil.uploadFile(appProperties.getUserImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
+                    String fileName = FileUtil.uploadFile(appProperties.getUserImageFolder(),
+                            photo.getOriginalFilename(), photo.getInputStream());
                     if (fileName.isEmpty()) {
                         user.setPicture(appProperties.getDefaultUserPhotoName());
                     } else {
@@ -110,7 +118,8 @@ public class UserService {
         }
 
         if (!Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
-            String fileName = FileUtil.uploadFile(appProperties.getUserImageFolder(), photo.getOriginalFilename(), photo.getInputStream());
+            String fileName = FileUtil.uploadFile(appProperties.getUserImageFolder(), photo.getOriginalFilename(),
+                    photo.getInputStream());
 
             if (StringUtils.hasText(fileName) && !exUser.getPicture().equals(appProperties.getDefaultUserPhotoName())) {
                 boolean deleted = FileUtil.deleteFile(appProperties.getUserImageFolder(), exUser.getPicture());
