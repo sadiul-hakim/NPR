@@ -34,6 +34,8 @@ public class AuthenticatedUserUtil {
         if (authentication instanceof UsernamePasswordAuthenticationToken user) {
             var principal = (CustomUserDetails) user.getPrincipal();
             return principal.getName();
+        } else if (authentication.getPrincipal() instanceof OAuth2User user) {
+            return user.getAttribute(NAME);
         }
         return "";
     }
@@ -44,6 +46,8 @@ public class AuthenticatedUserUtil {
         if (authentication instanceof UsernamePasswordAuthenticationToken user) {
             var principal = (CustomUserDetails) user.getPrincipal();
             return prefix + principal.getPicture();
+        } else if (authentication.getPrincipal() instanceof OAuth2User user) {
+            return user.getAttribute(PICTURE);
         }
         return "";
     }

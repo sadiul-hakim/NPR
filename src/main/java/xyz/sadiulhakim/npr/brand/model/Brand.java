@@ -19,14 +19,14 @@ public class Brand {
     private long id;
 
     @NotBlank
-    @Size(min = 2,max = 150)
+    @Size(min = 2, max = 150)
     @Column(length = 150, unique = true, nullable = false)
     private String name;
 
     @Column(length = 150)
     private String picture;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,mappedBy = "brand")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "brand", fetch = FetchType.EAGER)
     private List<Product> products = new ArrayList<>();
 
     public Brand() {

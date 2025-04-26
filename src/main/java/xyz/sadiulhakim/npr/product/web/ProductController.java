@@ -56,12 +56,16 @@ class ProductController {
     }
 
     @PostMapping("/save")
-    String save(@ModelAttribute @Valid Product dto, BindingResult result, @RequestParam MultipartFile photo) {
+    String save(@ModelAttribute @Valid Product product, BindingResult result, @RequestParam MultipartFile photo,
+                @RequestParam(defaultValue = "0") long productId, Model model) {
 
         if (result.hasErrors()) {
+            model.addAttribute("name", AuthenticatedUserUtil.getName());
+            model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
+            model.addAttribute("productId", productId);
             return "product/create_page";
         }
-        productService.save(dto, photo);
+        productService.save(product, photo);
         return "redirect:/products/page";
     }
 
