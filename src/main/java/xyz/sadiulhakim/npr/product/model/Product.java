@@ -3,6 +3,7 @@ package xyz.sadiulhakim.npr.product.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import xyz.sadiulhakim.npr.brand.model.Brand;
 import xyz.sadiulhakim.npr.category.model.Category;
 import xyz.sadiulhakim.npr.product.converter.ListOfLongConverter;
@@ -19,6 +20,7 @@ public class Product {
     private long id;
 
     @NotBlank
+    @Size(min = 2,max = 150)
     @Column(unique = true, nullable = false, length = 150)
     private String name;
 
@@ -36,6 +38,7 @@ public class Product {
     @Column(length = 150)
     private String qrCode;
 
+    @Size(min = 10,max = 250)
     @Column(length = 250)
     private String description;
 

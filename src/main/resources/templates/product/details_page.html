@@ -5,38 +5,31 @@
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="container my-6">
 
-    <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> Product Details</h1>
+    <h1 class="h4 font-weight-bold"><i data-feather="users"></i> Product Details</h1>
 
-    <div class="box p-3">
+    <div class="card p-3">
         <form th:action="@{/products/add_detail}" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}"
-                   th:value="${_csrf.token}"/>
-            <input type="hidden" name="productId"
-                   th:value="${productId}"/>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <input type="hidden" name="productId" th:value="${productId}"/>
 
-            <div class="field">
-                <label class="label" for="key">Key</label>
-                <div class="control">
-                    <input class="input" type="text" placeholder="Key" name="key" id="key"
-                           required/>
-                </div>
+            <div class="mb-3">
+                <label class="form-label" for="key">Key</label>
+                <input class="form-control" type="text" placeholder="Key" name="key" id="key" required/>
             </div>
 
-            <div class="field">
-                <label class="label" for="value">Value</label>
-                <div class="control">
-                    <input class="input" type="text" placeholder="value" name="value" id="value"
-                           required/>
-                </div>
+            <div class="mb-3">
+                <label class="form-label" for="value">Value</label>
+                <input class="form-control" type="text" placeholder="Value" name="value" id="value" required/>
             </div>
-            <div class="field">
-                <button class="button is-link" type="submit">Create</button>
-                <button class="button is-danger" type="reset">Reset</button>
+
+            <div class="mb-3">
+                <button class="btn btn-primary" type="submit">Create</button>
+                <button class="btn btn-danger" type="reset">Reset</button>
             </div>
         </form>
     </div>
 
-    <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
+    <table class="table table-bordered table-striped table-hover mt-3">
         <thead>
         <tr>
             <th>Name</th>
@@ -49,8 +42,8 @@
             <td th:text="${d.key}"></td>
             <td th:text="${d.value}"></td>
             <td>
-                <a th:href="@{'/products/delete_detail/' + ${d.key} + '?productId=' + ${productId}}" class="button is-danger">
-                    <i data-feather="trash-2"></i>
+                <a th:href="@{'/products/delete_detail/' + ${d.key} + '?productId=' + ${productId}}" class="btn btn-danger">
+                    <i data-feather="trash-2"></i> Delete
                 </a>
             </td>
         </tr>

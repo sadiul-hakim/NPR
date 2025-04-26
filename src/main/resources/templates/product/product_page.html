@@ -5,9 +5,10 @@
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="container my-6">
 
-    <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> Product Management</h1>
+    <h1 class="h4 font-weight-bold"><i data-feather="users"></i> Product Management</h1>
+
     <div th:replace="~{fragments/table :: table(${productResult},${table_url},~{::#table})}">
-        <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
+        <table class="table table-bordered table-striped table-hover" id="table">
             <thead>
             <tr>
                 <th>Picture</th>
@@ -17,10 +18,10 @@
                 <th>Final Rating</th>
                 <th>Description</th>
                 <th>
-                    <a class="button is-link" th:href="@{${table_url.csvUrl()}}">
+                    <a class="btn btn-primary" th:href="@{${table_url.csvUrl()}}">
                         CSV
                     </a>
-                    <a class="button is-link" th:href="@{${table_url.createPageUrl()}}">
+                    <a class="btn btn-primary" th:href="@{${table_url.createPageUrl()}}">
                         <i data-feather="plus"></i>
                     </a>
                 </th>
@@ -29,7 +30,7 @@
             <tbody>
             <tr th:each="p : ${productResult.data}">
                 <td>
-                    <img th:src="@{'/picture/product/'+${p.picture}}" th:alt="${p.name}" class="icon is-large"/>
+                    <img th:src="@{'/picture/product/'+${p.picture}}" th:alt="${p.name}" class="img-fluid" />
                 </td>
                 <td th:text="${p.name}"></td>
                 <td th:text="${p.brand}"></td>
@@ -37,14 +38,14 @@
                 <td th:text="${p.rating}"></td>
                 <td th:text="${p.description}"></td>
                 <td>
-                    <a th:href="@{'/products/details_page?productId={id}'(id=${p.id})}" class="button is-warning"
+                    <a th:href="@{'/products/details_page?productId={id}'(id=${p.id})}" class="btn btn-warning"
                        title="Product Details">
                         <i data-feather="list"></i>
                     </a>
-                    <a th:href="@{'/products/create_page?productId={id}'(id=${p.id})}" class="button is-link">
+                    <a th:href="@{'/products/create_page?productId={id}'(id=${p.id})}" class="btn btn-primary">
                         <i data-feather="edit"></i>
                     </a>
-                    <a th:href="@{'/products/delete/{id}'(id=${p.id})}" class="button is-danger">
+                    <a th:href="@{'/products/delete/{id}'(id=${p.id})}" class="btn btn-danger">
                         <i data-feather="trash-2"></i>
                     </a>
                 </td>

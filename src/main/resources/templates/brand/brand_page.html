@@ -3,42 +3,53 @@
 <head th:replace="~{fragments/head :: head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
-<div class="container my-6">
-    <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> Brand Management</h1>
+
+<div class="container my-5">
+    <h1 class="h4 fw-bold mb-4 d-flex align-items-center gap-2">
+        <i data-feather="users"></i> Brand Management
+    </h1>
+
     <div th:replace="~{fragments/table :: table(${brandResult},${table_url},~{::#table})}">
-        <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
-            <thead>
-            <tr>
-                <th>Picture</th>
-                <th>Name</th>
-                <th>
-                    <a class="button is-link" th:href="@{${table_url.csvUrl()}}">
-                        CSV
-                    </a>
-                    <a class="button is-link" th:href="@{${table_url.createPageUrl()}}">
-                        <i data-feather="plus"></i>
-                    </a>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="b : ${brandResult.data}">
-                <td>
-                    <img th:src="@{'/picture/brand/'+${b.picture}}" th:alt="${b.name}" class="icon is-large"/>
-                </td>
-                <td th:text="${b.name}"></td>
-                <td>
-                    <a th:href="@{'/brands/create_page?brandId={id}'(id=${b.id})}" class="button is-link">
-                        <i data-feather="edit"></i>
-                    </a>
-                    <a th:href="@{'/brands/delete/{id}'(id=${b.id})}" class="button is-danger">
-                        <i data-feather="trash-2"></i>
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped align-middle" id="table">
+                <thead class="table-light">
+                <tr>
+                    <th>Picture</th>
+                    <th>Name</th>
+                    <th>
+                        <div class="d-flex gap-2">
+                            <a class="btn btn-primary btn-sm" th:href="@{${table_url.csvUrl()}}">
+                                CSV
+                            </a>
+                            <a class="btn btn-success btn-sm" th:href="@{${table_url.createPageUrl()}}">
+                                <i data-feather="plus"></i>
+                            </a>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="b : ${brandResult.data}">
+                    <td>
+                        <img th:src="@{'/picture/brand/'+${b.picture}}" th:alt="${b.name}" class="rounded-circle" width="50" height="50"/>
+                    </td>
+                    <td th:text="${b.name}"></td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a th:href="@{'/brands/create_page?brandId={id}'(id=${b.id})}" class="btn btn-warning btn-sm">
+                                <i data-feather="edit"></i>
+                            </a>
+                            <a th:href="@{'/brands/delete/{id}'(id=${b.id})}" class="btn btn-danger btn-sm">
+                                <i data-feather="trash-2"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
 </body>
 </html>

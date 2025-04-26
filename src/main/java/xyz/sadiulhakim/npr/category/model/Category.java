@@ -2,6 +2,7 @@ package xyz.sadiulhakim.npr.category.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import xyz.sadiulhakim.npr.product.model.Product;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class Category {
     private long id;
 
     @NotBlank
+    @Size(min = 2,max = 65)
     @Column(length = 65, unique = true, nullable = false)
     private String name;
 

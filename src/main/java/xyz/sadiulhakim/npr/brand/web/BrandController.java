@@ -45,9 +45,9 @@ class BrandController {
     }
 
     @PostMapping("/save")
-    String save(@ModelAttribute @Valid Brand dro, @RequestParam MultipartFile photo, BindingResult result) {
+    String save(@ModelAttribute @Valid Brand dro, BindingResult result, @RequestParam MultipartFile photo) {
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return "brand/create_page";
         }
 

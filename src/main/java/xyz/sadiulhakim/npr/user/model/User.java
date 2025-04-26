@@ -1,10 +1,7 @@
 package xyz.sadiulhakim.npr.user.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import xyz.sadiulhakim.npr.role.model.Role;
 
 import java.time.LocalDateTime;
@@ -18,11 +15,13 @@ public class User {
     private long id;
 
     @NotBlank
+    @Size(min = 2,max = 60)
     @Column(length = 60, nullable = false)
     private String name;
 
     @NotBlank
     @Email
+    @Size(min = 2,max = 60)
     @Column(length = 60, nullable = false, unique = true)
     private String email;
 
@@ -36,6 +35,7 @@ public class User {
     @Column(length = 100)
     private String picture;
 
+    @NotNull
     @ManyToOne
     private Role role;
 

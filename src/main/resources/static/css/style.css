@@ -25,24 +25,24 @@ body {
     height: 500px !important;
 }
 
-.carousel {
+.my_carousel {
     position: relative;
     overflow: hidden;
 }
 
-.carousel-track {
+.my_carousel-track {
     display: flex;
     transition: transform 0.3s ease;
 }
 
-.carousel-item {
+.my_carousel-item {
     min-width: 20%; /* Show 3 items at once */
     flex-shrink: 0;
     box-sizing: border-box;
     height: 100px;
 }
 
-.carousel-buttons {
+.my_carousel-buttons {
     position: absolute;
     top: 50%;
     width: 100%;
@@ -51,12 +51,17 @@ body {
     transform: translateY(-50%);
 }
 
-.carousel-button {
+.my_carousel-button {
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
     padding: 10px;
     cursor: pointer;
+}
+
+.icon{
+    width: 40px;
+    height: 35px;
 }
 
 .borderless,
@@ -91,4 +96,30 @@ body {
 .notification.fade-out {
     opacity: 0;
     transform: translateX(50px);
+}
+
+.is-hidden{
+    display: none;
+}
+
+#hero {
+    background-image: url("/images/bg-4.jpg");
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 500px !important;
+}
+
+/* Additional Customizations */
+@media (max-width: 768px) {
+    .my_carousel-item {
+        min-width: 50%; /* Show 2 items on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .my_carousel-item {
+        min-width: 100%; /* Show 1 item on very small screens */
+    }
 }

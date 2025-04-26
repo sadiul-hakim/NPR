@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import xyz.sadiulhakim.npr.product.model.Product;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Brand {
     private long id;
 
     @NotBlank
+    @Size(min = 2,max = 150)
     @Column(length = 150, unique = true, nullable = false)
     private String name;
 

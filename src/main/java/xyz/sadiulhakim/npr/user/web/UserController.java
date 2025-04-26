@@ -1,10 +1,12 @@
 package xyz.sadiulhakim.npr.user.web;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -48,9 +50,16 @@ class UserController {
     }
 
     @PostMapping("/save")
-    String save(@ModelAttribute User userDto, @RequestParam MultipartFile photo, RedirectAttributes attributes) {
-
-        userService.save(userDto, photo);
+    String save(@ModelAttribute @Valid User user, BindingResult result, @RequestParam MultipartFile photo,
+                @RequestParam(defaultValue = "0") long userId, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("name", AuthenticatedUserUtil.getName());
+            model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
+            model.addAttribute("roles", roleService.findAll());
+            model.addAttribute("userId", userId);
+            return "user/create_page";
+        }
+        userService.save(user, photo);
 
         return "redirect:/users/page";
     }
@@ -76,9 +85,9 @@ class UserController {
         Optional<User> user = userService.getById(userId);
 
         if (user.isEmpty()) {
-            model.addAttribute("dto", new User());
+            model.addAttribute("user", new User());
         } else {
-            model.addAttribute("dto", user.get());
+            model.addAttribute("user", user.get());
         }
 
         return "user/create_page";

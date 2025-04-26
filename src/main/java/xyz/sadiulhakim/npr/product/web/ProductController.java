@@ -33,10 +33,11 @@ class ProductController {
     private final CategoryService categoryService;
     private final BrandService brandService;
 
-    private final TableUrlPojo table_url = new TableUrlPojo("/products/search", "/products", "/products/export-csv",
-            "/products/create_page", "/products/page");
+    private final TableUrlPojo table_url = new TableUrlPojo("/products/search", "/products",
+            "/products/export-csv", "/products/create_page", "/products/page");
 
-    ProductController(AppProperties appProperties, ProductService productService, CategoryService categoryService, BrandService brandService) {
+    ProductController(AppProperties appProperties, ProductService productService, CategoryService categoryService,
+                      BrandService brandService) {
         this.appProperties = appProperties;
         this.productService = productService;
         this.categoryService = categoryService;
@@ -55,7 +56,7 @@ class ProductController {
     }
 
     @PostMapping("/save")
-    String save(@ModelAttribute @Valid Product dto, @RequestParam MultipartFile photo, BindingResult result) {
+    String save(@ModelAttribute @Valid Product dto, BindingResult result, @RequestParam MultipartFile photo) {
 
         if (result.hasErrors()) {
             return "product/create_page";

@@ -3,21 +3,21 @@
 <head th:replace="~{fragments/head :: head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
-<div class="container my-6">
+<div class="container my-5">
 
-    <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> Role Management</h1>
+    <h1 class="h4 font-weight-bold"><i data-feather="users"></i> Role Management</h1>
     <div th:replace="~{fragments/table :: table(${roleResult},${table_url},~{::#table})}">
-        <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
+        <table class="table table-bordered table-striped table-hover" id="table">
             <thead>
             <tr>
                 <th>Id</th>
                 <th>Role</th>
                 <th>Description</th>
                 <th>
-                    <a class="button is-link" th:href="@{${table_url.csvUrl()}}">
+                    <a class="btn btn-primary" th:href="@{${table_url.csvUrl()}}">
                         CSV
                     </a>
-                    <a class="button is-link" th:href="@{${table_url.createPageUrl()}}">
+                    <a class="btn btn-primary" th:href="@{${table_url.createPageUrl()}}">
                         <i data-feather="plus"></i>
                     </a>
                 </th>
@@ -29,10 +29,10 @@
                 <td th:text="${r.name}"></td>
                 <td th:text="${r.description}"></td>
                 <td>
-                    <a th:href="@{'/roles/create_page?roleId={id}'(id=${r.id})}" class="button is-link">
+                    <a th:href="@{'/roles/create_page?roleId={id}'(id=${r.id})}" class="btn btn-warning">
                         <i data-feather="edit"></i>
                     </a>
-                    <a th:href="@{'/roles/delete/{id}'(id=${r.id})}" class="button is-danger">
+                    <a th:href="@{'/roles/delete/{id}'(id=${r.id})}" class="btn btn-danger">
                         <i data-feather="trash-2"></i>
                     </a>
                 </td>

@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:replace="~{fragments/head :: head}">
-</head>
-<body class="has-background-white">
+<head th:replace="~{fragments/head :: head}"></head>
+<body class="bg-white">
 <div class="container">
-    <div class="is-four-fifths mx-auto mt-3 is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-        <img th:src="@{'/images/error.png'}" alt="4xx error" width="600" height="400"/>
-        <h1 class="is-danger">500</h1>
-        <h2 class="is-link my-2">Sorry, Server encountered some error.</h2>
-        <a class="button is-link" th:href="@{'/'}">Home</a>
+    <div class="mx-auto my-5 d-flex flex-column align-items-center" style="max-width: 600px;">
+        <img th:src="@{'/images/error.png'}" alt="4xx error" class="img-fluid mb-4" width="600" height="400"/>
+        <h1 class="text-danger display-4 fw-bold">500</h1>
+        <h2 class="text-primary my-3">Sorry, Server encountered some error.</h2>
+        <a class="btn btn-primary mt-2" th:href="@{'/'}">Home</a>
     </div>
 </div>
 </body>

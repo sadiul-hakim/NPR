@@ -3,11 +3,12 @@
 <head th:replace="~{fragments/head :: head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
-<div class="container my-6">
 
-    <h1 class="is-size-4 has-text-weight-bold"><i data-feather="users"></i> User Management</h1>
+<div class="container my-5">
+    <h1 class="h4 font-weight-bold"><i data-feather="users"></i> User Management</h1>
+
     <div th:replace="~{fragments/table :: table(${userResult},${table_url},~{::#table})}">
-        <table class="table is-fullwidth is-bordered is-striped is-hoverable" id="table">
+        <table class="table table-bordered table-striped table-hover" id="table">
             <thead>
             <tr>
                 <th>Picture</th>
@@ -16,10 +17,10 @@
                 <th>Role</th>
                 <th>Date</th>
                 <th>
-                    <a class="button is-link" th:href="@{${table_url.csvUrl()}}">
+                    <a class="btn btn-primary" th:href="@{${table_url.csvUrl()}}">
                         CSV
                     </a>
-                    <a class="button is-link" th:href="@{${table_url.createPageUrl()}}">
+                    <a class="btn btn-primary" th:href="@{${table_url.createPageUrl()}}">
                         <i data-feather="plus"></i>
                     </a>
                 </th>
@@ -28,20 +29,20 @@
             <tbody>
             <tr th:each="u : ${userResult.data}">
                 <td>
-                    <img th:src="@{'/picture/user/'+${u.picture}}" th:alt="${u.name}" class="icon is-medium"/>
+                    <img th:src="@{'/picture/user/'+${u.picture}}" th:alt="${u.name}" class="img-fluid rounded-circle" style="width: 40px; height: 40px;"/>
                 </td>
                 <td th:text="${u.name}"></td>
                 <td th:text="${u.email}"></td>
                 <td th:text="${u.role.name}"></td>
                 <td th:text="${#temporals.format(u.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
                 <td>
-                    <a th:href="@{'/users/change_password_page?userId={id}'(id=${u.id})}" class="button is-warning">
+                    <a th:href="@{'/users/change_password_page?userId={id}'(id=${u.id})}" class="btn btn-warning">
                         <i data-feather="key"></i>
                     </a>
-                    <a th:href="@{'/users/create_page?userId={id}'(id=${u.id})}" class="button is-link">
+                    <a th:href="@{'/users/create_page?userId={id}'(id=${u.id})}" class="btn btn-primary">
                         <i data-feather="edit"></i>
                     </a>
-                    <a th:href="@{'/users/delete/{id}'(id=${u.id})}" class="button is-danger">
+                    <a th:href="@{'/users/delete/{id}'(id=${u.id})}" class="btn btn-danger">
                         <i data-feather="trash-2"></i>
                     </a>
                 </td>
@@ -50,5 +51,6 @@
         </table>
     </div>
 </div>
+
 </body>
 </html>

@@ -3,137 +3,141 @@
 <head th:replace="~{fragments/head :: head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
-<span class="is-hidden" th:text="${username}" id="username"></span>
-<div id="hero" class="p-6 is-flex is-justify-content-center is-align-items-center">
-    <div>
-        <h1 class="is-size-1 has-text-light has-text-centered has-text-weight-bold">Find The Product You Can Trust</h1>
-        <p class="is-size-4 has-text-light has-text-centered has-text-weight-bold">Real views by real people</p>
-        <form class="is-fullwidth mt-4">
-            <div class="has-background-white is-flex has-radius-rounded p-3">
-                <input
-                        type="search"
-                        class="input borderless"
-                        placeholder="Search Product By Name"
-                />
-                <button class="button is-link has-radius-rounded ml-2 shadow"><i data-feather="search"></i></button>
+<span class="d-none" th:text="${username}" id="username"></span>
+
+<!-- Hero Section -->
+<section id="hero" class="p-5 d-flex justify-content-center align-items-center"
+         style="background-image: url('/images/bg-4.jpg'); background-size: cover; background-position: center; height: 500px;">
+    <div class="text-center text-light">
+        <h1 class="display-3 font-weight-bold">Find The Product You Can Trust</h1>
+        <p class="h4 font-weight-bold">Real views by real people</p>
+        <form class="mt-4">
+            <div class="input-group rounded p-3 bg-white">
+                <input type="search" class="form-control border-0 borderless" placeholder="Search Product By Name"
+                       aria-label="Search Product">
+                <button class="btn btn-link ml-2 shadow" aria-label="Search">
+                    <i data-feather="search"></i>
+                </button>
             </div>
         </form>
     </div>
-</div>
-<!--Hero section ends-->
-<div class="container my-5">
-    <h2 class="is-size-4 has-text-weight-bold my-4">What are you looking for?</h2>
-    <div class="carousel">
-        <div class="carousel-track">
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+</section>
+
+<section class="container my-5">
+    <h2 class="h4 font-weight-bold my-4">What are you looking for?</h2>
+    <div class="my_carousel">
+        <div class="my_carousel-track">
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                     Textiles & Apparel
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Leather Products
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Footwear
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Furniture
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Pharmaceuticals
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Ceramics & Pottery
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Plastic Products
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Cement
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Handicrafts
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Spices
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Electronics & Electrical
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Food & Beverages
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Toys & Sporting
                 </span>
             </div>
-            <div class="carousel-item box is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon is-medium"/>
+            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
+                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
                 <span>
                 Metal Products
                 </span>
             </div>
         </div>
-        <div class="carousel-buttons">
-            <button class="carousel-button" id="prevBtn">&#10094;</button>
-            <button class="carousel-button" id="nextBtn">&#10095;</button>
+        <div class="my_carousel-buttons">
+            <button class="my_carousel-button" id="prevBtn">&#10094;</button>
+            <button class="my_carousel-button" id="nextBtn">&#10095;</button>
         </div>
     </div>
-</div>
-<!--Category section ends-->
-<div class="container my-6">
-    <div class="box has-background-warning-90 columns">
-        <div class="column p-4 is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-            <h2 class="is-size-2 has-text-weight-bold has-text-centered has-text-black">Help thousands make the right
-                choice</h2>
-            <p class="is-size-6 mb-2">Share your experience on NPR, where real reviews make a difference.</p>
-            <a th:href="@{/oauth2/authorization/google}" class="button is-warning has-text-light">
+</section>
+
+
+<!-- Call to Action Section -->
+<section class="container my-5">
+    <div class="row bg-warning text-dark p-4 rounded">
+        <div class="col d-flex flex-column justify-content-center align-items-center">
+            <h2 class="h2 font-weight-bold text-center">Help thousands make the right choice</h2>
+            <p class="h6 mb-2">Share your experience on NPR, where real reviews make a difference.</p>
+            <a th:href="@{/oauth2/authorization/google}" class="btn btn-primary text-light">
                 <i data-feather="at-sign"></i>
                 <span class="ml-2">Continue with Google</span>
             </a>
         </div>
-        <div class="column is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-            <img th:src="@{'/images/bd product.jpg'}" alt="bangladeshi product" height="280" width="420"
-                 class="has-radius-small"/>
+        <div class="col d-flex justify-content-center align-items-center">
+            <img th:src="@{'/images/bd product.jpg'}" alt="Bangladeshi product" class="rounded" height="280"
+                 width="420"/>
         </div>
     </div>
-</div>
-</body>
+</section>
+
 <script th:src="@{/js/carousel.js}"></script>
+</body>
 </html>

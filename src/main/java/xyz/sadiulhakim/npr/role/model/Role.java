@@ -2,6 +2,7 @@ package xyz.sadiulhakim.npr.role.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import xyz.sadiulhakim.npr.user.model.User;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class Role {
     private long id;
 
     @NotBlank
+    @Size(min = 2,max = 30)
     @Column(length = 30, nullable = false, unique = true)
     private String name;
 

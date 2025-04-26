@@ -45,9 +45,9 @@ class CategoryController {
     }
 
     @PostMapping("/save")
-    String save(@ModelAttribute @Valid Category dto, @RequestParam MultipartFile photo, BindingResult result) {
+    String save(@ModelAttribute @Valid Category dto, BindingResult result, @RequestParam MultipartFile photo) {
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return "category/create_page";
         }
 
