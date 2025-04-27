@@ -2,6 +2,7 @@ package xyz.sadiulhakim.npr.category.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import xyz.sadiulhakim.npr.product.model.Product;
 
@@ -17,7 +18,7 @@ public class Category {
     private long id;
 
     @NotBlank
-    @Size(min = 2,max = 65)
+    @Size(min = 2, max = 65)
     @Column(length = 65, unique = true, nullable = false)
     private String name;
 
@@ -26,6 +27,9 @@ public class Category {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "category")
     private List<Product> products = new ArrayList<>();
+
+    @NotNull
+    private boolean active = true;
 
     public Category() {
     }
@@ -36,11 +40,19 @@ public class Category {
         this.picture = picture;
     }
 
-    public Category(long id, String name, String picture, List<Product> products) {
+    public Category(long id, String name, String picture, List<Product> products, boolean active) {
         this.id = id;
         this.name = name;
         this.picture = picture;
         this.products = products;
+        this.active = active;
+    }
+
+    public Category(long id, String name, String picture, boolean active) {
+        this.id = id;
+        this.name = name;
+        this.picture = picture;
+        this.active = active;
     }
 
     public List<Product> getProducts() {
@@ -75,16 +87,24 @@ public class Category {
         this.picture = picture;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return id == category.id && Objects.equals(name, category.name) && Objects.equals(picture, category.picture) &&
-                Objects.equals(products, category.products);
+        return id == category.id && active == category.active && Objects.equals(name, category.name) &&
+                Objects.equals(picture, category.picture) && Objects.equals(products, category.products);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, picture, products);
+        return Objects.hash(id, name, picture, products, active);
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.concurrent.SimpleAsyncTaskScheduler;
 import org.springframework.transaction.PlatformTransactionManager;
 import xyz.sadiulhakim.npr.brand.model.Brand;
@@ -120,10 +121,11 @@ public class BrandAndCategoryImporterJob extends DefaultBatchConfiguration {
     ItemWriter<Brand> brandItemWriter(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<Brand>()
                 .dataSource(dataSource)
-                .sql("insert into brand(name,picture) values(?,?) ON CONFLICT(name) DO NOTHING")
+                .sql("insert into brand(name,picture,active) values(?,?,?) ON CONFLICT(name) DO NOTHING")
                 .itemPreparedStatementSetter((item, ps) -> {
                     ps.setString(1, item.getName());
                     ps.setString(2, item.getPicture());
+                    ps.setBoolean(3, item.isActive());
                 })
                 .build();
     }
@@ -132,10 +134,11 @@ public class BrandAndCategoryImporterJob extends DefaultBatchConfiguration {
     ItemWriter<Category> categoryItemWriter(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<Category>()
                 .dataSource(dataSource)
-                .sql("insert into category(name,picture) values(?,?) ON CONFLICT(name) DO NOTHING")
+                .sql("insert into category(name,picture,active) values(?,?,?) ON CONFLICT(name) DO NOTHING")
                 .itemPreparedStatementSetter((item, ps) -> {
                     ps.setString(1, item.getName());
                     ps.setString(2, item.getPicture());
+                    ps.setBoolean(3, item.isActive());
                 })
                 .build();
     }
@@ -150,11 +153,21 @@ public class BrandAndCategoryImporterJob extends DefaultBatchConfiguration {
                 .reader(brandItemReader)
                 .processor(processBrand)
                 .writer(brandItemWriter)
+                .faultTolerant()
+                .skip(EmptyResultDataAccessException.class)
+                .skipLimit(100)
                 .listener(new StepExecutionListener() {
                     @Override
                     public ExitStatus afterStep(StepExecution stepExecution) {
                         System.out.println("Done importing Brand Data");
                         return StepExecutionListener.super.afterStep(stepExecution);
+                    }
+                })
+                .listener(new SkipListener<>() {
+                    @Override
+                    public void onSkipInWrite(Object item, Throwable t) {
+                        System.out.printf("Skipped error %s on item %s\n", t.getClass().getName(), item);
+                        SkipListener.super.onSkipInWrite(item, t);
                     }
                 })
                 .build();
@@ -170,11 +183,21 @@ public class BrandAndCategoryImporterJob extends DefaultBatchConfiguration {
                 .reader(categoryItemReader)
                 .processor(processCategory)
                 .writer(categoryItemWriter)
+                .faultTolerant()
+                .skip(EmptyResultDataAccessException.class)
+                .skipLimit(100)
                 .listener(new StepExecutionListener() {
                     @Override
                     public ExitStatus afterStep(StepExecution stepExecution) {
                         System.out.println("Done importing Category Data");
                         return StepExecutionListener.super.afterStep(stepExecution);
+                    }
+                })
+                .listener(new SkipListener<>() {
+                    @Override
+                    public void onSkipInWrite(Object item, Throwable t) {
+                        System.out.printf("Skipped error %s on item %s\n", t.getClass().getName(), item);
+                        SkipListener.super.onSkipInWrite(item, t);
                     }
                 })
                 .build();
