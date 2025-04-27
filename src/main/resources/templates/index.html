@@ -27,89 +27,12 @@
     <h2 class="h4 font-weight-bold my-4">What are you looking for?</h2>
     <div class="my_carousel">
         <div class="my_carousel-track">
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                    Textiles & Apparel
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Leather Products
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Footwear
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Furniture
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Pharmaceuticals
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Ceramics & Pottery
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Plastic Products
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Cement
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Handicrafts
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Spices
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Electronics & Electrical
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Food & Beverages
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Toys & Sporting
-                </span>
-            </div>
-            <div class="my_carousel-item d-flex flex-column justify-content-center align-items-center card">
-                <img th:src="@{/images/category/food.svg}" alt="category" class="icon"/>
-                <span>
-                Metal Products
-                </span>
+            <div
+                    th:each="category : ${categories}"
+                    class="my_carousel-item d-flex flex-column justify-content-center align-items-center card"
+            >
+                <img th:src="@{'/picture/category/'+${category.getPicture()}}" alt="category" class="icon"/>
+                <span th:text="${category.name}"></span>
             </div>
         </div>
         <div class="my_carousel-buttons">

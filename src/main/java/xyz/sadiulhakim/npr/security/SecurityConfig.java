@@ -44,7 +44,8 @@ class SecurityConfig {
                 "/categories/**",
                 "/products/**",
                 "/visitors/**",
-                "/actuator/**"
+                "/actuator/**",
+                "/data_importer"
         };
         return http
                 .authorizeHttpRequests(auth -> auth.requestMatchers(publicApi).permitAll())

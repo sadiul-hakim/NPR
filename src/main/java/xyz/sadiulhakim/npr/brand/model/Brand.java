@@ -39,6 +39,12 @@ public class Brand {
         this.products = products;
     }
 
+    public Brand(long id, String name, String picture) {
+        this.id = id;
+        this.name = name;
+        this.picture = picture;
+    }
+
     public List<Product> getProducts() {
         return products;
     }

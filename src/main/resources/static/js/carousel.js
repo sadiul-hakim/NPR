@@ -6,18 +6,15 @@ let itemsToShow = 5; // Default number of items visible at once
 let currentIndex = 0;
 
 const moveToSlide = (index) => {
-    // Update transform to move the carousel track
     track.style.transform = `translateX(-${(index * 100) / itemsToShow}%)`;
 };
 
 prevButton.addEventListener('click', () => {
-    // Decrement currentIndex and wrap around when reaching the beginning
-    currentIndex = (currentIndex === 0) ? Math.ceil(items.length / itemsToShow) - 1 : currentIndex - 1;
+    currentIndex = (currentIndex === 0) ? Math.ceil(items.length - itemsToShow) : currentIndex - 1;
     moveToSlide(currentIndex);
 });
 
 nextButton.addEventListener('click', () => {
-    // Increment currentIndex and wrap around when reaching the end
-    currentIndex = (currentIndex === Math.ceil(items.length / itemsToShow) - 1) ? 0 : currentIndex + 1;
+    currentIndex = (currentIndex >= items.length - itemsToShow) ? 0 : currentIndex + 1;
     moveToSlide(currentIndex);
 });

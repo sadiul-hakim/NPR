@@ -143,6 +143,11 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    public List<Category> findAll(int pageNumber, int size) {
+        return categoryRepository.findAll(PageRequest.of(pageNumber, size, Sort.by("name")))
+                .stream().toList();
+    }
+
     public PaginationResult search(String text, int pageNumber) {
 
         LOGGER.info("CategoryService.searchUser :: search category by text : {}", text);

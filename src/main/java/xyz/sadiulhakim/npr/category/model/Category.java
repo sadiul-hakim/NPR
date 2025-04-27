@@ -30,6 +30,12 @@ public class Category {
     public Category() {
     }
 
+    public Category(long id, String name, String picture) {
+        this.id = id;
+        this.name = name;
+        this.picture = picture;
+    }
+
     public Category(long id, String name, String picture, List<Product> products) {
         this.id = id;
         this.name = name;
