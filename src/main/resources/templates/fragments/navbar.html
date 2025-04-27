@@ -1,11 +1,13 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary" role="navigation" aria-label="main navigation" th:fragment="navbar"
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" role="navigation" aria-label="main navigation"
+     th:fragment="navbar"
      xmlns:sec="http://www.w3.org/1999/xhtml">
     <div class="container">
         <a class="navbar-brand" th:href="@{/}">
-            <img th:src="@{/images/logo.png}" alt="logo" width="40" height="35" />
+            <img th:src="@{/images/logo.png}" alt="logo" width="40" height="35"/>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nprNavbar" aria-controls="nprNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nprNavbar"
+                aria-controls="nprNavbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -27,70 +29,79 @@
                 </a>
 
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img th:src="${picture}" alt="" class="rounded-circle me-2" style="width:30px; height:30px; object-fit:cover;"/>
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img th:src="${picture}" alt="" class="rounded-circle me-2"
+                             style="width:30px; height:30px; object-fit:cover;"/>
                         <span th:text="${name == null || name.isEmpty() ? '' : name}"></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li>
                             <form th:action="@{/logout}" method="post">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                <button type="submit" class="dropdown-item"><i data-feather="log-out"></i> Logout</button>
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="dropdown-item"><i data-feather="log-out"></i> Logout
+                                </button>
                             </form>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <div sec:authorize="hasAnyRole('ADMIN','ASSISTANT')" class="ms-auto navbar-nav">
-                <a class="nav-link active" th:href="@{/dashboard/page}">
+            <div class="ms-auto navbar-nav" sec:authorize="hasAnyRole('ADMIN','ASSISTANT')">
+                <a class="nav-link active" th:href="@{/dashboard/page}" sec:authorize="hasAnyRole('ADMIN','ASSISTANT')">
                     <i data-feather="home"></i>
                     Dashboard
                 </a>
-                <a class="nav-link" th:href="@{/roles/page}">
-                    <i data-feather="chevrons-up"></i>
-                    Roles
-                </a>
-                <a class="nav-link" th:href="@{/users/page}">
-                    <i data-feather="user"></i>
-                    Users
-                </a>
-                <a class="nav-link" th:href="@{/brands/page}">
-                    <i data-feather="award"></i>
-                    Brands
-                </a>
-                <a class="nav-link" th:href="@{/categories/page}">
-                    <i data-feather="list"></i>
-                    Categories
-                </a>
-                <a class="nav-link" th:href="@{/products/page}">
-                    <i data-feather="package"></i>
-                    Products
-                </a>
-                <a class="nav-link" th:href="@{/visitors/page}">
-                    <i data-feather="users"></i>
-                    Visitors
-                </a>
-
-                <a class="nav-link" th:href="@{/data_importer/page}">
-                    <i data-feather="database"></i>
-                    Data Importer
-                </a>
-
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img th:src="@{'/picture'+${picture}}" alt="" class="rounded-circle me-2" style="width:30px; height:30px; object-fit:cover;"/>
-                        <span th:text="${name == null || name.isEmpty() ? '' : name}"></span>
+                <th:block sec:authorize="hasAnyRole('ADMIN')">
+                    <a class="nav-link" th:href="@{/users/page}">
+                        <i data-feather="user"></i>
+                        Users
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                        <li>
-                            <form th:action="@{/logout}" method="post">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                <button type="submit" class="dropdown-item"><i data-feather="log-out"></i> Logout</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+                    <a class="nav-link" th:href="@{/roles/page}">
+                        <i data-feather="chevrons-up"></i>
+                        Roles
+                    </a>
+                </th:block>
+                <th:block sec:authorize="hasAnyRole('ADMIN','ASSISTANT')">
+                    <a class="nav-link" th:href="@{/brands/page}">
+                        <i data-feather="award"></i>
+                        Brands
+                    </a>
+                    <a class="nav-link" th:href="@{/categories/page}">
+                        <i data-feather="list"></i>
+                        Categories
+                    </a>
+                    <a class="nav-link" th:href="@{/products/page}">
+                        <i data-feather="package"></i>
+                        Products
+                    </a>
+                    <a class="nav-link" th:href="@{/visitors/page}">
+                        <i data-feather="users"></i>
+                        Visitors
+                    </a>
+
+                    <a class="nav-link" th:href="@{/data_importer/page}">
+                        <i data-feather="database"></i>
+                        Data Importer
+                    </a>
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img th:src="@{'/picture'+${picture}}" alt="" class="rounded-circle me-2"
+                                 style="width:30px; height:30px; object-fit:cover;"/>
+                            <span th:text="${name == null || name.isEmpty() ? '' : name}"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                    <button type="submit" class="dropdown-item"><i data-feather="log-out"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </th:block>
             </div>
 
             <div sec:authorize="!isAuthenticated()" class="ms-auto navbar-nav">

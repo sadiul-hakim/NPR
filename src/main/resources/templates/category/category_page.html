@@ -15,6 +15,7 @@
             <tr>
                 <th>Picture</th>
                 <th>Name</th>
+                <th>Active</th>
                 <th class="text-end">
                     <div class="d-flex justify-content-end gap-2">
                         <a class="btn btn-primary btn-sm" th:href="@{${table_url.csvUrl()}}">
@@ -33,6 +34,7 @@
                     <img th:src="@{'/picture/category/'+${b.picture}}" th:alt="${b.name}" class="img-thumbnail" style="height: 50px; width: 50px; object-fit: cover;"/>
                 </td>
                 <td th:text="${b.name}"></td>
+                <td th:text="${b.active}"></td>
                 <td class="text-end">
                     <div class="d-flex justify-content-end gap-2">
                         <a th:href="@{'/categories/create_page?brandId={id}'(id=${b.id})}" class="btn btn-primary btn-sm">
