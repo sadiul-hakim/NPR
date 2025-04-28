@@ -66,7 +66,7 @@ public class DashboardService {
         return emitters.computeIfAbsent(username, key -> new SseEmitter((long) (1000 * 60 * 20)));
     }
 
-    @Scheduled(fixedRate = 5000, scheduler = "defaultTaskScheduler")
+    @Scheduled(fixedRate = 20000, scheduler = "defaultTaskScheduler")
     public void streamCount() {
         Map<String, Long> counts = new HashMap<>();
         counts.put("Users", userService.count());
