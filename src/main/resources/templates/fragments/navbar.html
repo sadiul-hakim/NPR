@@ -13,23 +13,23 @@
 
         <div id="nprNavbar" class="collapse navbar-collapse">
             <div sec:authorize="isAuthenticated() && !hasAnyRole('ADMIN','ASSISTANT')" class="ms-auto navbar-nav">
-                <a class="nav-link" href="#">
+                <a class="nav-link active" href="#">
                     <i data-feather="package"></i>
                     Products
                 </a>
 
-                <a class="nav-link" href="#">
+                <a class="nav-link active" href="#">
                     <i data-feather="list"></i>
                     Categories
                 </a>
 
-                <a class="nav-link" href="#">
+                <a class="nav-link active" href="#">
                     <i data-feather="award"></i>
                     Brands
                 </a>
 
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                    <a class="nav-link active dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img th:src="${picture}" alt="" class="rounded-circle me-2"
                              style="width:30px; height:30px; object-fit:cover;"/>
@@ -53,39 +53,39 @@
                     Dashboard
                 </a>
                 <th:block sec:authorize="hasAnyRole('ADMIN')">
-                    <a class="nav-link" th:href="@{/users/page}">
+                    <a class="nav-link active" th:href="@{/users/page}">
                         <i data-feather="user"></i>
                         Users
                     </a>
-                    <a class="nav-link" th:href="@{/roles/page}">
+                    <a class="nav-link active" th:href="@{/roles/page}">
                         <i data-feather="chevrons-up"></i>
                         Roles
                     </a>
                 </th:block>
                 <th:block sec:authorize="hasAnyRole('ADMIN','ASSISTANT')">
-                    <a class="nav-link" th:href="@{/brands/page}">
+                    <a class="nav-link active" th:href="@{/brands/page}">
                         <i data-feather="award"></i>
                         Brands
                     </a>
-                    <a class="nav-link" th:href="@{/categories/page}">
+                    <a class="nav-link active" th:href="@{/categories/page}">
                         <i data-feather="list"></i>
                         Categories
                     </a>
-                    <a class="nav-link" th:href="@{/products/page}">
+                    <a class="nav-link active" th:href="@{/products/page}">
                         <i data-feather="package"></i>
                         Products
                     </a>
-                    <a class="nav-link" th:href="@{/visitors/page}">
+                    <a class="nav-link active" th:href="@{/visitors/page}">
                         <i data-feather="users"></i>
                         Visitors
                     </a>
 
-                    <a class="nav-link" th:href="@{/data_importer/page}">
+                    <a class="nav-link active" th:href="@{/data_importer/page}">
                         <i data-feather="database"></i>
                         Data Importer
                     </a>
                     <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown"
+                        <a class="nav-link active dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown"
                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img th:src="@{'/picture'+${picture}}" alt="" class="rounded-circle me-2"
                                  style="width:30px; height:30px; object-fit:cover;"/>

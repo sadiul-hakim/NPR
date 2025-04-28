@@ -63,11 +63,28 @@ public class DashboardService {
 
         // After the checks, ensure the emitter is still valid
         // If the emitter was removed (expired or completed), create a new one and return it
-        return emitters.computeIfAbsent(username, key -> new SseEmitter((long) (1000 * 60 * 20)));
+        SseEmitter emitter1 = emitters.computeIfAbsent(username, key -> new SseEmitter((long) (1000 * 60 * 20)));
+        try {
+            emitter1.send(SseEmitter.event().name("dashboard_counts").data(getCounts()));
+        } catch (IOException e) {
+            LOGGER.warn("DashboardService.subscribe :: {}", e.getMessage());
+        }
+        return emitter1;
     }
 
     @Scheduled(fixedRate = 20000, scheduler = "defaultTaskScheduler")
     public void streamCount() {
+
+        for (SseEmitter emitter : emitters.values()) {
+            try {
+                emitter.send(SseEmitter.event().name("dashboard_counts").data(getCounts()));
+            } catch (IOException e) {
+                LOGGER.warn("DashboardService.streamCount :: {}", e.getMessage());
+            }
+        }
+    }
+
+    private Map<String, Long> getCounts() {
         Map<String, Long> counts = new HashMap<>();
         counts.put("Users", userService.count());
         counts.put("Visitors", visitorService.count());
@@ -75,13 +92,6 @@ public class DashboardService {
         counts.put("Categories", categoryService.count());
         counts.put("Products", productService.count());
         counts.put("Reviews", reviewService.count());
-
-        for (SseEmitter emitter : emitters.values()) {
-            try {
-                emitter.send(SseEmitter.event().name("dashboard_counts").data(counts));
-            } catch (IOException e) {
-                LOGGER.warn("DashboardService.streamCount :: {}", e.getMessage());
-            }
-        }
+        return counts;
     }
 }
