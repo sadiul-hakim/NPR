@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body class="bg-light">
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+<div class="container py-5">
+    <h1 class="mb-4">🚀 Application Status</h1>
+
+    <div class="row g-4">
+
+        <!-- Health Status -->
+        <div class="col-md-6">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    Health Status
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="'Status: ' + ${health.status}"></h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Info -->
+        <div class="col-md-6">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    App Info
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:each="entry : ${info.entrySet()}"
+                            th:text="${entry.key} + ': ' + ${entry.value}"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Memory Usage -->
+        <div class="col-md-6">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    Memory Usage
+                </div>
+                <div class="card-body">
+                    <p
+                            th:text="'Used Memory: ' + ${#numbers.formatDecimal(memoryUsage.measurements.get(0).value / 1024 / 1024, 0, 2,'POINT')} + ' MB'"
+                            th:if="${memoryUsage != null}"
+                    ></p>
+                    <p
+                            th:text="'Heap Memory: ' + ${#numbers.formatDecimal(heapMemory.measurements.get(0).value / 1024 / 1024, 0, 2,'POINT')} + ' MB'"
+                            th:if="${heapMemory != null}"
+                    ></p>
+                    <p
+                            th:text="'Non-Heap Memory: ' + ${#numbers.formatDecimal(nonHeapMemory.measurements.get(0).value / 1024 / 1024, 0,2, 'POINT')} + ' MB'"
+                            th:if="${nonHeapMemory != null}"
+                    ></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Uptime -->
+        <div class="col-md-6">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    Uptime
+                </div>
+                <div class="card-body">
+                    <p
+                            th:text="'Uptime: ' + ${#numbers.formatDecimal(uptime.measurements.get(0).value / 60, 0, 2,'POINT')} + ' minutes'"
+                            th:if="${uptime != null}"
+                    ></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Garbage Collection Stats -->
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    Garbage Collection
+                </div>
+                <div class="card-body">
+                    <p
+                            th:text="'GC Count: ' + ${gcCount.measurements.get(0).value}"
+                            th:if="${gcCount != null}"
+                    ></p>
+                    <p
+                            th:text="'GC Time: ' + ${#numbers.formatDecimal(gcTime.measurements.get(0).value / 1000, 0, 2,'POINT')} + ' seconds'"
+                            th:if="${gcTime != null}"
+                    ></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CPU Usage -->
+        <div class="col-md-6">
+            <div class="card border-secondary">
+                <div class="card-header bg-secondary text-white">
+                    CPU Usage
+                </div>
+                <div class="card-body">
+                    <p
+                            th:text="'CPU Usage: ' + ${#numbers.formatDecimal(cpuUsage.measurements.get(0).value * 100, 0, 2,'POINT')} + ' %'"
+                            th:if="${cpuUsage != null}"
+                    ></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

@@ -92,6 +92,7 @@
                             <span th:text="${name == null || name.isEmpty() ? '' : name}"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                            <a th:href="@{/status}" class="dropdown-item">App Status</a>
                             <li>
                                 <form th:action="@{/logout}" method="post">
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>

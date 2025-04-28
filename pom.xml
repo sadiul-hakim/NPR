@@ -112,6 +112,8 @@
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
         </dependency>
+        <!--    Session Ends   -->
+        <!--    Batch Starts   -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -129,7 +131,7 @@
             <artifactId>spring-batch-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--    Session Ends   -->
+        <!--    Batch Ends   -->
     </dependencies>
 
     <build>
@@ -141,6 +143,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--                <configuration>-->
+                <!--                    <jvmArguments>-XX:+UseZGC -Xms512m -Xmx1024m</jvmArguments>-->
+                <!--                </configuration>-->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

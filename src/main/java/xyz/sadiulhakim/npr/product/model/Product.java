@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import xyz.sadiulhakim.npr.brand.model.Brand;
 import xyz.sadiulhakim.npr.category.model.Category;
-import xyz.sadiulhakim.npr.product.converter.ListOfLongConverter;
 import xyz.sadiulhakim.npr.product.converter.MapOfStringAndObjectConverter;
 import xyz.sadiulhakim.npr.review.model.Review;
 
@@ -20,7 +19,7 @@ public class Product {
     private long id;
 
     @NotBlank
-    @Size(min = 2,max = 150)
+    @Size(min = 2, max = 150)
     @Column(unique = true, nullable = false, length = 150)
     private String name;
 
@@ -38,7 +37,7 @@ public class Product {
     @Column(length = 150)
     private String qrCode;
 
-    @Size(min = 10,max = 250)
+    @Size(min = 10, max = 250)
     @Column(length = 250)
     private String description;
 
@@ -47,6 +46,7 @@ public class Product {
     private Map<String, Object> details = new HashMap<>();
 
     private double rating;
+    private boolean active = true;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "product")
     private List<Review> reviews = new ArrayList<>();
@@ -55,7 +55,8 @@ public class Product {
     }
 
     public Product(long id, String name, Brand brand, Category category, String picture, String qrCode,
-                   String description, Map<String, Object> details, double rating, List<Review> reviews) {
+                   String description, Map<String, Object> details, double rating, boolean active,
+                   List<Review> reviews) {
         this.id = id;
         this.name = name;
         this.brand = brand;
@@ -65,7 +66,16 @@ public class Product {
         this.description = description;
         this.details = details;
         this.rating = rating;
+        this.active = active;
         this.reviews = reviews;
+    }
+
+    public Product(long id, String name, Brand brand, Category category, String description) {
+        this.id = id;
+        this.name = name;
+        this.brand = brand;
+        this.category = category;
+        this.description = description;
     }
 
     public long getId() {
@@ -148,19 +158,27 @@ public class Product {
         this.category = category;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && Double.compare(rating, product.rating) == 0 && Objects.equals(name, product.name) &&
-                Objects.equals(brand, product.brand) && Objects.equals(category, product.category) &&
-                Objects.equals(picture, product.picture) && Objects.equals(qrCode, product.qrCode) &&
-                Objects.equals(description, product.description) && Objects.equals(details, product.details) &&
-                Objects.equals(reviews, product.reviews);
+        return id == product.id && Double.compare(rating, product.rating) == 0 && active == product.active &&
+                Objects.equals(name, product.name) && Objects.equals(brand, product.brand) &&
+                Objects.equals(category, product.category) && Objects.equals(picture, product.picture) &&
+                Objects.equals(qrCode, product.qrCode) && Objects.equals(description, product.description) &&
+                Objects.equals(details, product.details) && Objects.equals(reviews, product.reviews);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, brand, category, picture, qrCode, description, details, rating, reviews);
+        return Objects.hash(id, name, brand, category, picture, qrCode, description, details, rating, active, reviews);
     }
 }

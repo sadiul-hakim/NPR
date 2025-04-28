@@ -26,8 +26,7 @@ class SecurityConfig {
                 "/fonts/**",
                 "/js/**",
                 "/images/**",
-                "/picture/**",
-                "/admin_login"
+                "/picture/**"
         };
 
         String[] authenticatedUserAccess = {
@@ -45,7 +44,8 @@ class SecurityConfig {
                 "/products/**",
                 "/visitors/**",
                 "/actuator/**",
-                "/data_importer"
+                "/data_importer",
+                "/status"
         };
         return http
                 .authorizeHttpRequests(auth -> auth.requestMatchers(publicApi).permitAll())
@@ -64,6 +64,7 @@ class SecurityConfig {
                         .permitAll()
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)  // Invalidate session
+                        .clearAuthentication(true)
                         .deleteCookies("JSESSIONID", "SESSION")
                 )
                 .build();

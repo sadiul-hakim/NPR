@@ -4,56 +4,41 @@
 <body class="bg-light">
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="container my-5">
-    <div class="row">
-        <div class="col-12 col-md-4 mb-4">
-            <div class="card p-5 text-center">
-                <p class="h5">
-                    <span>10</span><br>
-                    <span>User</span>
-                </p>
-            </div>
-        </div>
-        <div class="col-12 col-md-4 mb-4">
-            <div class="card p-5 text-center">
-                <p class="h5">
-                    <span>1000</span><br>
-                    <span>Visitors</span>
-                </p>
-            </div>
-        </div>
-        <div class="col-12 col-md-4 mb-4">
-            <div class="card p-5 text-center">
-                <p class="h5">
-                    <span>100</span><br>
-                    <span>Brands</span>
-                </p>
-            </div>
-        </div>
-        <div class="col-12 col-md-4 mb-4">
-            <div class="card p-5 text-center">
-                <p class="h5">
-                    <span>200</span><br>
-                    <span>Categories</span>
-                </p>
-            </div>
-        </div>
-        <div class="col-12 col-md-4 mb-4">
-            <div class="card p-5 text-center">
-                <p class="h5">
-                    <span>300</span><br>
-                    <span>Products</span>
-                </p>
-            </div>
-        </div>
-        <div class="col-12 col-md-4 mb-4">
-            <div class="card p-5 text-center">
-                <p class="h5">
-                    <span>300,000</span><br>
-                    <span>Reviews</span>
-                </p>
-            </div>
-        </div>
+    <div class="row" id="dashboard_area">
     </div>
 </div>
 </body>
+<script>
+    const dashboard_area = document.getElementById("dashboard_area");
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // Update counts on event
+        const eventSource = new EventSource("/dashboard/subscribe");
+        eventSource.addEventListener("dashboard_counts", function (event) {
+
+            const counts = JSON.parse(event.data);
+
+            dashboard_area.innerHTML = '';
+            Object.entries(counts).forEach(([key, value]) => {
+                const template = `
+                    <div class="col-12 col-md-4 mb-4">
+                        <div class="card p-5 text-center">
+                            <p class="h5">
+                                <span>${value}</span><br>
+                                <span>${key}</span>
+                            </p>
+                        </div>
+                    </div>
+                `;
+                dashboard_area.insertAdjacentHTML('beforeend',template);
+            });
+        });
+
+        eventSource.onerror = function (event) {
+            console.error("Error in SSE connection", event);
+            eventSource.close();
+        };
+    })
+</script>
 </html>

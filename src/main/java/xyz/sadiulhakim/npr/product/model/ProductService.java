@@ -114,7 +114,7 @@ public class ProductService {
         productRepository.save(exProduct);
     }
 
-    public long numberOfProducts() {
+    public long count() {
         return productRepository.numberOfProducts();
     }
 
