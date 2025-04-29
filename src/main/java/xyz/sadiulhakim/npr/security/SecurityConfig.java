@@ -26,13 +26,12 @@ class SecurityConfig {
                 "/fonts/**",
                 "/js/**",
                 "/images/**",
-                "/picture/**"
-        };
-
-        String[] authenticatedUserAccess = {
-                "/categories/get-all",
-                "/brands/get-all",
-                "/products/get-all"
+                "/picture/**",
+                "/products/by-brand/**",
+                "/products/by-category/**",
+                "/products/view",
+                "/categories/list",
+                "/brands/list"
         };
 
         String[] adminAccess = {
@@ -49,7 +48,6 @@ class SecurityConfig {
         };
         return http
                 .authorizeHttpRequests(auth -> auth.requestMatchers(publicApi).permitAll())
-                .authorizeHttpRequests(auth -> auth.requestMatchers(authenticatedUserAccess).authenticated())
                 .authorizeHttpRequests(auth -> auth.requestMatchers(adminAccess).hasAnyRole("ADMIN", "ASSISTANT"))
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .userDetailsService(userDetailsService)

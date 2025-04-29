@@ -40,8 +40,19 @@ class BrandController {
         model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
         model.addAttribute("brandResult", brandService.findAllPaginated(page));
         model.addAttribute("table_url", table_url);
-
         return "brand/brand_page";
+    }
+
+    @GetMapping("/list")
+    String list(@RequestParam(defaultValue = "0") int page, Model model) {
+
+        model.addAttribute("name", AuthenticatedUserUtil.getName());
+        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
+        model.addAttribute("brandResult", brandService.findAllPaginated(page));
+        TableUrlPojo brand_table_url = new TableUrlPojo("", "/brands/list",
+                "", "", "");
+        model.addAttribute("table_url", brand_table_url);
+        return "brand/brand_list";
     }
 
     @PostMapping("/save")

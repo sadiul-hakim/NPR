@@ -44,6 +44,18 @@ class CategoryController {
         return "category/category_page";
     }
 
+    @GetMapping("/list")
+    String list(@RequestParam(defaultValue = "0") int page, Model model) {
+
+        model.addAttribute("name", AuthenticatedUserUtil.getName());
+        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
+        model.addAttribute("categoryResult", categoryService.findAllPaginated(page));
+        TableUrlPojo category_table_url = new TableUrlPojo("", "/categories/list", "",
+                "", "");
+        model.addAttribute("table_url", category_table_url);
+        return "category/category_list";
+    }
+
     @PostMapping("/save")
     String save(@ModelAttribute @Valid Category dto, BindingResult result, @RequestParam MultipartFile photo) {
 
