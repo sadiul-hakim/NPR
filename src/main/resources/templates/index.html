@@ -1,7 +1,11 @@
 <!doctype html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/head :: head}"></head>
+<head th:replace="~{fragments/head :: head}">
+</head>
 <body class="bg-light">
+<link rel="stylesheet" th:href="@{/css/glider.min.css}">
+<script th:src="@{/js/glider.min.js}"></script>
+
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <span class="d-none" th:text="${username}" id="username"></span>
 
@@ -23,21 +27,25 @@
     </div>
 </section>
 
+<!--Category Slide-->
 <section class="container my-5">
     <h2 class="h4 font-weight-bold my-4">What are you looking for?</h2>
-    <div class="my_carousel">
-        <div class="my_carousel-track">
-            <div
-                    th:each="category : ${categories}"
-                    class="my_carousel-item d-flex flex-column justify-content-center align-items-center card"
-            >
-                <img th:src="@{'/picture/category/'+${category.getPicture()}}" alt="category" class="icon"/>
-                <span th:text="${category.name}"></span>
+    <div class="my_carousel" th:fragment="carousel(slide)">
+        <div class="glider-contain">
+            <div class="glider">
+                <div th:each="item : ${categories}"
+                     class="my_carousel-item card d-flex justify-content-center align-items-center p-3">
+                    <img th:src="@{'/picture/category/' + ${item.picture}}" alt="category" class="icon img-fluid"/>
+                    <a
+                            class="text-muted"
+                            th:text="${item.name}"
+                            style="text-decoration: none;"
+                            th:href="@{'/products/by-category?categoryId='+${item.id}}">
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="my_carousel-buttons">
-            <button class="my_carousel-button" id="prevBtn">&#10094;</button>
-            <button class="my_carousel-button" id="nextBtn">&#10095;</button>
+            <button class="glider-prev btn btn-outline-secondary">&laquo;</button>
+            <button class="glider-next btn btn-outline-secondary">&raquo;</button>
         </div>
     </div>
 </section>
@@ -49,7 +57,7 @@
         <div class="col d-flex flex-column justify-content-center align-items-center">
             <h2 class="h2 font-weight-bold text-center">Help thousands make the right choice</h2>
             <p class="h6 mb-2">Share your experience on NPR, where real reviews make a difference.</p>
-            <a th:href="@{/oauth2/authorization/google}" class="btn btn-primary text-light">
+            <a th:href="@{/oauth2/authorization/google}" class="btn btn-primary text-light my-2">
                 <i data-feather="at-sign"></i>
                 <span class="ml-2">Continue with Google</span>
             </a>
@@ -61,6 +69,61 @@
     </div>
 </section>
 
-<script th:src="@{/js/carousel.js}"></script>
+<!--Product Slide-->
+<section class="container my-5">
+    <h2 class="h4 font-weight-bold my-4">Top-rated products?</h2>
+    <div class="my_carousel" th:fragment="carousel(slide)">
+        <div class="glider-contain">
+            <div class="glider">
+                <div th:each="item : ${topRatedProduct}"
+                     class="my_carousel-item card d-flex justify-content-center align-items-center p-3">
+                    <img th:src="@{'/picture/product/' + ${item.picture}}" alt="product" class="icon_md img-fluid"/>
+                    <a
+                            th:text="${item.name}"
+                            class="text-muted"
+                            style="text-decoration: none;"
+                            th:href="@{'/products/view?productId='+${item.id}}">
+                    </a>
+                    <span th:text="${item.rating}" class="text-warning"></span>
+                </div>
+            </div>
+            <button class="glider-prev btn btn-outline-secondary">&laquo;</button>
+            <button class="glider-next btn btn-outline-secondary">&raquo;</button>
+        </div>
+    </div>
+</section>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.glider').forEach(gliderEl => {
+            new Glider(gliderEl, {
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                draggable: true,
+                dots: null,
+                arrows: {
+                    prev: gliderEl.parentElement.querySelector('.glider-prev'),
+                    next: gliderEl.parentElement.querySelector('.glider-next')
+                },
+                responsive: [
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 6,
+                        }
+                    },
+                    {
+                        breakpoint: 576,
+                        settings: {
+                            slidesToShow: 1,
+                        }
+                    }
+                ]
+            });
+        });
+    });
+</script>
+
 </html>

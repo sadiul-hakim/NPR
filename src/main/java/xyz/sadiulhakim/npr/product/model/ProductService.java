@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.sadiulhakim.npr.brand.model.Brand;
+import xyz.sadiulhakim.npr.brand.model.BrandService;
+import xyz.sadiulhakim.npr.category.model.Category;
+import xyz.sadiulhakim.npr.category.model.CategoryService;
 import xyz.sadiulhakim.npr.event.EntityEventType;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
 import xyz.sadiulhakim.npr.product.event.ProductEvent;
@@ -33,13 +37,17 @@ public class ProductService {
     private final ApplicationEventPublisher eventPublisher;
     private final AppProperties appProperties;
     private final ObjectMapper mapper;
+    private final CategoryService categoryService;
+    private final BrandService brandService;
 
     ProductService(ProductRepository productRepository, ApplicationEventPublisher eventPublisher,
-                   AppProperties appProperties, ObjectMapper mapper) {
+                   AppProperties appProperties, ObjectMapper mapper, CategoryService categoryService, BrandService brandService) {
         this.productRepository = productRepository;
         this.eventPublisher = eventPublisher;
         this.appProperties = appProperties;
         this.mapper = mapper;
+        this.categoryService = categoryService;
+        this.brandService = brandService;
     }
 
     public void save(Product product, MultipartFile photo) {
@@ -172,6 +180,34 @@ public class ProductService {
         return findAllPaginatedWithSize(pageNumber, appProperties.getPaginationSize());
     }
 
+    public PaginationResult findAllByCategoryPaginated(long category, int pageNumber) {
+
+        LOGGER.info("ProductService.findAllByCategoryPaginated :: finding products page : {}", pageNumber);
+        Optional<Category> categoryOpt = categoryService.getById(category);
+        if (categoryOpt.isEmpty()) {
+            return new PaginationResult();
+        }
+        Page<Product> productPage = productRepository.findAllByCategory(
+                categoryOpt.get(),
+                PageRequest.of(pageNumber, appProperties.getPaginationSize())
+        );
+        return PageUtil.prepareResult(productPage);
+    }
+
+    public PaginationResult findAllByBrandPaginated(long brand, int pageNumber) {
+
+        LOGGER.info("ProductService.findAllByBrandPaginated :: finding products page : {}", pageNumber);
+        Optional<Brand> brandOpt = brandService.getById(brand);
+        if (brandOpt.isEmpty()) {
+            return new PaginationResult();
+        }
+        Page<Product> productPage = productRepository.findAllByBrand(
+                brandOpt.get(),
+                PageRequest.of(pageNumber, appProperties.getPaginationSize())
+        );
+        return PageUtil.prepareResult(productPage);
+    }
+
     public PaginationResult findAllPaginatedWithSize(int pageNumber, int size) {
 
         LOGGER.info("ProductService.findAllPaginated :: finding products page : {}", pageNumber);
@@ -183,9 +219,13 @@ public class ProductService {
 
         LOGGER.info("ProductService.search :: search product by text : {}", text);
         Page<Product> page = productRepository.findAllByNameContainingOrDescriptionContaining(
-                text, text, text, text, PageRequest.of(pageNumber, 200)
+                text, text, PageRequest.of(pageNumber, 200)
         );
         return PageUtil.prepareResult(page);
+    }
+
+    public List<Product> findTopRatedProduct(int pageNumber, int pageSize) {
+        return productRepository.findAllByOrderByRatingDesc(PageRequest.of(pageNumber, pageSize));
     }
 
     public byte[] getCsvData() {

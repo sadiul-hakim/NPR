@@ -25,38 +25,13 @@ body {
     height: 500px !important;
 }
 
-.my_carousel {
-    position: relative;
-    overflow: hidden;
-}
-
-.my_carousel-track {
-    display: flex;
-    transition: transform 0.3s ease;
-}
-
 .my_carousel-item {
-    min-width: 20%; /* Show 3 items at once */
-    flex-shrink: 0;
-    box-sizing: border-box;
-    height: 100px;
+    max-width: 200px;
+    margin: 0 auto;
 }
-
-.my_carousel-buttons {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    transform: translateY(-50%);
-}
-
-.my_carousel-button {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
+.icon_md {
+    max-width: 100px;
+    height: 165px;
 }
 
 .icon{

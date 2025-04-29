@@ -80,6 +80,10 @@ public class DashboardService {
                 emitter.send(SseEmitter.event().name("dashboard_counts").data(getCounts()));
             } catch (IOException e) {
                 LOGGER.warn("DashboardService.streamCount :: {}", e.getMessage());
+                emitter.completeWithError(e);
+            } catch (IllegalStateException e) {
+                // Already completed
+                emitter.completeWithError(e);
             }
         }
     }

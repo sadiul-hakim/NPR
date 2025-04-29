@@ -37,7 +37,7 @@ public class Product {
     @Column(length = 150)
     private String qrCode;
 
-    @Size(min = 10, max = 250)
+    @Size(max = 250)
     @Column(length = 250)
     private String description;
 

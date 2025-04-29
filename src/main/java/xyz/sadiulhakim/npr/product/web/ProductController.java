@@ -9,11 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import xyz.sadiulhakim.npr.brand.model.Brand;
 import xyz.sadiulhakim.npr.brand.model.BrandService;
 import xyz.sadiulhakim.npr.category.model.Category;
 import xyz.sadiulhakim.npr.category.model.CategoryService;
+import xyz.sadiulhakim.npr.pojo.PaginationResult;
 import xyz.sadiulhakim.npr.pojo.TableUrlPojo;
 import xyz.sadiulhakim.npr.product.model.Product;
 import xyz.sadiulhakim.npr.product.model.ProductService;
@@ -53,6 +53,54 @@ class ProductController {
         model.addAttribute("table_url", table_url);
 
         return "product/product_page";
+    }
+
+    @GetMapping("/view")
+    String view(@RequestParam(defaultValue = "0") int productId, Model model) {
+
+        model.addAttribute("name", AuthenticatedUserUtil.getName());
+        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
+
+        Optional<Product> product = productService.getById(productId);
+        if (product.isEmpty()) {
+            return "product/product_not_found";
+        }
+        model.addAttribute("product", product.get());
+        return "product/single_product";
+    }
+
+    @GetMapping("/by-category")
+    String byCategory(@RequestParam(defaultValue = "0") long categoryId, @RequestParam(defaultValue = "0") int page,
+                      Model model) {
+
+        model.addAttribute("name", AuthenticatedUserUtil.getName());
+        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
+
+        PaginationResult pageResult = productService.findAllByCategoryPaginated(categoryId, page);
+        model.addAttribute("productResult", pageResult);
+        model.addAttribute("categoryId", categoryId);
+
+        TableUrlPojo product_table_url = new TableUrlPojo("", "/products/by-category",
+                "", "", "");
+        model.addAttribute("table_url", product_table_url);
+        return "product/products_by_category";
+    }
+
+    @GetMapping("/by-brand")
+    String byBrand(@RequestParam(defaultValue = "0") long brandId, @RequestParam(defaultValue = "0") int page,
+                   Model model) {
+
+        model.addAttribute("name", AuthenticatedUserUtil.getName());
+        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
+
+        PaginationResult pageResult = productService.findAllByBrandPaginated(brandId, page);
+        model.addAttribute("productResult", pageResult);
+        model.addAttribute("brandId", brandId);
+
+        TableUrlPojo product_table_url = new TableUrlPojo("", "/products/by-category",
+                "", "", "");
+        model.addAttribute("table_url", product_table_url);
+        return "product/products_by_brand";
     }
 
     @PostMapping("/save")
