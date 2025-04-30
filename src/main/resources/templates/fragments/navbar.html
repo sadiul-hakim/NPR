@@ -13,7 +13,7 @@
 
         <div id="nprNavbar" class="collapse navbar-collapse">
             <div sec:authorize="isAuthenticated() && !hasAnyRole('ADMIN','ASSISTANT')" class="ms-auto navbar-nav">
-                <a class="nav-link active" href="#">
+                <a class="nav-link active" th:href="@{/products/list}">
                     <i data-feather="package"></i>
                     Products
                 </a>

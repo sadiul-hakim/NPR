@@ -15,14 +15,16 @@
     <div class="text-center text-light">
         <h1 class="display-3 font-weight-bold">Find The Product You Can Trust</h1>
         <p class="h4 font-weight-bold">Real views by real people</p>
-        <form class="mt-4">
+        <form class="mt-4 position-relative">
             <div class="input-group rounded p-2 bg-white">
-                <input type="search" class="form-control border-0 borderless" placeholder="Search Product By Name"
-                       aria-label="Search Product">
+                <input type="search" id="searchInput" class="form-control border-0 borderless"
+                       placeholder="Search Product By Name" aria-label="Search Product" autocomplete="off">
                 <button class="btn btn-link ml-2 shadow" aria-label="Search">
                     <i data-feather="search"></i>
                 </button>
             </div>
+            <div id="searchPopup" class="position-absolute bg-white border rounded mt-1 w-100"
+                 style="display: none; z-index: 1000;"></div>
         </form>
     </div>
 </section>
@@ -96,6 +98,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+
+        // Carousel
         document.querySelectorAll('.glider').forEach(gliderEl => {
             new Glider(gliderEl, {
                 slidesToShow: 3,
@@ -121,6 +125,63 @@
                     }
                 ]
             });
+        });
+
+        // Search Popup
+        const input = document.getElementById('searchInput');
+        const popup = document.getElementById('searchPopup');
+
+        let timeout = null;
+
+        input.addEventListener('keyup', function () {
+            const query = input.value.trim();
+
+            // Debounce API calls
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                if (query.length === 0) {
+                    popup.style.display = 'none';
+                    popup.innerHTML = '';
+                    return;
+                }
+
+                fetch(`/products/search_api?text=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                        if (data.length === 0) {
+                            popup.style.display = 'none';
+                            popup.innerHTML = '';
+                            return;
+                        }
+
+                        popup.innerHTML = data.map(item => `
+                        <div class="p-2 border-bottom text-dark d-flex justify-content-start">
+                            <img class="icon" src="/picture/product/${item.picture}" alt="product"/>
+                            <div class="d-flex flex-column ms-1 justify-content-start align-items-start">
+                                <a
+                                href="/products/view?productId=${item.id}"
+                                style="text-decoration: none;"
+                                class="text-dark"><strong>${item.name}</strong></a>
+                                <small class="text-warning">${item.rating}</small>
+                            </div>
+                        </div>
+                    `).join('');
+
+                        popup.style.display = 'block';
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        popup.style.display = 'none';
+                    });
+            }, 300); // Wait 300ms after typing
+        });
+
+        // Optional: Hide popup when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!popup.contains(e.target) && e.target !== input) {
+                popup.style.display = 'none';
+            }
         });
     });
 </script>

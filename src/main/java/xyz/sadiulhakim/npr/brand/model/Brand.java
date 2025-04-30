@@ -1,5 +1,6 @@
 package xyz.sadiulhakim.npr.brand.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -26,6 +27,7 @@ public class Brand {
     @Column(length = 150)
     private String picture;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "brand", fetch = FetchType.EAGER)
     private List<Product> products = new ArrayList<>();
 

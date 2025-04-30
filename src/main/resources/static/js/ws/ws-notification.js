@@ -18,11 +18,11 @@ document.addEventListener("DOMContentLoaded", function () {
         {'ws-id': wsId},
         function (frame) {
             stompClient.subscribe('/user/queue/notification', function (message) {
-                showNotification(JSON.parse(message.body).title, JSON.parse(message.body).message, "is-info");
+                showNotification(JSON.parse(message.body).title, JSON.parse(message.body).message, "bg-info");
             });
 
             stompClient.subscribe("/topic/nprChannel", function (message) {
-                showNotification(JSON.parse(message.body).title, JSON.parse(message.body).message, "is-success");
+                showNotification(JSON.parse(message.body).title, JSON.parse(message.body).message, "bg-success");
             });
         },
         function (err) {
@@ -31,13 +31,13 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 });
 
-function showNotification(title, msg, type = "is-info") {
+function showNotification(title, msg, type = "bg-info") {
     let notification = createTag("div", "", ["notification", type]);
-    let deleteBtn = createTag("button", "", ["delete"]);
+    let deleteBtn = createTag("button", "x", ["delete"]);
 
     let messageDiv = createTag("div", "", []);
-    let messageTag = createTag("span", msg, ["has-text-light", "is-size-7"]);
-    let titleTag = createTag("h4", title, ["has-text-weight-bold", "has-text-warning"]);
+    let messageTag = createTag("span", msg, ["text-light", "fs-6"]);
+    let titleTag = createTag("h4", title, ["fw-bold", "text-warning"]);
 
     messageDiv.append(titleTag);
     messageDiv.append(messageTag);

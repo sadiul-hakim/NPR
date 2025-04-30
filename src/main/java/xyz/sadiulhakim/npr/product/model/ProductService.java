@@ -219,7 +219,7 @@ public class ProductService {
 
         LOGGER.info("ProductService.search :: search product by text : {}", text);
         Page<Product> page = productRepository.findAllByNameContainingOrDescriptionContaining(
-                text, text, PageRequest.of(pageNumber, 200)
+                text, text, PageRequest.of(pageNumber, appProperties.getPaginationSize())
         );
         return PageUtil.prepareResult(page);
     }

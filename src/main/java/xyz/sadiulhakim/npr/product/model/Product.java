@@ -1,5 +1,6 @@
 package xyz.sadiulhakim.npr.product.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -48,6 +49,7 @@ public class Product {
     private double rating;
     private boolean active = true;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "product")
     private List<Review> reviews = new ArrayList<>();
 

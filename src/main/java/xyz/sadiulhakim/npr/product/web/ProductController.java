@@ -69,6 +69,18 @@ class ProductController {
         return "product/single_product";
     }
 
+    @GetMapping("/list")
+    String list(@RequestParam(defaultValue = "0") int page, Model model) {
+
+        model.addAttribute("name", AuthenticatedUserUtil.getName());
+        model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
+        model.addAttribute("productResult", productService.findAllPaginated(page));
+        TableUrlPojo product_table_url = new TableUrlPojo("", "/products/list", "",
+                "", "");
+        model.addAttribute("table_url", product_table_url);
+        return "product/product_list";
+    }
+
     @GetMapping("/by-category")
     String byCategory(@RequestParam(defaultValue = "0") long categoryId, @RequestParam(defaultValue = "0") int page,
                       Model model) {
@@ -118,13 +130,20 @@ class ProductController {
     }
 
     @GetMapping("/search")
-    String searchUser(@RequestParam String text, Model model) {
+    String search(@RequestParam String text, Model model) {
         model.addAttribute("name", AuthenticatedUserUtil.getName());
         model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
         model.addAttribute("productResult", productService.search(text, 0));
         model.addAttribute("table_url", table_url);
 
         return "product/product_page";
+    }
+
+    @ResponseBody
+    @GetMapping("/search_api")
+    List<Object> searchApi(@RequestParam String text) {
+        PaginationResult search = productService.search(text, 0);
+        return search.getData();
     }
 
     @GetMapping("/create_page")

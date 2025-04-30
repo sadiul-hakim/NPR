@@ -31,7 +31,9 @@ class SecurityConfig {
                 "/products/by-category/**",
                 "/products/view",
                 "/categories/list",
-                "/brands/list"
+                "/brands/list",
+                "/products/search_api/**",
+                "/products/list"
         };
 
         String[] adminAccess = {

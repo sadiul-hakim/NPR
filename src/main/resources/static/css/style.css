@@ -66,6 +66,13 @@ body {
     transition: opacity 0.3s ease-out, transform 0.3s ease-out;
     transform: translateX(0);
     background-color: rgba(10, 90, 155, 0.63) !important;
+    padding: 5px;
+}
+
+.delete{
+    border: none;
+    color: white;
+    background: transparent;
 }
 
 .notification.fade-out {

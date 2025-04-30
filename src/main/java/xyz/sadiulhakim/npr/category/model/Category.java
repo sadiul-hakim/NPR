@@ -1,5 +1,6 @@
 package xyz.sadiulhakim.npr.category.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +26,7 @@ public class Category {
     @Column(length = 150, nullable = false)
     private String picture;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "category")
     private List<Product> products = new ArrayList<>();
 
