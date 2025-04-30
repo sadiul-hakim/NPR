@@ -86,7 +86,7 @@
                             th:href="@{'/products/view?productId='+${item.id}}">
                     </a>
                     <span th:text="${item.rating}" class="text-warning lead"></span>
-                    <div th:replace="~{fragments/stars :: stars(${item})}"></div>
+                    <div th:replace="~{fragments/stars :: stars(${item.rating})}"></div>
                 </div>
             </div>
             <button class="glider-prev btn btn-outline-secondary">&laquo;</button>

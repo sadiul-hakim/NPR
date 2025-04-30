@@ -47,6 +47,13 @@ public class Product {
     private Map<String, Object> details = new HashMap<>();
 
     private double rating;
+
+    @JsonIgnore
+    private double sumOfRating;
+
+    @JsonIgnore
+    private int numOfRating;
+
     private boolean active = true;
 
     @JsonIgnore
@@ -168,12 +175,29 @@ public class Product {
         this.active = active;
     }
 
+    public double getSumOfRating() {
+        return sumOfRating;
+    }
+
+    public void setSumOfRating(double sumOfRating) {
+        this.sumOfRating = sumOfRating;
+    }
+
+    public int getNumOfRating() {
+        return numOfRating;
+    }
+
+    public void setNumOfRating(int numOfRating) {
+        this.numOfRating = numOfRating;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && Double.compare(rating, product.rating) == 0 && active == product.active &&
-                Objects.equals(name, product.name) && Objects.equals(brand, product.brand) &&
+        return id == product.id && Double.compare(rating, product.rating) == 0 &&
+                Double.compare(sumOfRating, product.sumOfRating) == 0 && numOfRating == product.numOfRating &&
+                active == product.active && Objects.equals(name, product.name) && Objects.equals(brand, product.brand) &&
                 Objects.equals(category, product.category) && Objects.equals(picture, product.picture) &&
                 Objects.equals(qrCode, product.qrCode) && Objects.equals(description, product.description) &&
                 Objects.equals(details, product.details) && Objects.equals(reviews, product.reviews);
@@ -181,6 +205,7 @@ public class Product {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, brand, category, picture, qrCode, description, details, rating, active, reviews);
+        return Objects.hash(id, name, brand, category, picture, qrCode, description, details, rating, sumOfRating,
+                numOfRating, active, reviews);
     }
 }

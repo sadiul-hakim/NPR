@@ -59,9 +59,9 @@ public class ProductService {
             Optional<Product> existingProduct = getById(product.getId());
             if (existingProduct.isEmpty()) {
 
-                if (Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
+                if (photo != null && Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
                     product.setPicture(appProperties.getDefaultProductPhotoName());
-                } else {
+                } else if (photo != null) {
 
                     String fileName = FileUtil.uploadFile(appProperties.getProductImageFolder(),
                             photo.getOriginalFilename(), photo.getInputStream());
@@ -103,7 +103,7 @@ public class ProductService {
 
         // Updating of Product QRCode , Details , Rating and Reviews would be handled somewhere else.
 
-        if (!Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
+        if (photo != null && !Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {
             String fileName = FileUtil.uploadFile(appProperties.getProductImageFolder(), photo.getOriginalFilename(),
                     photo.getInputStream());
 

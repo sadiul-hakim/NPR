@@ -22,10 +22,11 @@
                     <hr>
                     <div class="w-25">
                         <p class="m-0">
-                            Rating : <span th:text="${product.rating}" class="text-warning"></span>
+                            Rating : <span th:text="${product.rating}" class="text-warning"></span> | Reviews : <span
+                                th:text="${numberOfReviews}"></span>
                         </p>
                         <div class="w-25">
-                            <div th:replace="~{fragments/stars :: stars(${product})}"></div>
+                            <div th:replace="~{fragments/stars :: stars(${product.rating})}"></div>
                         </div>
                     </div>
                 </div>
@@ -45,6 +46,14 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="row mt-3">
+                <div class="d-flex justify-content-between">
+                    <h3 class="text-warning my-2">Reviews</h3>
+                    <p class="lead">Please login to write review <a th:href="@{/oauth2/authorization/google}"
+                                                       class="btn btn-outline-primary">Login</a></p>
+                </div>
+
             </div>
         </div>
     </div>

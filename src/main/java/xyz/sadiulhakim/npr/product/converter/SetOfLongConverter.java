@@ -9,15 +9,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Converter(autoApply = true)
-public class ListOfLongConverter implements AttributeConverter<List<Long>, String> {
+public class SetOfLongConverter implements AttributeConverter<Set<Long>, String> {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final Logger LOGGER = LoggerFactory.getLogger(ListOfLongConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SetOfLongConverter.class);
 
     @Override
-    public String convertToDatabaseColumn(List<Long> attribute) {
+    public String convertToDatabaseColumn(Set<Long> attribute) {
         try {
             return MAPPER.writeValueAsString(attribute);
         } catch (Exception ex) {
@@ -27,13 +28,13 @@ public class ListOfLongConverter implements AttributeConverter<List<Long>, Strin
     }
 
     @Override
-    public List<Long> convertToEntityAttribute(String dbData) {
+    public Set<Long> convertToEntityAttribute(String dbData) {
         try {
             return MAPPER.readValue(dbData, new TypeReference<>() {
             });
         } catch (Exception ex) {
             LOGGER.error("ListOfLongConverter.convertToEntityAttribute :: Error occurred {}", ex.getMessage());
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
     }
 }

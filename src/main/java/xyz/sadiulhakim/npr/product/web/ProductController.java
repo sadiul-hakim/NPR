@@ -18,6 +18,7 @@ import xyz.sadiulhakim.npr.pojo.TableUrlPojo;
 import xyz.sadiulhakim.npr.product.model.Product;
 import xyz.sadiulhakim.npr.product.model.ProductService;
 import xyz.sadiulhakim.npr.properties.AppProperties;
+import xyz.sadiulhakim.npr.review.model.ReviewService;
 import xyz.sadiulhakim.npr.util.auth.AuthenticatedUserUtil;
 
 import java.util.HashMap;
@@ -32,16 +33,18 @@ class ProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
     private final BrandService brandService;
+    private final ReviewService reviewService;
 
     private final TableUrlPojo table_url = new TableUrlPojo("/products/search", "/products",
             "/products/export-csv", "/products/create_page", "/products/page");
 
     ProductController(AppProperties appProperties, ProductService productService, CategoryService categoryService,
-                      BrandService brandService) {
+                      BrandService brandService, ReviewService reviewService) {
         this.appProperties = appProperties;
         this.productService = productService;
         this.categoryService = categoryService;
         this.brandService = brandService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/page")
@@ -56,7 +59,8 @@ class ProductController {
     }
 
     @GetMapping("/view")
-    String view(@RequestParam(defaultValue = "0") int productId, Model model) {
+    String view(@RequestParam(defaultValue = "0") int productId, @RequestParam(defaultValue = "0") int reviewPage,
+                Model model) {
 
         model.addAttribute("name", AuthenticatedUserUtil.getName());
         model.addAttribute("picture", AuthenticatedUserUtil.getPicture(appProperties.getUserImageFolder()));
@@ -65,7 +69,12 @@ class ProductController {
         if (product.isEmpty()) {
             return "product/product_not_found";
         }
+
+        model.addAttribute("numberOfReviews", reviewService.countByProduct(productId));
         model.addAttribute("product", product.get());
+
+        PaginationResult reviewResult = reviewService.findAllByProduct(productId, reviewPage);
+        model.addAttribute("reviewResult", reviewResult);
         return "product/single_product";
     }
 
