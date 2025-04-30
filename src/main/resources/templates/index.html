@@ -39,7 +39,7 @@
                      class="my_carousel-item card d-flex justify-content-center align-items-center p-3">
                     <img th:src="@{'/picture/category/' + ${item.picture}}" alt="category" class="icon img-fluid"/>
                     <a
-                            class="text-muted"
+                            class="text-muted text-center"
                             th:text="${item.name}"
                             style="text-decoration: none;"
                             th:href="@{'/products/by-category?categoryId='+${item.id}}">
@@ -81,7 +81,7 @@
                     <img th:src="@{'/picture/product/' + ${item.picture}}" alt="product" class="icon_md img-fluid"/>
                     <a
                             th:text="${item.name}"
-                            class="text-muted"
+                            class="text-muted text-center"
                             style="text-decoration: none;"
                             th:href="@{'/products/view?productId='+${item.id}}">
                     </a>

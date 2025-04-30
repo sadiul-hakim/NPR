@@ -14,7 +14,7 @@
                     <img th:src="@{'/picture/category/' + ${item.picture}}" alt="product" class="icon_md img-fluid"/>
                     <a
                             th:text="${item.name}"
-                            class="text-muted"
+                            class="text-muted text-center"
                             style="text-decoration: none;"
                             th:href="@{'/products/by-category?categoryId='+${item.id}}">
                     </a>
