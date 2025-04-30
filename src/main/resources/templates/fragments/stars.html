@@ -1,0 +1,27 @@
+<!-- Star icons -->
+<div class="d-flex justify-content-between align-items-center" th:fragment="stars(item)">
+  <th:block th:with="
+        fullStars=${T(java.lang.Math).floor(item.rating)},
+        hasFullStars=${fullStars > 0},
+        fractionalPart=${item.rating - fullStars},
+        hasHalfStar=${fractionalPart >= 0.25 && fractionalPart < 0.75},
+        totalStarsDrawn=${fullStars + (hasHalfStar ? 1 : 0)},
+        emptyStars=${5 - totalStarsDrawn},
+        hasEmptyStars = ${emptyStars > 0}
+    ">
+    <!-- Full stars -->
+    <th:block th:if="${hasFullStars}" th:each="i : ${#numbers.sequence(1, fullStars)}">
+      <img th:src="@{/images/full_star.svg}" alt="full star"/>
+    </th:block>
+
+    <!-- Half star -->
+    <th:block th:if="${hasHalfStar}">
+      <img th:src="@{/images/half_star.svg}" alt="half star"/>
+    </th:block>
+
+    <!-- Empty stars -->
+    <th:block th:if="${hasEmptyStars}" th:each="i : ${#numbers.sequence(1, emptyStars)}">
+      <img th:src="@{/images/empty_star.svg}" alt="empty star"/>
+    </th:block>
+  </th:block>
+</div>

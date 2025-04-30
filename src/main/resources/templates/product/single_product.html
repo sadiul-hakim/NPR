@@ -20,10 +20,11 @@
                             th:text="${product.brand.name}"></span></p>
                     <p th:text="${product.description}"></p>
                     <hr>
-                    <div>
+                    <div class="w-25">
                         <p class="m-0">
                             Rating : <span th:text="${product.rating}" class="text-warning"></span>
                         </p>
+                        <div th:replace="~{fragments/stars :: stars(${product})}"></div>
                     </div>
                 </div>
             </div>
