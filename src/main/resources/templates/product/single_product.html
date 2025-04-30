@@ -24,7 +24,9 @@
                         <p class="m-0">
                             Rating : <span th:text="${product.rating}" class="text-warning"></span>
                         </p>
-                        <div th:replace="~{fragments/stars :: stars(${product})}"></div>
+                        <div class="w-25">
+                            <div th:replace="~{fragments/stars :: stars(${product})}"></div>
+                        </div>
                     </div>
                 </div>
             </div>
