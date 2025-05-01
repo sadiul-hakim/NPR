@@ -78,7 +78,7 @@ public class ReviewService {
         }
 
         // If the visitor had already given a review do not add another one
-        long reviews = repository.countAllByVisitor(vById.get());
+        long reviews = repository.countAllByVisitorAndProduct(vById.get(), product.get());
         if (reviews > 0) {
             return;
         }

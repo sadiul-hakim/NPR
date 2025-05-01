@@ -21,5 +21,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findAllByVisitor(Visitor visitor);
 
-    long countAllByVisitor(Visitor visitor);
+    long countAllByVisitorAndProduct(Visitor visitor,Product product);
 }
