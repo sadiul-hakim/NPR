@@ -20,14 +20,12 @@
                             th:text="${product.brand.name}"></span></p>
                     <p th:text="${product.description}"></p>
                     <hr>
-                    <div class="w-25">
+                    <div>
                         <p class="m-0">
                             Rating : <span th:text="${product.rating}" class="text-warning"></span> | Reviews : <span
                                 th:text="${numberOfReviews}"></span>
                         </p>
-                        <div class="w-25">
-                            <div th:replace="~{fragments/stars :: stars(${product.rating})}"></div>
-                        </div>
+                        <div th:replace="~{fragments/stars :: stars(${product.rating})}"></div>
                     </div>
                 </div>
             </div>
@@ -47,17 +45,188 @@
                     </tbody>
                 </table>
             </div>
+
+            <!--Review Section-->
             <div class="row mt-3">
                 <div class="d-flex justify-content-between">
-                    <h3 class="text-warning my-2">Reviews</h3>
-                    <p class="lead" sec:authorize="isAnonymous()">Please login to write review <a th:href="@{/oauth2/authorization/google}"
-                                                       class="btn btn-outline-primary">Login</a></p>
+                    <h3 class="text-warning my-2">Reviews and Ratings</h3>
+                    <p class="lead" sec:authorize="isAnonymous()">Please login to write review <a
+                            th:href="@{/oauth2/authorization/google}"
+                            class="btn btn-outline-primary">Login</a></p>
                 </div>
 
+                <!--Stars Section-->
+                <div class="my-2 p-2 d-flex">
+                    <div>
+                        <h1 th:text="${product.rating}" class="my-1"></h1>
+                        <div>
+                            <div th:replace="~{fragments/stars :: stars(${product.rating})}"></div>
+                        </div>
+                        <p class="text-muted">
+                            <span th:text="${numberOfReviews}"></span> Reviews
+                        </p>
+                        <button
+                                class="btn btn-outline-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#reviewModal"
+                                sec:authorize="isAuthenticated() && hasAuthority('OIDC_USER')">
+                            Write a Review
+                        </button>
+                    </div>
+                    <div class="ms-5">
+                        <div>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <span class="ms-2" th:text="${starMap.get('5_Stars')}"></span>
+                        </div>
+                        <div>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/empty_star.svg}" alt="empty star"/>
+                            <span class="ms-2" th:text="${starMap.get('4_Stars')}"></span>
+                        </div>
+                        <div>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/empty_star.svg}" alt="empty star"/>
+                            <img th:src="@{/images/empty_star.svg}" alt="empty star"/>
+                            <span class="ms-2" th:text="${starMap.get('3_Stars')}"></span>
+                        </div>
+                        <div>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/empty_star.svg}" alt="empty star"/>
+                            <img th:src="@{/images/empty_star.svg}" alt="empty star"/>
+                            <img th:src="@{/images/empty_star.svg}" alt="empty star"/>
+                            <span class="ms-2" th:text="${starMap.get('2_Stars')}"></span>
+                        </div>
+                        <div>
+                            <img th:src="@{/images/full_star.svg}" alt="full star"/>
+                            <img th:src="@{/images/empty_star.svg}" alt="empty star"/>
+                            <img th:src="@{/images/empty_star.svg}" alt="empty star"/>
+                            <img th:src="@{/images/empty_star.svg}" alt="empty star"/>
+                            <img th:src="@{/images/empty_star.svg}" alt="empty star"/>
+                            <span class="ms-2" th:text="${starMap.get('1_Stars')}"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Reviews List-->
+                <div>
+                    <div th:each="review : ${reviewResult.data}" class="border-bottom px-2 py-4">
+                        <div class="d-flex">
+                            <img th:src="@{${review.visitor.picture}}" alt="visitor"
+                                 class="icon mx-2 rounded-circle"/>
+                            <div class="d-flex flex-column">
+                                <div>
+                                    by&nbsp;<span th:text="${review.visitor.name}"></span>,&nbsp;
+                                    <span th:text="${#temporals.format(review.time, 'dd MMM yyyy')}"
+                                          class="text-muted"></span>
+                                </div>
+                                <div>
+                                    <div th:replace="~{fragments/stars :: stars(${review.rating})}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="my-1" th:text="${review.review}"></p>
+
+                        <div class="d-flex review_btn" sec:authorize="isAuthenticated() && hasAuthority('OIDC_USER')"
+                             th:data-review="${review.id}"
+                             th:data-visitor="${#authentication.principal.attributes['email']}">
+                            <button class="btn btn-outline-dark helpful">Helpful (<span
+                                    th:text="${review.helpful.size}"></span>)
+                            </button>
+                            <button class="btn btn-outline-dark ms-1 not_helpful">Not Helpful
+                                (<span
+                                        th:text="${review.notHelpful.size}"></span>)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!--Pagination-->
+                    <div class="row my-2">
+                        <div class="col-12 d-flex justify-content-end align-items-center">
+                            <nav aria-label="Pagination">
+                                <ul class="pagination mb-0">
+                                    <li class="page-item" th:classappend="${reviewResult.isFirst} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{|${pageUrl}?page=${reviewResult.currentPage - 1}&productId=${product.id}|}">Previous</a>
+                                    </li>
+                                    <li class="page-item" th:each="i:${#numbers.sequence(1,reviewResult.totalPages)}"
+                                        th:classappend="${reviewResult.currentPage + 1 == i} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{|${pageUrl}?page=${i-1}&&productId=${product.id}|}"
+                                           th:text="${i}"></a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${reviewResult.isLast} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{|${pageUrl}?page=${reviewResult.currentPage + 1}&productId=${product.id}|}">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Write Review Modal-->
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="reviewModalLabel">Write a Review</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form class="modal-body" method="post" th:action="@{/reviews/write}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+                    <input type="hidden" name="visitor" th:value="${#authentication.principal.attributes['email']}"
+                           sec:authorize="isAuthenticated() && hasAuthority('OIDC_USER')">
+                    <label for="rating">Rating (1–5):</label>
+                    <input type="number" id="rating" name="rating" min="1" max="5" class="form-control" required><br/>
+                    <label for="review">Write Review</label>
+                    <textarea class="form-control" cols="30" rows="10" name="review" id="review"></textarea><br/>
+                    <button type="submit" class="btn btn-primary">Write</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 </body>
+<script>
+    const review_btn = document.getElementsByClassName("review_btn");
+
+    for (let btn of review_btn) {
+        let helpful = btn.querySelector(".helpful");
+        let not_helpful = btn.querySelector(".not_helpful");
+
+        let review = btn.dataset.review;
+        let visitor = btn.dataset.visitor;
+
+        helpful.onclick = async () => {
+            let voteNum = await vote(visitor, review, 0);
+            helpful.querySelector("span").innerText = `${voteNum.helpful}`;
+            not_helpful.querySelector("span").innerText = `${voteNum.notHelpful}`;
+        };
+        not_helpful.onclick = async () => {
+            let voteNum = await vote(visitor, review, 1);
+            helpful.querySelector("span").innerText = `${voteNum.helpful}`;
+            not_helpful.querySelector("span").innerText = `${voteNum.notHelpful}`;
+        };
+    }
+
+    async function vote(visitor, review, type) {
+        let response = await fetch(`/reviews/vote?visitor=${visitor}&reviewId=${review}&type=${type}`);
+        return await response.json();
+    }
+</script>
 </html>

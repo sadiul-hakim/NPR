@@ -36,6 +36,10 @@ class SecurityConfig {
                 "/products/list"
         };
 
+        String[] OIDC_USER = {
+                "/reviews/vote"
+        };
+
         String[] adminAccess = {
                 "/dashboard/**",
                 "/users/**",
@@ -50,6 +54,7 @@ class SecurityConfig {
         };
         return http
                 .authorizeHttpRequests(auth -> auth.requestMatchers(publicApi).permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers(OIDC_USER).hasAuthority("OIDC_USER"))
                 .authorizeHttpRequests(auth -> auth.requestMatchers(adminAccess).hasAnyRole("ADMIN", "ASSISTANT"))
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .userDetailsService(userDetailsService)

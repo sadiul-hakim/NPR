@@ -101,6 +101,10 @@ public class ProductService {
             exProduct.setDescription(product.getDescription());
         }
 
+        if (product.getRating() != 0) {
+            exProduct.setRating(product.getRating());
+        }
+
         // Updating of Product QRCode , Details , Rating and Reviews would be handled somewhere else.
 
         if (photo != null && !Objects.requireNonNull(photo.getOriginalFilename()).isEmpty()) {

@@ -59,7 +59,7 @@ class ProductController {
     }
 
     @GetMapping("/view")
-    String view(@RequestParam(defaultValue = "0") int productId, @RequestParam(defaultValue = "0") int reviewPage,
+    String view(@RequestParam(defaultValue = "0") int productId, @RequestParam(defaultValue = "0") int page,
                 Model model) {
 
         model.addAttribute("name", AuthenticatedUserUtil.getName());
@@ -73,8 +73,11 @@ class ProductController {
         model.addAttribute("numberOfReviews", reviewService.countByProduct(productId));
         model.addAttribute("product", product.get());
 
-        PaginationResult reviewResult = reviewService.findAllByProduct(productId, reviewPage);
+        PaginationResult reviewResult = reviewService.findAllByProduct(productId, page);
         model.addAttribute("reviewResult", reviewResult);
+        model.addAttribute("starMap", reviewService.numberOfStars(productId));
+        model.addAttribute("pageUrl", "/products/view");
+
         return "product/single_product";
     }
 

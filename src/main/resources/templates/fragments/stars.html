@@ -1,5 +1,5 @@
 <!-- Star icons -->
-<div class="d-flex justify-content-between align-items-center" th:fragment="stars(rating)">
+<div class="d-flex align-items-center" th:fragment="stars(rating)">
   <th:block th:with="
         fullStars=${T(java.lang.Math).floor(rating)},
         hasFullStars=${fullStars > 0},
