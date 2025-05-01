@@ -120,22 +120,30 @@
                 <!--Reviews List-->
                 <div>
                     <div th:each="review : ${reviewResult.data}" class="border-bottom px-2 py-4">
-                        <div class="d-flex">
-                            <img th:src="@{${review.visitor.picture}}" alt="visitor"
-                                 class="icon mx-2 rounded-circle"/>
-                            <div class="d-flex flex-column">
-                                <div>
-                                    by&nbsp;<span th:text="${review.visitor.name}"></span>,&nbsp;
-                                    <span th:text="${#temporals.format(review.time, 'dd MMM yyyy')}"
-                                          class="text-muted"></span>
-                                </div>
-                                <div>
-                                    <div th:replace="~{fragments/stars :: stars(${review.rating})}"></div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                <img th:src="@{${review.visitor.picture}}" alt="visitor"
+                                     class="icon me-2 rounded-circle"/>
+                                <div class="d-flex flex-column">
+                                    <div>
+                                        by&nbsp;<span th:text="${review.visitor.name}"></span>,&nbsp;
+                                        <span th:text="${#temporals.format(review.time, 'dd MMM yyyy HH:mm')}"
+                                              class="text-muted"></span>
+                                    </div>
+                                    <div>
+                                        <div th:replace="~{fragments/stars :: stars(${review.rating})}"></div>
+                                    </div>
                                 </div>
                             </div>
+                            <a
+                                    th:href="@{'/reviews/delete?reviewId='+${review.id}+'&visitor='+${review.visitor.email}}"
+                                    sec:authorize="isAuthenticated() && hasAuthority('OIDC_USER')"
+                                    th:if="${#authentication.principal.attributes['email'] == review.visitor.email}"
+                            >
+                                <i data-feather="trash" class="text-danger"></i>
+                            </a>
                         </div>
-                        <p class="my-1" th:text="${review.review}"></p>
-
+                        <p class="my-2" th:text="${review.review}"></p>
                         <div class="d-flex review_btn" sec:authorize="isAuthenticated() && hasAuthority('OIDC_USER')"
                              th:data-review="${review.id}"
                              th:data-visitor="${#authentication.principal.attributes['email']}">
@@ -176,7 +184,7 @@
             </div>
         </div>
     </div>
-
+    
     <!--Write Review Modal-->
     <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
         <div class="modal-dialog">

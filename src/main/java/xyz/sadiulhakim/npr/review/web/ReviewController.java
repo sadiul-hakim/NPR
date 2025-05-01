@@ -41,4 +41,10 @@ public class ReviewController {
         reviewService.save(reviewObj, productId, visitor);
         return "redirect:/products/view?page=0&&productId=" + productId;
     }
+
+    @GetMapping("/delete")
+    String deleteReview(@RequestParam long reviewId, @RequestParam String visitor) {
+        long productId = reviewService.delete(reviewId, visitor);
+        return "redirect:/products/view?page=0&&productId=" + productId;
+    }
 }

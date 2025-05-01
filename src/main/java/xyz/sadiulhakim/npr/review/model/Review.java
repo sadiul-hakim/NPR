@@ -45,7 +45,7 @@ public class Review {
     private Visitor visitor;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Product product;
 
     @Temporal(TemporalType.TIMESTAMP)

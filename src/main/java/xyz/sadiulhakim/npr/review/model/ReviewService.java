@@ -1,7 +1,11 @@
 package xyz.sadiulhakim.npr.review.model;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import xyz.sadiulhakim.npr.pojo.PaginationResult;
 import xyz.sadiulhakim.npr.product.model.Product;
@@ -13,6 +17,7 @@ import xyz.sadiulhakim.npr.visitor.model.VisitorService;
 
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -60,6 +65,34 @@ public class ReviewService {
                 product.get(),
                 PageRequest.of(pageNumber, appProperties.getPaginationSize())
         );
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof OAuth2User user) {
+            String username = user.getAttribute("email");
+            Visitor visitor = visitorService.getByMail(username).get();
+            List<Review> reviews = repository.findAllByVisitorAndProduct(visitor, product.get());
+
+            // Remove duplicates (in case visitorReviews are already in the page)
+            List<Review> filteredPageContent = page.getContent().stream()
+                    .filter(review -> !review.getVisitor().getEmail().equals(visitor.getEmail()))
+                    .toList();
+
+            // Combine: visitor reviews first, then rest of the page
+            List<Review> combined = new ArrayList<>();
+            combined.addAll(reviews);
+            combined.addAll(filteredPageContent);
+
+            // Trim to fit page size
+            int pageSize = appProperties.getPaginationSize();
+            List<Review> finalPageContent = combined.stream()
+                    .limit(pageSize)
+                    .toList();
+
+            // Wrap into a PageImpl to retain pagination metadata
+            page = new PageImpl<>(finalPageContent, PageRequest.of(pageNumber, pageSize),
+                    page.getTotalElements());
+        }
+
         return PageUtil.prepareResult(page);
     }
 
@@ -194,5 +227,35 @@ public class ReviewService {
         double rating = ((C * m) + (totalRatingSum)) / (C + totalRatingCount);
         String format = DECIMAL_FORMAT.format(rating);
         return Double.parseDouble(format);
+    }
+
+    public long delete(long reviewId, String visitor) {
+        Optional<Visitor> vByMail = visitorService.getByMail(visitor);
+        if (vByMail.isEmpty()) {
+            return 0;
+        }
+
+        Optional<Review> rById = getById(reviewId);
+        if (rById.isEmpty()) {
+            return 0;
+        }
+
+        Review review = rById.get();
+        Visitor visitorObj = vByMail.get();
+        if (!review.getVisitor().getEmail().equals(visitorObj.getEmail())) {
+            return 0;
+        }
+
+        Product product = review.getProduct();
+        product.setNumOfRating(product.getNumOfRating() - 1);
+        product.setSumOfRating(product.getSumOfRating() - review.getRating());
+
+        double finalRating = calculateBayesianAverage(product.getSumOfRating(), product.getNumOfRating());
+        product.setRating(finalRating);
+
+        productService.save(product, null);
+        repository.delete(review);
+
+        return product.getId();
     }
 }
